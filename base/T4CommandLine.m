@@ -148,7 +148,7 @@
   return switchIndex;
 }
 
--(void)printHelp
+-printHelp
 {
   //  NSProcessInfo *processInfo = [[NSProcessInfo alloc] init];
   int nSwitches = [switches count];
@@ -249,18 +249,20 @@
 
   //  [processInfo release];
   exit(-1);
+  return self;
 }
 
--(void)addText: (NSString*)aText
+-addText: (NSString*)aText
 {
   NSMutableArray *currentOptions = [options objectForKey: currentSwitch];
   T4CommandLineOption *option = [[T4CommandLineOption alloc] initWithName: @"" type: @"" help: aText];
 
   [currentOptions addObject: option];
   [allocator keepObject: option];
+  return self;
 }
 
--(void)addMasterSwitch: (NSString*)aSwitch
+-addMasterSwitch: (NSString*)aSwitch
 {
   NSMutableArray *currentOptions = [[NSMutableArray alloc] init];
   NSMutableArray *currentArguments = [[NSMutableArray alloc] init];
@@ -273,76 +275,79 @@
   [allocator retainAndKeepObject: aSwitch];
   [allocator keepObject: currentOptions];
   [allocator keepObject: currentArguments];
+  return self;
 }
 
--(void)addOption: (T4CommandLineOption*)option
+-addOption: (T4CommandLineOption*)option
 {
   NSMutableArray *currentOptions = [options objectForKey: currentSwitch];
   [currentOptions addObject: option];
   [allocator retainAndKeepObject: option]; //arg: si c'est pas retained???
+  return self;
 }
 
--(void)addIntOption: (NSString*)aName address: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp
+-addIntOption: (NSString*)aName address: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp
 {
   T4IntCommandLineOption *option = [T4IntCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
-  [self addOption: option];
+  return [self addOption: option];
 }
 
--(void)addRealOption: (NSString*)aName address: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp
+-addRealOption: (NSString*)aName address: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp
 {
   T4RealCommandLineOption *option = [T4RealCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
-  [self addOption: option];
+  return [self addOption: option];
 }
 
--(void)addBoolOption: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp
+-addBoolOption: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp
 {
   T4BoolCommandLineOption *option = [T4BoolCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
-  [self addOption: option];
+  return [self addOption: option];
 }
 
--(void)addStringOption: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefault help: (NSString*)aHelp
+-addStringOption: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefault help: (NSString*)aHelp
 {
   T4StringCommandLineOption *option = [T4StringCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
-  [self addOption: option];
+  return [self addOption: option];
 }
 
--(void)addArgument: (T4CommandLineOption*)argument
+-addArgument: (T4CommandLineOption*)argument
 {
   NSMutableArray *currentArguments = [arguments objectForKey: currentSwitch];
   [currentArguments addObject: argument];
   [allocator retainAndKeepObject: argument]; //arg: si c'est pas retained???
+  return self;
 }
 
--(void)addIntArgument: (NSString*)aName address: (int*)anAddress help: (NSString*)aHelp
+-addIntArgument: (NSString*)aName address: (int*)anAddress help: (NSString*)aHelp
 {
   T4IntCommandLineOption *option = [T4IntCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: 0 help: aHelp];
   [allocator keepObject: option];
-  [self addArgument: option];
+  return [self addArgument: option];
 }
 
--(void)addRealArgument: (NSString*)aName address: (real*)anAddress help: (NSString*)aHelp
+-addRealArgument: (NSString*)aName address: (real*)anAddress help: (NSString*)aHelp
 {
   T4RealCommandLineOption *option = [T4RealCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: 0 help: aHelp];
   [allocator keepObject: option];
-  [self addArgument: option];
+  return [self addArgument: option];
 }
 
--(void)addStringArgument: (NSString*)aName address: (NSMutableString*)anAddress help: (NSString*)aHelp
+-addStringArgument: (NSString*)aName address: (NSMutableString*)anAddress help: (NSString*)aHelp
 {
   T4StringCommandLineOption *option = [T4StringCommandLineOption alloc];
   [option initWithName: aName address: anAddress default: @"" help: aHelp];
   [allocator keepObject: option];
-  [self addArgument: option];
+  return [self addArgument: option];
 }
 
 @end

@@ -24,7 +24,7 @@
   output = 0;
   for(c = 0; c < numColumns; c++)
   {
-    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealData: [targets columnAtIndex: c]]];
+    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealArray: [targets columnAtIndex: c]]];
     real *inputColumn = [someInputs columnAtIndex: c];
 
     for(r = 0; r < numInputs; r++)
@@ -60,7 +60,7 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealData: [targets firstColumn]]];
+    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealArray: [targets firstColumn]]];
     real *inputColumn = [someInputs columnAtIndex: c];
     real *gradInputColumn = [gradInputs columnAtIndex: c];
 

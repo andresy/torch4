@@ -117,7 +117,7 @@
     {
       int elementSize = (someElementSizes[i] < 0 ? defaultElementSize : someElementSizes[i]);
 
-      exampleArray[i] = [[T4Matrix alloc] initWithRealData: currentColumn+offset
+      exampleArray[i] = [[T4Matrix alloc] initWithRealArray: currentColumn+offset
                                           numberOfRows: elementSize
                                           numberOfColumns: numColumns
                                           stride: stride];
@@ -245,7 +245,7 @@
 
   for(m = 0; m < numMatrices; m++)
   {
-    T4Matrix *matrix = [[T4Matrix alloc] initWithRealData: [aMatrix columnAtIndex: currentColumnIndex]+aRowOffset
+    T4Matrix *matrix = [[T4Matrix alloc] initWithRealArray: [aMatrix columnAtIndex: currentColumnIndex]+aRowOffset
                                          numberOfRows: aNumRows
                                          numberOfColumns: aNumColumns
                                          stride: stride];

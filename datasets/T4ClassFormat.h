@@ -13,6 +13,6 @@
 -(int)numberOfClasses;
 
 // primitive:
--(int)classFromRealData: (real*)aVector;
+-(int)classFromRealArray: (real*)aVector;
 
 @end

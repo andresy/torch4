@@ -66,7 +66,7 @@
       outputStride = [outputs stride];
     }
 
-    [currentOutputs copyToRealData: outputData+offsets[i] stride: outputStride];
+    [currentOutputs copyToRealArray: outputData+offsets[i] stride: outputStride];
   }
 
   return outputs;
@@ -89,7 +89,7 @@
   {
     currentMachine = [machines objectAtIndex: i];
 
-    [gradOutputs setMatrixFromRealData: gradOutputData+offsets[i]
+    [gradOutputs setMatrixFromRealArray: gradOutputData+offsets[i]
                  numberOfRows: [currentMachine numberOfOutputs]
                  numberOfColumns: gradOutputNumColumns
                  stride: gradOutputStride];

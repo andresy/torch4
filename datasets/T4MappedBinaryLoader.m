@@ -47,7 +47,7 @@
   if(mappedAddresses[numMapped] == MAP_FAILED)
     T4Error(@"MappedBinaryLoader: cannot map the file. If it is a memory problem, buy a new processor!");
 
-  matrix = [[T4Matrix alloc] initWithRealData: (real*)(((char*)mappedAddresses[numMapped])+sizeof(int)*2)  numberOfRows: numRows numberOfColumns: numColumns stride: -1];
+  matrix = [[T4Matrix alloc] initWithRealArray: (real*)(((char*)mappedAddresses[numMapped])+sizeof(int)*2)  numberOfRows: numRows numberOfColumns: numColumns stride: -1];
   [allocator keepObject: matrix];
 
   numMapped++;
@@ -55,9 +55,10 @@
   return matrix;
 }
 
--(void)setMaxNumberOfColumns: (int)aMaxNumber
+-setMaxNumberOfColumns: (int)aMaxNumber
 {
   maxNumColumns = aMaxNumber;
+  return self;
 }
 
 -(void)dealloc

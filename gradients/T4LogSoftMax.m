@@ -25,7 +25,7 @@
     real *inputColumn = [someInputs columnAtIndex: c];
     real *outputColumn = [outputs columnAtIndex: c];
 
-    real sum = LOG_ZERO;
+    real sum = T4LogZero;
     for(r = 0; r < numInputs; r++)
     {
       real z = inputColumn[r];

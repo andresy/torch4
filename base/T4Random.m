@@ -17,13 +17,13 @@ BOOL T4RandomNormalIsValid = NO;
 
 @implementation T4Random
 
-+(void)setRandomSeed
++setRandomSeed
 {
   time_t ltime;
   struct tm *today;
   time(&ltime);
   today = localtime(&ltime);
-  [self setSeed: ((unsigned long)today->tm_sec)];
+  return [self setSeed: ((unsigned long)today->tm_sec)];
 }
 
 ///////////// The next 4 methods are taken from http://www.math.keio.ac.jp/matumoto/emt.html
@@ -84,7 +84,7 @@ BOOL T4RandomNormalIsValid = NO;
 #define TWIST(u,v) ((MIXBITS(u,v) >> 1) ^ ((v)&1UL ? MATRIX_A : 0UL))
 /////////////////////////////////////////////////////////// That's it.
 
-+(void)setSeed: (unsigned long)aSeed
++setSeed: (unsigned long)aSeed
 {
   int j;
 
@@ -101,6 +101,7 @@ BOOL T4RandomNormalIsValid = NO;
   }
   T4RandomLeft = 1;
   T4RandomInitf = 1;
+  return self;
 }
 
 +(unsigned long)initialSeed
@@ -114,7 +115,7 @@ BOOL T4RandomNormalIsValid = NO;
   return T4RandomInitialSeed;
 }
 
-+(void)nextState
++nextState
 {
   unsigned long *p = T4RandomState;
   int j;
@@ -135,6 +136,7 @@ BOOL T4RandomNormalIsValid = NO;
     *p = p[T4RandomM-T4RandomN] ^ TWIST(p[0], p[1]);
 
   *p = p[T4RandomM-T4RandomN] ^ TWIST(p[0], T4RandomState[0]);
+  return self;
 }
 
 +(unsigned long)random
@@ -180,17 +182,17 @@ BOOL T4RandomNormalIsValid = NO;
 /////////////////////////////////////////////////////////////////////
 //// Now my own code...
 
-+(void)getArrayOfShuffledIndices: (int*)indices capacity: (int)aCapacity
++getArrayOfShuffledIndices: (int*)indices capacity: (int)aCapacity
 {
   int i;
 
   for(i = 0; i < aCapacity; i++)
     indices[i] = i;
   
-  [self shuffleArray: indices capacity: aCapacity elementCapacity: sizeof(int)];
+  return [self shuffleArray: indices capacity: aCapacity elementCapacity: sizeof(int)];
 }
 
-+(void)shuffleArray: (void*)anArray capacity: (int)aCapacity elementCapacity: (int)anElementCapacity
++shuffleArray: (void*)anArray capacity: (int)aCapacity elementCapacity: (int)anElementCapacity
 {
   void *save = [T4Allocator sysAllocByteArrayWithCapacity: anElementCapacity];
   char *tab = (char *)anArray;
@@ -205,6 +207,8 @@ BOOL T4RandomNormalIsValid = NO;
   }
   
   [T4Allocator sysFree: save];
+
+  return self;
 }
 
 +(real)uniformBoundedWithValue: (real)a value: (real)b

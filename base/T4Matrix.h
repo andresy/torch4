@@ -12,11 +12,11 @@
 -init;
 -initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithNumberOfRows: (int)aNumRows;
--initWithRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
+-initWithRealArray: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
 -initWithSubMatrix: (T4Matrix*)aMatrix firstRowIndex: (int)aFirstRowIndex firstColumnIndex: (int)aFirstColumnIndex numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithColumn: (int)aColumnIndex fromMatrix: (T4Matrix*)aMatrix;
 
--setMatrixFromRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
+-setMatrixFromRealArray: (real*)aRealArray numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
 
 -(real*)columnAtIndex: (int)aColumnIndex;
 -(real*)firstColumn;
@@ -31,14 +31,14 @@
 -zero;
 
 -copyMatrix: (T4Matrix*)aMatrix;
--copyFromRealData: (real*)aRealData stride: (int)aStride;
--copyToRealData: (real*)aRealData stride: (int)aStride;
+-copyFromRealArray: (real*)aRealArray stride: (int)aStride;
+-copyToRealArray: (real*)aRealArray stride: (int)aStride;
 
 -addMatrix: (T4Matrix*)aMatrix;
 -addValue: (real)aValue dotSumMatrixColumns: (T4Matrix*)aMatrix;
 -addValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix;
--addFromRealData: (real*)aRealData stride: (int)aStride;
--addToRealData: (real*)aRealData stride: (int)aStride;
+-addFromRealArray: (real*)aRealArray stride: (int)aStride;
+-addToRealArray: (real*)aRealArray stride: (int)aStride;
 
 -(real)column: (int)aColumnIndex dotColumn: (int)aMatrixColumnIndex ofMatrix: (T4Matrix*)aMatrix;
 -(real)dotMatrix: (T4Matrix*)aMatrix;

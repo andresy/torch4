@@ -61,37 +61,35 @@
   }
 
   return self;
-//  partial_backprop = false;
 }
 
--(void)setCriterion: (T4Criterion*)aCriterion
+-setCriterion: (T4Criterion*)aCriterion
 {
   criterion = aCriterion;
+  return self;
 }
 
-// void GradientMachine::setPartialBackprop(bool flag)
-// {
-//   partial_backprop = flag;
-// }
 // -(void)iterInitialize
 // {
 // }
 
 -(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
-  return someInputs;
+  [self subclassResponsibility: _cmd];
+  return nil;
 }
 
 -(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
-  return someGradOutputs;
+  [self subclassResponsibility: _cmd];
+  return nil;
 }
 
--(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers
+-trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers
 {
   int iteration = 0;
   real currentError = 0;
-  real previousError = INF;
+  real previousError = T4Inf;
   real currentLearningRate = learningRate;
   int numTrain = [aDataset count];
   int *shuffledIndices = [allocator allocIntArrayWithCapacity: numTrain];  
@@ -115,11 +113,6 @@
     measurer = [someMeasurers objectAtIndex: i];
     [measurer reset];
   }
-/*
-  enumerator = [someMeasurers objectEnumerator];
-  while( (measurer = [enumerator nextObject]) )
-    [measurer reset];
-*/
 
   localAllocator = T4ExtractMeasurers(someMeasurers, aDataset, &datasets, &measurers);
 
@@ -150,15 +143,9 @@
       }
 
       [criterion forwardExampleAtIndex: shuffledIndices[t] inputs: [self forwardMatrix: inputs]];
-//      T4Message(@"criterion = %g [out mlp = %g] for example <%d> = [%@]", [criterion output], [[self outputs] realData][0], shuffledIndices[t], inputs);
       [self backwardMatrix:
               [criterion backwardExampleAtIndex: shuffledIndices[t] inputs: [self outputs]]
             inputs: inputs];
-
-//       T4Message(@"gradients = %@", gradInputs);
-//       exit(0);
-
-//      T4Message(@"gradients = %@", gradParameters);
 
       currentMeasurers = [measurers objectAtIndex: 0];
       numMeasurers = [currentMeasurers count];
@@ -167,22 +154,12 @@
         measurer = [currentMeasurers objectAtIndex: i];
         [measurer measureExampleAtIndex: shuffledIndices[t]];
       }
-/*      
-      enumerator = [[measurers objectAtIndex: 0] objectEnumerator];
-      while( (measurer = [enumerator nextObject]) )
-        [measurer measureExample: shuffledIndices[t]];
-*/      
+
       for(i = 0; i < numParameters; i++)
       {
         T4Matrix *parameter = [parameters objectAtIndex: i];
         T4Matrix *gradParameter = [gradParameters objectAtIndex: i];
         [parameter addValue: -currentLearningRate dotMatrix: gradParameter];
-//         real *ptrParams = [parameter realData];
-//         real *ptrDParams = [gradParameter realData];
-//         int size = [parameter numberOfRows];
-        
-//         for(j = 0; j < size; j++)
-//           ptrParams[j] -= currentLearningRate * ptrDParams[j];
       }
 
       currentError += [criterion output];
@@ -223,31 +200,6 @@
       }
     }
 
-/*
-    enumerator = [[measurers objectAtIndex: 0] objectEnumerator];
-    while( (measurer = [enumerator nextObject]) )
-      [measurer measureIteration: iteration];
-
-    // le data 0 est le train dans tous les cas...
-    for(julie = 1; julie < [datasets count]; julie++)
-    {
-      NSArray *aTestDataset = [datasets objectAtIndex: julie];
-      int numTest = [aTestDataset count];
-
-      for(t = 0; t < numTest; t++)
-      {
-        [self forwardMatrix: [[aTestDataset objectAtIndex: t] objectAtIndex: 0]];
-
-        enumerator = [[measurers objectAtIndex: julie] objectEnumerator];
-        while( (measurer = [enumerator nextObject]) )
-          [measurer measureExample: t];
-      }
-
-      enumerator = [[measurers objectAtIndex: julie] objectEnumerator];
-      while( (measurer = [enumerator nextObject]) )
-        [measurer measureIteration: iteration];
-    }
-*/
     T4Print(@".");
     currentError /= (real)(numTrain);
     T4Message(@"current error = %g", currentError);
@@ -268,16 +220,12 @@
     }
   }
 
-/*
-  enumerator = [someMeasurers objectEnumerator];
-  while( (measurer = [enumerator nextObject]) )
-    [measurer measureEnd];
-*/
-
   [allocator freePointer: shuffledIndices];
+
+  return self;
 }
 
--(void)testWithMeasurers: (NSArray*)someMeasurers
+-testWithMeasurers: (NSArray*)someMeasurers
 {
   NSArray *datasets;
   NSArray *measurers;
@@ -335,6 +283,8 @@
   
   T4Print(@"\n");
   [progressBar release];
+
+  return self;
 }
 
 -reset

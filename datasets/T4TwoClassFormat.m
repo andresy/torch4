@@ -14,7 +14,7 @@
   return self;
 }
 
--(int)classFromRealData: (real*)aVector
+-(int)classFromRealArray: (real*)aVector
 {
   real value = aVector[0];
   

@@ -8,6 +8,7 @@
     int maxNumColumns;
 }
 
--(void)setMaxNumberOfColumns: (int)aMaxNumber;
+-init;
+-setMaxNumberOfColumns: (int)aMaxNumber;
 
 @end

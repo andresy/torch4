@@ -189,19 +189,22 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
   return matrix;
 }
 
--(void)setTransposesMatrix: (BOOL)aFlag
+-setTransposesMatrix: (BOOL)aFlag
 {
   transposesMatrix = aFlag;
+  return self;
 }
 
--(void)setAutodetectsSize: (BOOL)aFlag
+-setAutodetectsSize: (BOOL)aFlag
 {
   autodetectsSize = aFlag;
+  return self;
 }
 
--(void)setMaxNumberOfColumns: (int)aMaxNumber
+-setMaxNumberOfColumns: (int)aMaxNumber
 {
   maxNumColumns = aMaxNumber;
+  return self;
 }
 
 @end

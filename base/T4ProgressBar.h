@@ -7,6 +7,6 @@
 }
 
 -initWithMaxValue: (int)aMaxValue;
--(void)setProgress: (int)currentProgress;
+-setProgress: (int)currentProgress;
 
 @end

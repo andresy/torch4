@@ -52,25 +52,28 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   return T4FileNativeEncoding;
 }
 
-+(void)setNativeEncoding
++setNativeEncoding
 {
   T4FileNativeEncoding = YES;
+  return self;
 }
 
-+(void)setLittleEndianEncoding
++setLittleEndianEncoding
 {
   if([self isLittleEndianProcessor])
     T4FileNativeEncoding = YES;
   else
     T4FileNativeEncoding = NO;
+  return self;
 }
 
-+(void)setBigEndianEncoding
++setBigEndianEncoding
 {
   if([self isBigEndianProcessor])
     T4FileNativeEncoding = YES;
   else
     T4FileNativeEncoding = NO;
+  return self;
 }
 
 // End of endian stuff ////////////////////////////////////////////////
@@ -206,19 +209,21 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
     return NO;
 }
 
--(void)synchronizeFile
+-synchronizeFile
 {
   if( !(fileAttributes & T4FileIsWritable) )
     T4Error(@"DiskFile: cannot synchronize a non-writable file");
 
   if(fflush(file))
     T4Error(@"DiskFile: cannot flush file");
+  return self;
 }
 
--(void)seekToFileOffset: (unsigned long long)anOffset
+-seekToFileOffset: (unsigned long long)anOffset
 {
   if(fseek(file, (long)anOffset, SEEK_SET))
     T4Error(@"DiskFile: cannot seek in the file");
+  return self;
 }
 
 -(unsigned long long)offsetInFile
@@ -234,13 +239,14 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   return [self offsetInFile];
 }
 
--(void)seekToBeginningOfFile
+-seekToBeginningOfFile
 {
   if(fseek(file, 0L, SEEK_SET))
     T4Error(@"DiskFile: cannot seek in the file");
+  return self;
 }
 
--(void)writeStringWithFormat: (NSString*)aFormat, ...
+-writeStringWithFormat: (NSString*)aFormat, ...
 {
   NSString *stringToWrite;
   va_list arguments;
@@ -263,6 +269,7 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
     T4Error(@"DiskFile: error while writing");
 
   [stringToWrite release];
+  return self;
 }
 
 -(BOOL)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr

@@ -93,7 +93,7 @@
   return [self initWithNumberOfClasses: [T4DatasetClassFormat numberOfClassesInDataset: aDataset]];
 }
 
--(int)classFromRealData: (real*)aVector
+-(int)classFromRealArray: (real*)aVector
 {
   if(directEncoding)
     return (int)aVector[0];

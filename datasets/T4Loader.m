@@ -64,9 +64,10 @@
   return matrices;
 }
 
--(void)setMaxNumberOfMatrices: (int)aMaxNumber
+-setMaxNumberOfMatrices: (int)aMaxNumber
 {
   maxNumMatrices = aMaxNumber;
+  return self;
 }
 
 @end

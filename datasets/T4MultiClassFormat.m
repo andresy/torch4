@@ -17,11 +17,11 @@
   return self;
 }
 
--(int)classFromRealData: (real*)aVector
+-(int)classFromRealArray: (real*)aVector
 {
   int numClasses = [classLabels numberOfColumns];
   real value = aVector[0];
-  real dist = INF;
+  real dist = T4Inf;
   int index = -1;
   int i;
 

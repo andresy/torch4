@@ -11,8 +11,8 @@
 -init;
 -initWithName: (NSString*)aName type: (NSString*)aTypeName help: (NSString*)aHelp;
 
--(void)read: (NSMutableArray*)arguments;
--(void)initToDefaultValue;
+-read: (NSMutableArray*)arguments;
+-initToDefaultValue;
 -(NSString*)textValue;
 
 -(BOOL)isSet;
@@ -30,8 +30,8 @@
 }
 
 -initWithName: (NSString*)aName address: (int*)anAddress default: (int)aDefaultValue help: (NSString*)aHelp;
--(void)read: (NSMutableArray*)arguments;
--(void)initToDefaultValue;
+-read: (NSMutableArray*)arguments;
+-initToDefaultValue;
 -(NSString*)textValue;
 
 @end
@@ -43,8 +43,8 @@
 }
 
 -initWithName: (NSString*)aName address: (real*)anAddress default: (real)aDefaultValue help: (NSString*)aHelp;
--(void)read: (NSMutableArray*)arguments;
--(void)initToDefaultValue;
+-read: (NSMutableArray*)arguments;
+-initToDefaultValue;
 -(NSString*)textValue;
 
 @end
@@ -56,8 +56,8 @@
 }
 
 -initWithName: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefaultValue help: (NSString*)aHelp;
--(void)read: (NSMutableArray*)arguments;
--(void)initToDefaultValue;
+-read: (NSMutableArray*)arguments;
+-initToDefaultValue;
 -(NSString*)textValue;
 
 @end
@@ -69,8 +69,8 @@
 }
 
 -initWithName: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp;
--(void)read: (NSMutableArray*)arguments;
--(void)initToDefaultValue;
+-read: (NSMutableArray*)arguments;
+-initToDefaultValue;
 -(NSString*)textValue;
 
 @end

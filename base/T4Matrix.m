@@ -433,21 +433,21 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 @implementation T4Matrix
 
--initWithRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
+-initWithRealArray: (real*)aRealArray numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
 {
   if( (self = [super init]) )
   {
     numRows = (aNumRows > 0 ? aNumRows : 0);
     numColumns = (aNumColumns > 0 ? aNumColumns : 0);
     stride = (aStride > 0 ? aStride : numRows);
-    if( (aData == NULL) && (numRows > 0) && (numColumns > 0) )
+    if( (aRealArray == NULL) && (numRows > 0) && (numColumns > 0) )
     {
       data = [allocator allocRealArrayWithCapacity: numRows*numColumns];
       dataSize = numRows*numColumns;
     }
     else
     {
-      data = aData;
+      data = aRealArray;
       dataSize = 0;
     }
   }
@@ -456,17 +456,17 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -init
 {
-  return [self initWithRealData: NULL numberOfRows: 0 numberOfColumns: 0 stride: 0];
+  return [self initWithRealArray: NULL numberOfRows: 0 numberOfColumns: 0 stride: 0];
 }
 
 -initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns
 {
-  return [self initWithRealData: NULL numberOfRows: aNumRows numberOfColumns: aNumColumns stride: aNumRows];
+  return [self initWithRealArray: NULL numberOfRows: aNumRows numberOfColumns: aNumColumns stride: aNumRows];
 }
 
 -initWithNumberOfRows: (int)aNumRows
 {
-  return [self initWithRealData: NULL numberOfRows: aNumRows numberOfColumns: 1 stride: aNumRows];
+  return [self initWithRealArray: NULL numberOfRows: aNumRows numberOfColumns: 1 stride: aNumRows];
 }
 
 -initWithSubMatrix: (T4Matrix*)aMatrix firstRowIndex: (int)aFirstRowIndex firstColumnIndex: (int)aFirstColumnIndex numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns
@@ -476,7 +476,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   if(aFirstRowIndex < 0)
     aFirstRowIndex = 0;
 
-  return [self initWithRealData: [aMatrix columnAtIndex: aFirstColumnIndex]+aFirstRowIndex
+  return [self initWithRealArray: [aMatrix columnAtIndex: aFirstColumnIndex]+aFirstRowIndex
                numberOfRows: (aNumRows < 0 ? [aMatrix numberOfRows] : aNumRows-aFirstRowIndex)
                numberOfColumns: (aNumColumns < 0 ? [aMatrix numberOfColumns] : aNumColumns-aFirstColumnIndex)
                stride: [aMatrix stride]];
@@ -484,14 +484,14 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -initWithColumn: (int)aColumnIndex fromMatrix: (T4Matrix*)aMatrix
 {
-  return [self initWithRealData: [aMatrix columnAtIndex: aColumnIndex]
+  return [self initWithRealArray: [aMatrix columnAtIndex: aColumnIndex]
                numberOfRows: [aMatrix numberOfRows]
                numberOfColumns: 1
                stride: [aMatrix stride]];
 }
 
 
--setMatrixFromRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
+-setMatrixFromRealArray: (real*)aRealArray numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
 {
   numRows = aNumRows;
   numColumns = aNumColumns;
@@ -499,7 +499,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
     stride = aStride;
   else
     stride = numRows;
-  data = aData;
+  data = aRealArray;
   dataSize = 0;
 
   return self;
@@ -562,15 +562,15 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
--copyFromRealData: (real*)aRealData stride: (int)aStride
+-copyFromRealArray: (real*)aRealArray stride: (int)aStride
 {
-  T4CopyMatrix(data, stride, aRealData, aStride, numRows, numColumns);
+  T4CopyMatrix(data, stride, aRealArray, aStride, numRows, numColumns);
   return self;
 }
 
--copyToRealData: (real*)aRealData stride: (int)aStride
+-copyToRealArray: (real*)aRealArray stride: (int)aStride
 {
-  T4CopyMatrix(aRealData, aStride, data, stride, numRows, numColumns);
+  T4CopyMatrix(aRealArray, aStride, data, stride, numRows, numColumns);
   return self;
 }
 
@@ -631,15 +631,15 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
--addFromRealData: (real*)aRealData stride: (int)aStride
+-addFromRealArray: (real*)aRealArray stride: (int)aStride
 {
-  T4AddMatrix(data, stride, 1., aRealData, aStride, numRows, numColumns);
+  T4AddMatrix(data, stride, 1., aRealArray, aStride, numRows, numColumns);
   return self;
 }
 
--addToRealData: (real*)aRealData stride: (int)aStride
+-addToRealArray: (real*)aRealArray stride: (int)aStride
 {
-  T4AddMatrix(aRealData, aStride, 1., data, stride, numRows, numColumns);
+  T4AddMatrix(aRealArray, aStride, 1., data, stride, numRows, numColumns);
   return self;
 }
 
@@ -703,7 +703,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -(real)getMinRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex
 {
-  real minValue = INF;
+  real minValue = T4Inf;
   int columnIndex = 0;
   int rowIndex = 0;
   real *column = data;
@@ -731,7 +731,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -(real)getMaxRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex
 {
-  real maxValue = INF;
+  real maxValue = T4Inf;
   int columnIndex = 0;
   int rowIndex = 0;
   real *column = data;

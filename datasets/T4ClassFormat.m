@@ -23,7 +23,7 @@
   return [classLabels numberOfColumns];
 }
 
--(int)classFromRealData: (real*)aVector
+-(int)classFromRealArray: (real*)aVector
 {
   [self subclassResponsibility: _cmd];
   return -1;

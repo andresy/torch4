@@ -23,7 +23,7 @@
   [outputs zero];
 
   for(i = 0; i < numMachines; i++)
-    [outputs addFromRealData: inputData+i*numOutputs stride: inputStride];
+    [outputs addFromRealArray: inputData+i*numOutputs stride: inputStride];
 
   return outputs;
 }
@@ -39,7 +39,7 @@
   gradInputStride = [gradInputs stride];
 
   for(i = 0; i < numMachines; i++)
-    [someGradOutputs copyToRealData: gradInputData+i*numOutputs stride: gradInputStride];
+    [someGradOutputs copyToRealArray: gradInputData+i*numOutputs stride: gradInputStride];
 
   return gradInputs;
 }

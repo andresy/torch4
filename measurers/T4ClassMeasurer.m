@@ -34,8 +34,8 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    int classInputs = [inputClassFormat classFromRealData: [inputs columnAtIndex: c]];
-    int classTargets = [datasetClassFormat classFromRealData: [targets columnAtIndex: c]];
+    int classInputs = [inputClassFormat classFromRealArray: [inputs columnAtIndex: c]];
+    int classTargets = [datasetClassFormat classFromRealArray: [targets columnAtIndex: c]];
     
     if(classInputs != classTargets)
       internalError += 1.;

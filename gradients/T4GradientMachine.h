@@ -40,9 +40,7 @@
 -setMaxNumberOfIterations: (int)aValue;
 -setShufflesExamples: (BOOL)aFlag;
 
--(void)setCriterion: (T4Criterion*)aCriterion;
--(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;
--(void)testWithMeasurers: (NSArray*)someMeasurers;
+-setCriterion: (T4Criterion*)aCriterion;
 
 -(int)numberOfInputs;
 -(int)numberOfOutputs;

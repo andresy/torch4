@@ -72,7 +72,7 @@
   return [self initWithDataset: aDataset columnIndex: 0];
 }
 
--(void)normalizeDataset: (NSArray*)aDataset columnIndex: (int)anIndex
+-normalizeDataset: (NSArray*)aDataset columnIndex: (int)anIndex
 {
   int numExamples = [aDataset count];
   int e;
@@ -82,14 +82,15 @@
     T4Matrix *matrix = [[aDataset objectAtIndex: e] objectAtIndex: anIndex];
     [self normalizeMatrix: matrix];
   }
+  return self;
 }
 
--(void)normalizeDataset: (NSArray*)aDataset
+-normalizeDataset: (NSArray*)aDataset
 {
-  [self normalizeDataset: aDataset columnIndex: 0];
+  return [self normalizeDataset: aDataset columnIndex: 0];
 }
 
--(void)normalizeMatrix: (T4Matrix*)aMatrix
+-normalizeMatrix: (T4Matrix*)aMatrix
 {
   int numColumns = [aMatrix numberOfColumns];
   int numRows = [aMatrix numberOfRows];
@@ -108,6 +109,7 @@
         matrixColumn[r] -= meanColumn[r];
     }
   }
+  return self;
 }
 
 -(T4Matrix*)mean

@@ -6,9 +6,6 @@
 }
 
 -init;
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks;
--(void)writeStringWithFormat: (NSString*)aFormat, ...;
-
 -(NSArray*)arrayOfContents;
 
 @end

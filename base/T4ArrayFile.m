@@ -21,7 +21,7 @@
   return aNumBlocks;
 }
 
--(void)writeStringWithFormat: (NSString*)aFormat, ...
+-writeStringWithFormat: (NSString*)aFormat, ...
 {
   NSString *stringToWrite;
   va_list arguments;
@@ -31,10 +31,12 @@
 
   [contents addObject: stringToWrite];
   [stringToWrite release];
+  return self;
 }
 
--(void)synchronizeFile
+-synchronizeFile
 {
+  return self;
 }
 
 -(NSArray*)arrayOfContents

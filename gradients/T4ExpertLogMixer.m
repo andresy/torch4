@@ -20,7 +20,7 @@
   int c, r, e;
 
   [outputs resizeWithNumberOfColumns: numColumns];
-  [outputs fillWithValue: LOG_ZERO];
+  [outputs fillWithValue: T4LogZero];
   for(c = 0; c < numColumns; c++)
   {
     real *weightColumn = [someInputs columnAtIndex: c];

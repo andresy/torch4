@@ -14,13 +14,15 @@
   return self;
 }
 
--(void)setProgress: (int)currentProgress
+-setProgress: (int)currentProgress
 {
   if( !(currentProgress % interval) )
     T4Print(@".");
   
   if(currentProgress == maxValue)
     T4Print(@"]");
+
+  return self;
 }
 
 @end

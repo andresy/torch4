@@ -6,7 +6,8 @@
     int maxNumColumns;
 }
 
--(void)setTransposesMatrix: (BOOL)aFlag;
--(void)setMaxNumberOfColumns: (int)aMaxNumber;
+-init;
+-setTransposesMatrix: (BOOL)aFlag;
+-setMaxNumberOfColumns: (int)aMaxNumber;
 
 @end

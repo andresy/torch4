@@ -21,7 +21,7 @@
   output = 0;
   for(c = 0; c < numColumns; c++)
   {
-    int theClass = [classFormat classFromRealData: [targets firstColumn]];
+    int theClass = [classFormat classFromRealArray: [targets firstColumn]];
     output -= [someInputs columnAtIndex: c][theClass];
   }
   
@@ -39,7 +39,7 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    int theClass = [classFormat classFromRealData: [targets firstColumn]];
+    int theClass = [classFormat classFromRealArray: [targets firstColumn]];
     [gradInputs columnAtIndex: c][theClass] = -1;
   }
 

@@ -31,12 +31,14 @@
   return self;
 }
 
--(void)read: (NSMutableArray*)arguments
+-read: (NSMutableArray*)arguments
 {
+  return self;
 }
 
--(void)initToDefaultValue;
+-initToDefaultValue;
 {
+  return self;
 }
 
 -(NSString*)textValue
@@ -80,7 +82,7 @@
   return self;
 }
 
--(void)read: (NSMutableArray*)arguments
+-read: (NSMutableArray*)arguments
 {
   if([arguments count] > 0)
   {
@@ -95,11 +97,14 @@
     T4Error(@"IntCommandLineOption: cannot correctly set <%@>", name);
   
   isSet = YES;
+
+  return self;
 }
 
--(void)initToDefaultValue
+-initToDefaultValue
 {
   *address = defaultValue;
+  return self;
 }
 
 -(NSString*)textValue
@@ -125,7 +130,7 @@
   return self;
 }
 
--(void)read: (NSMutableArray*)arguments
+-read: (NSMutableArray*)arguments
 {
   if([arguments count] > 0)
   {
@@ -144,11 +149,14 @@
     T4Error(@"RealCommandLineOption: cannot correctly set <%@>", name);
   
   isSet = YES;
+
+  return self;
 }
 
--(void)initToDefaultValue
+-initToDefaultValue
 {
   *address = defaultValue;
+  return self;
 }
 
 -(NSString*)textValue
@@ -174,15 +182,17 @@
   return self;
 }
 
--(void)read: (NSMutableArray*)arguments
+-read: (NSMutableArray*)arguments
 {
   *address = !defaultValue;
   isSet = YES;
+  return self;
 }
 
--(void)initToDefaultValue
+-initToDefaultValue
 {
   *address = defaultValue;
+  return self;
 }
 
 -(NSString*)textValue
@@ -210,7 +220,7 @@
   return self;
 }
 
--(void)read: (NSMutableArray*)arguments
+-read: (NSMutableArray*)arguments
 {
   if([arguments count] > 0)
   {
@@ -221,11 +231,14 @@
     T4Error(@"StringCommandLineOption: cannot correctly set <%@>", name);
   
   isSet = YES;
+
+  return self;
 }
 
--(void)initToDefaultValue
+-initToDefaultValue
 {
   [address setString: defaultValue];
+  return self;
 }
 
 -(NSString*)textValue

@@ -36,7 +36,7 @@
   currentError = 0;
   for(c = 0; c < numColumns; c++)
   {
-    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealData: [targets columnAtIndex: c]]];
+    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealArray: [targets columnAtIndex: c]]];
     real *inputColumn = [inputs columnAtIndex: c];
 
     for(r = 0; r < numRows; r++)

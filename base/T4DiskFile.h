@@ -23,9 +23,9 @@
 +(BOOL)isLittleEndianProcessor;
 +(BOOL)isBigEndianProcessor;
 +(BOOL)isNativeEncoding;
-+(void)setNativeEncoding;
-+(void)setLittleEndianEncoding;
-+(void)setBigEndianEncoding;
++setNativeEncoding;
++setLittleEndianEncoding;
++setBigEndianEncoding;
 
 -(int)fileAttributes;
 

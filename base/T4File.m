@@ -20,14 +20,14 @@
   return NO;
 }
 
--(void)synchronizeFile
+-synchronizeFile
 {
-  [self subclassResponsibility: _cmd];
+  return [self subclassResponsibility: _cmd];
 }
 
--(void)seekToFileOffset: (unsigned long long)anOffset
+-seekToFileOffset: (unsigned long long)anOffset
 {
-  [self subclassResponsibility: _cmd];
+  return [self subclassResponsibility: _cmd];
 }
 
 -(unsigned long long)offsetInFile
@@ -42,14 +42,14 @@
   return 0L;
 }
 
--(void)seekToBeginningOfFile
+-seekToBeginningOfFile
 {
-  [self subclassResponsibility: _cmd];
+  return [self subclassResponsibility: _cmd];
 }
 
--(void)writeStringWithFormat: (NSString*)aFormat, ...
+-writeStringWithFormat: (NSString*)aFormat, ...
 {
-  [self subclassResponsibility: _cmd];
+  return [self subclassResponsibility: _cmd];
 }
 
 

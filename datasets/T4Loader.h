@@ -7,6 +7,8 @@
     int maxNumMatrices;
 }
 
+-init;
+
 //primitive
 -(T4Matrix*)loadMatrixFromFile: (T4File*)aFile;
 
@@ -14,6 +16,6 @@
 -(NSArray*)loadMatricesFromFiles: (NSArray*)someFiles;
 -(NSArray*)loadMatricesAtPaths: (NSArray*)somePaths;
 
--(void)setMaxNumberOfMatrices: (int)aMaxNumber;
+-setMaxNumberOfMatrices: (int)aMaxNumber;
 
 @end

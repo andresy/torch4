@@ -69,14 +69,16 @@
   return matrix;
 }
 
--(void)setTransposesMatrix: (BOOL)aFlag
+-setTransposesMatrix: (BOOL)aFlag
 {
   transposesMatrix = aFlag;
+  return self;
 }
 
--(void)setMaxNumberOfColumns: (int)aMaxNumber
+-setMaxNumberOfColumns: (int)aMaxNumber
 {
   maxNumColumns = aMaxNumber;
+  return self;
 }
 
 @end

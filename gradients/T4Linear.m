@@ -16,10 +16,10 @@
     parametersAddr = [[parameters objectAtIndex: 0] firstColumn];
     gradParametersAddr = [[gradParameters objectAtIndex: 0] firstColumn];
     
-    weights = [[T4Matrix alloc] initWithRealData: parametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
-    biases = [[T4Matrix alloc] initWithRealData: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
-    gradWeights = [[T4Matrix alloc] initWithRealData: gradParametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
-    gradBiases = [[T4Matrix alloc] initWithRealData: gradParametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
+    weights = [[T4Matrix alloc] initWithRealArray: parametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
+    biases = [[T4Matrix alloc] initWithRealArray: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
+    gradWeights = [[T4Matrix alloc] initWithRealArray: gradParametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
+    gradBiases = [[T4Matrix alloc] initWithRealArray: gradParametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
 
     [allocator keepObject: weights];
     [allocator keepObject: biases];

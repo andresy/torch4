@@ -56,11 +56,10 @@
       if(!aMachine)
         T4Error(@"MLP: unknow layer type <%@>", layerType);
     
-      [self addFullConnectedMachine: aMachine];
+      [self addMachine: aMachine];
       aNumInputs = aNumOutputs;
     }
 
-    [self build];
     va_end(args);
   }
 
@@ -69,13 +68,13 @@
 
 -setWeightDecay: (real)aWeightDecay
 {
+  int numMachines = [machines count];
   int l;
 
-  for(l = 0; l < [layers count]; l++)
+  for(l = 0; l < numMachines; l++)
   {
     if(isLinear[l])
-      [[[[layers objectAtIndex: l] objectAtIndex: 0] machine]
-        setRealOption: @"weight decay" value: aWeightDecay];
+      [[machines objectAtIndex: l] setRealOption: @"weight decay" value: aWeightDecay];
   }
   return self;
 }

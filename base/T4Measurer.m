@@ -24,20 +24,24 @@
   return [self initWithDataset: aDataset file: fileHandle];
 }
 
--(void)measureExample: (int)anIndex
+-measureExample: (int)anIndex
 {
+  return self;
 }
 
--(void)measureIteration: (int)anIteration
+-measureIteration: (int)anIteration
 {
+  return self;
 }
 
--(void)measureEnd
+-measureEnd
 {
+  return self;
 }
 
--(void)reset
+-reset
 {
+  return self;
 }
 
 -(NSArray*)dataset

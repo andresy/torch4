@@ -8,10 +8,10 @@
 
 -initWithDataset: (NSArray*)aDataset file: (NSFileHandle*)aFile;
 -initWithDataset: (NSArray*)aDataset path: (NSString*)aPath;
--(void)measureExample: (int)anIndex;
--(void)measureIteration: (int)anIteration;
--(void)measureEnd;
--(void)reset;
+-measureExample: (int)anIndex;
+-measureIteration: (int)anIteration;
+-measureEnd;
+-reset;
 
 -(NSArray*)dataset;
 

@@ -1,6 +1,6 @@
-#import "T4ConnectedMachine.h"
+#import "T4SequentialMachine.h"
 
-@interface T4MLP : T4ConnectedMachine
+@interface T4MLP : T4SequentialMachine
 {
     BOOL *isLinear;
 }

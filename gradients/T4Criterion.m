@@ -9,7 +9,7 @@
     dataset = nil;
     output = 0;
     numInputs = aNumInputs;
-    gradInputs = [[T4Matrix alloc] initWithNumberOfRows: numInputs];
+    gradInputs = [[[T4Matrix alloc] initWithNumberOfRows: numInputs] keepWithAllocator: allocator];
   }
 
   return self;

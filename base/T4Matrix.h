@@ -22,6 +22,7 @@
 -(real*)columnAtIndex: (int)aColumnIndex;
 
 -resizeWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
+-resizeWithNumberOfRows: (int)aNumRows;
 -resizeWithNumberOfColumns: (int)aNumColumns;
 
 -fillWithValue: (real)aValue;

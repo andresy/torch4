@@ -371,13 +371,15 @@ inline void T4TrMatrixDotTrMatrix(real aValue1, real *destMat, int destStride,
 inline void T4CopyMatrix(real *destAddr, int destStride, real *sourceAddr, int sourceStride, int numRows, int numColumns)
 {
   if( (sourceStride == numRows) && (destStride == numRows) )
-    memmove(destAddr, sourceAddr, sizeof(real)*numRows*numColumns);
+//    memmove(destAddr, sourceAddr, sizeof(real)*numRows*numColumns);
+    cblas_scopy(numRows*numColumns, sourceAddr, 1, destAddr, 1);
   else
   {
     int c;
     for(c = 0; c < numColumns; c++)
     {
-      memmove(destAddr, sourceAddr, sizeof(real)*numRows);
+//      memmove(destAddr, sourceAddr, sizeof(real)*numRows);
+      cblas_scopy(numRows, sourceAddr, 1, destAddr, 1);
       sourceAddr += sourceStride;
       destAddr += destStride;
     }
@@ -505,7 +507,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   aNumRows = (aNumRows > 0 ? aNumRows : numRows);
   aNumColumns = (aNumColumns > 0 ? aNumColumns : numColumns);
 
-  if( (aNumRows == numRows) && (aNumColumns = numColumns) )
+  if( (aNumRows == numRows) && (aNumColumns == numColumns) )
     return self;
   else
   {
@@ -532,8 +534,40 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
--resizeWithNumberOfColumns: (int)aNumColumns
+-resizeWithNumberOfRows: (int)aNumRows
 {
+  return [self resizeWithNumberOfRows: aNumRows numberOfColumns: -1];
+}
+
+-resizeWithNumberOfColumns: (int)aNumColumns
+{/*
+  aNumColumns = (aNumColumns > 0 ? aNumColumns : numColumns);
+
+  if(aNumColumns == numColumns)
+    return self;
+  else
+  {
+    numColumns = aNumColumns;
+    stride = numRows;
+  }
+
+  if([allocator isMyPointer: data])
+  {
+    if(numRows*numColumns > dataSize)
+    {
+      [allocator freePointer: data];
+      data = [allocator allocRealArrayWithCapacity: numRows*numColumns];
+      dataSize = numRows*numColumns;
+    }
+  }
+  else
+  {
+    data = [allocator allocRealArrayWithCapacity: numRows*numColumns];
+    dataSize = numRows*numColumns;
+  }
+
+  return self;
+ */
   return [self resizeWithNumberOfRows: -1 numberOfColumns: aNumColumns];
 }
 

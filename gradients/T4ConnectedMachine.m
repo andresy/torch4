@@ -146,12 +146,12 @@
     int offset = 0;
     int i;
     
-    [inputs resizeWithNumberOfColumns: [currentInputs numberOfColumns]];
+    [inputs resizeWithNumberOfColumns: currentInputs->numColumns];
     for(i = 0; i < numInputMatrices; i++)
     {
       currentInputs = [inputMatrices objectAtIndex: i];
-      [currentInputs copyToRealData: [inputs realData]+offset stride: [inputs stride]];
-      offset += [currentInputs numberOfRows];
+      [currentInputs copyToRealData: inputs->data+offset stride: inputs->stride];
+      offset += currentInputs->numRows;
     }      
   }
 
@@ -174,10 +174,10 @@
 //                    numberOfColumns: [currentGradOutputs numberOfColumns]
 //                    stride: [currentGradOutputs stride]];
 
-      [gradOutputs setMatrixFromRealData: [directGradOutputs realData]+gradOutputMatrixOffsets[0]
-                   numberOfRows: [[machine outputs] numberOfRows]
-                   numberOfColumns: [directGradOutputs numberOfColumns]
-                   stride: [directGradOutputs stride]];
+      [gradOutputs setMatrixFromRealData: directGradOutputs->data+gradOutputMatrixOffsets[0]
+                   numberOfRows: [machine outputs]->numRows
+                   numberOfColumns: directGradOutputs->numColumns
+                   stride: directGradOutputs->stride];
     }
     
     // Connected to several machines
@@ -187,13 +187,13 @@
       int numGradOutputMatrices = [gradOutputMatrices count];
       int i;
 
-      [gradOutputs resizeWithNumberOfColumns: [currentGradOutputs numberOfColumns]];
-      [gradOutputs copyFromRealData: [currentGradOutputs realData]+gradOutputMatrixOffsets[0] stride: [currentGradOutputs stride]];
+      [gradOutputs resizeWithNumberOfColumns: currentGradOutputs->numColumns];
+      [gradOutputs copyFromRealData: currentGradOutputs->data+gradOutputMatrixOffsets[0] stride: currentGradOutputs->stride];
       
       for(i = 1; i < numGradOutputMatrices; i++)
       {
         currentGradOutputs = [gradOutputMatrices objectAtIndex: i];
-        [gradOutputs addFromRealData: [currentGradOutputs realData]+gradOutputMatrixOffsets[i] stride: [currentGradOutputs stride]];
+        [gradOutputs addFromRealData: currentGradOutputs->data+gradOutputMatrixOffsets[i] stride: currentGradOutputs->stride];
       }
     }
   }
@@ -426,16 +426,16 @@
     node = [layer objectAtIndex: 0];
     currentOutputs = [[node machine] outputs];
     
-    [outputs resizeWithNumberOfColumns: [currentOutputs numberOfColumns]];
-    [currentOutputs copyToRealData: [outputs realData] stride: [outputs stride]];
-    offset = [currentOutputs numberOfRows];
+    [outputs resizeWithNumberOfColumns: currentOutputs->numColumns];
+    [currentOutputs copyToRealData: outputs->data stride: outputs->stride];
+    offset = currentOutputs->numRows;
 
     for(i = 1; i < numNodes; i++)
     {
       node = [layer objectAtIndex: i];
       currentOutputs = [[node machine] outputs];
-      [currentOutputs copyToRealData: [outputs realData]+offset stride: [outputs stride]];
-      offset += [currentOutputs numberOfRows];
+      [currentOutputs copyToRealData: outputs->data+offset stride: outputs->stride];
+      offset += currentOutputs->numRows;
     }
   }
 
@@ -479,7 +479,7 @@
     node = [layer objectAtIndex: 0];
     currentGradInputs = [[node machine] gradInputs];
     
-    [gradInputs resizeWithNumberOfColumns: [currentGradInputs numberOfColumns]];
+    [gradInputs resizeWithNumberOfColumns: currentGradInputs->numColumns];
     [gradInputs copyMatrix: currentGradInputs];
 
     for(i = 1; i < numNodes; i++)

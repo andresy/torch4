@@ -43,8 +43,8 @@
 		logProbabilitiesGaussians = [[T4Matrix alloc] initWithNumberOfRows: numGaussians numberOfColumns:1];
 		[allocator keepObject: logProbabilitiesGaussians];
 
-		logProbabilities = [[T4Matrix alloc] initWithNumberOfRows: 1 numberOfColumns: 1];
-		[allocator keepObject: logProbabilities];
+    logProbabilities = [[T4Matrix alloc] initWithNumberOfRows: 1 numberOfColumns: 1];
+    [allocator keepObject: logProbabilities];                                 
 
 		[self reset];
 	}
@@ -97,7 +97,7 @@
 	real sum = 0.;
 	real* logWeightsAddr = [logWeights firstColumn];
 	for (i=0;i<numGaussians;i++) {
-		logWeightsAddr[i] = [T4Random uniformBoundedWithValue: 0.1 andValue:1];
+		logWeightsAddr[i] = [T4Random uniformBoundedWithValue: 0.1 value:1];
 		sum += logWeightsAddr[i];
 	}
 	for (i=0;i<numGaussians;i++) {
@@ -110,7 +110,7 @@
 		real* meansAddr = [means columnAtIndex:i];
 		real* variancesAddr = [variances columnAtIndex:i];
 		for (j=0;j<numInputs;j++) {
-			meansAddr[j] = [T4Random uniformBoundedWithValue: 0 andValue:1];
+			meansAddr[j] = [T4Random uniformBoundedWithValue: 0 value:1];
 			variancesAddr[j] = 1.0;
 			//variancesAddr[j] = [T4Random uniformBoundedWithValue: 0.1 andValue:1];
 		}
@@ -124,7 +124,7 @@
 {
 	int t,i,j;
 	int numTrain = [aDataset count];
-	int totalOfNumColumns = 0;
+	int numFrames = 0;
 	int* exampleSize = (int*) malloc(sizeof(int)*numTrain);
 	[variancesFlooring zero];
 	real *x2 = [variancesFlooring firstColumn];
@@ -134,7 +134,7 @@
 		NSArray *example = [aDataset objectAtIndex: t];
 		T4Matrix *inputs = [example objectAtIndex:0];
 		exampleSize[t] = [inputs numberOfColumns];
-		totalOfNumColumns += exampleSize[t];
+		numFrames += exampleSize[t];
 		for(i=0;i<[inputs numberOfColumns];i++){
 			real *z = [inputs columnAtIndex:i];
 			for(j=0;j<numInputs;j++){
@@ -145,12 +145,12 @@
 	}
 
 	for(j=0;j<numInputs;j++){
-		x[j] /= totalOfNumColumns;
-		x2[j] = 0.1 * (x2[j] / totalOfNumColumns - (x[j] * x[j]) );
+		x[j] /= numFrames;
+		x2[j] = 0.1 * (x2[j] / numFrames - (x[j] * x[j]) );
 	}
-	T4Message(@"Number of columns: %d",totalOfNumColumns);
+	T4Message(@"Number of frames: %d",numFrames);
 	{
-		int numberOfPart = totalOfNumColumns/(real)numGaussians;
+		int numberOfPart = numFrames/(real)numGaussians;
 		// initialize the parameters using some examples in the dataset randomly
 		int sum = 0;
 		int ex = 0; 
@@ -184,7 +184,7 @@
 }
 
 
--(real)columnLogProbabilityOneGaussian: (int)gaussianIndex inputColumn: (real*) aInputColumn
+-(real)frameLogProbabilityOfGaussian: (int)gaussianIndex frame: (real*) aFrame
 {
 
 	int j;
@@ -192,19 +192,19 @@
 	real* minusAddr = [minusHalfOverVar columnAtIndex:gaussianIndex];
 	real sumXDotMu = 0.;
 	for(j = 0; j < numInputs; j++) {
-		real xDotMu = (aInputColumn[j] - meansAddr[j]);
+		real xDotMu = (aFrame[j] - meansAddr[j]);
 		sumXDotMu += xDotMu*xDotMu * minusAddr[j];
 	}
 	return sumXDotMu + [sumLogVarPlusNObsLog2Pi firstColumn][gaussianIndex];
 }
 
 
--(real)columnLogProbability: (int)columnIndex inputColumn: (real*)aInputColumn
+-(real)frameLogProbability: (real*)aFrame index: (int)anIndex
 {
 	int i;
 	real logProba = LOG_ZERO;
 	real *logWeightsAddr = [logWeights firstColumn];
-	real* logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:columnIndex];
+	real* logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:anIndex];
 	real* meansAddr = [means firstColumn];
 	real* minusAddr = [minusHalfOverVar firstColumn];
 	real* sumAddr = [sumLogVarPlusNObsLog2Pi firstColumn];
@@ -212,12 +212,10 @@
 		int j;
 		real sumXDotMu = 0.;
 		for(j = 0; j < numInputs; j++) {
-			real xDotMu = (aInputColumn[j] - meansAddr[j]);
+			real xDotMu = (aFrame[j] - meansAddr[j]);
 			sumXDotMu += xDotMu*xDotMu * minusAddr[j];
 		}
 		logProbabilitiesGaussianAddr[i] = sumXDotMu + sumAddr[i];
-		//*logProbabilitiesGaussianAddr = [self columnLogProbabilityOneGaussian: i inputColumn:aInputColumn];
-		//T4Message(@"%g %g %g",logProba,*logProbabilitiesGaussianAddr,*logWeightsAddr);
 		logProba = T4LogAdd(logProba, logProbabilitiesGaussianAddr[i] + logWeightsAddr[i]);
 		meansAddr += numInputs;
 		minusAddr += numInputs;
@@ -227,31 +225,31 @@
 }
 
 
--(real)forwardMatrix: (T4Matrix*)someInputs
+-(real)forwardInputs: (T4Matrix*)someInputs
 {
 	real ll = 0;
 	int i;
-	int numColumns = [someInputs numberOfColumns];
-	[logProbabilities resizeWithNumberOfColumns: numColumns];
-	[logProbabilitiesGaussians resizeWithNumberOfColumns: numColumns];
+	int numFrames = [someInputs numberOfColumns];
+	[logProbabilities resizeWithNumberOfColumns: numFrames];
+	[logProbabilitiesGaussians resizeWithNumberOfColumns: numFrames];
 	real* logProbabilitiesAddr = [logProbabilities firstColumn];
 	real *logWeightsAddr = [logWeights firstColumn];
 
 	real* sumAddr = [sumLogVarPlusNObsLog2Pi firstColumn];
 
-	for (i=0;i<numColumns;i++) {
+	for (i=0;i<numFrames;i++) {
 		int g;
 		real* meansAddr = [means firstColumn];
 		real* minusAddr = [minusHalfOverVar firstColumn];
 		real logProba = LOG_ZERO;
 		real* logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:i];
-		real* aInputColumn = [someInputs columnAtIndex:i];
+		real* aFrame = [someInputs columnAtIndex:i];
 
 		for (g=0;g<numGaussians;g++) {
 			int j;
 			real sumXDotMu = 0.;
 			for(j = 0; j < numInputs; j++) {
-				real xDotMu = (aInputColumn[j] - meansAddr[j]);
+				real xDotMu = (aFrame[j] - meansAddr[j]);
 				sumXDotMu += xDotMu*xDotMu * minusAddr[j];
 			}
 			logProbabilitiesGaussianAddr[g] = sumXDotMu + sumAddr[g];
@@ -275,38 +273,32 @@
 }
 
 
--accumulateMatrix: (T4Matrix*)someInputs logPosterior: (real) aLogPosterior
+-backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
 {
-	int i;
-	int numColumns = [someInputs numberOfColumns];
-	for (i=0;i<numColumns;i++)
-		[self accumulateColumn:i inputColumn: [someInputs columnAtIndex:i] logPosterior: aLogPosterior];
+  int f;
+  int numFrames = [someInputs numberOfColumns];
+  for (f=0;f<numFrames;f++) {
+    real* frame = [someInputs columnAtIndex:f];
+	  int i,j;
+	  real logProba = [logProbabilities firstColumn][f];
+	  real *accWeightsAddr = [accWeights firstColumn];
+	  real *logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:f]; 
+	  real *logWeightsAddr = [logWeights firstColumn];
+	  real* accMeansAddr = [accMeans firstColumn];
+	  real* accVariancesAddr = [accVariances firstColumn];
+	  for (i=0;i<numGaussians;i++) {
+		  real posteriorGaussian = exp(aLogPosterior + logWeightsAddr[i] + logProbabilitiesGaussianAddr[i] - logProba);
+		  accWeightsAddr[i] += posteriorGaussian;
 
-	return self;
-}
-
-
--accumulateColumn: (int)aColumnIndex inputColumn: (real*)aInputColumn logPosterior: (real)aLogPosterior
-{
-	int i,j;
-	real logProba = [logProbabilities firstColumn][aColumnIndex];
-	real *accWeightsAddr = [accWeights firstColumn];
-	real *logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:aColumnIndex]; 
-	real *logWeightsAddr = [logWeights firstColumn];
-	real* accMeansAddr = [accMeans firstColumn];
-	real* accVariancesAddr = [accVariances firstColumn];
-	for (i=0;i<numGaussians;i++) {
-		real posteriorGaussian = exp(aLogPosterior + logWeightsAddr[i] + logProbabilitiesGaussianAddr[i] - logProba);
-		accWeightsAddr[i] += posteriorGaussian;
-
-		for(j = 0; j < numInputs; j++) {
-			real z = aInputColumn[j];
-			accVariancesAddr[j] += posteriorGaussian * z * z;
-			accMeansAddr[j] += posteriorGaussian * z;
-		} 
-		accMeansAddr += numInputs;
-		accVariancesAddr += numInputs;
-	}
+		  for(j = 0; j < numInputs; j++) {
+			  real z = frame[j];
+			  accVariancesAddr[j] += posteriorGaussian * z * z;
+			  accMeansAddr[j] += posteriorGaussian * z;
+		  } 
+		  accMeansAddr += numInputs;
+		  accVariancesAddr += numInputs;
+	  }
+  }
 	return self;
 }
 

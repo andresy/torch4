@@ -19,8 +19,8 @@
 -initWithNumberOfInputs: (int)aNumInputs numberOfParameters: (int)aNumParams;
 
 
--(real)forwardMatrix: (T4Matrix*)someInputs;
--accumulateMatrix: (T4Matrix*)someInputs logPosterior: (real)aLogPosterior;
+-(real)forwardInputs: (T4Matrix*)someInputs;
+-backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs;
 -update;
 
 -reset;

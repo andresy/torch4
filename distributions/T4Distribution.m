@@ -27,6 +27,7 @@
 			[allocator keepObject: aMatrix];
 			[accumulators addObject: aMatrix];
 			[allocator keepObject: accumulators];
+
 		}
 		else
 		{
@@ -58,12 +59,12 @@
   return self;
 }
 
--(real)forwardMatrix: (T4Matrix*)someInputs
+-(real)forwardInputs: (T4Matrix*)someInputs
 {
   return -INF;
 }
 
--accumulateMatrix: (T4Matrix*)someInputs logPosterior: (real) aLogPosterior
+-backwardOutputWithLogPosterior: (real) aLogPosterior inputs: (T4Matrix*)someInputs;
 {
 	return self;	
 }
@@ -125,7 +126,7 @@
     for(j = 0; j < numCurrentDataset; j++)
     {
       T4Matrix *inputs = [[currentDataset objectAtIndex: j] objectAtIndex: 0];
-      [self forwardMatrix: inputs];
+      [self forwardInputs: inputs];
 
       for(k = 0; k < numCurrentMeasurers; k++)
       {
@@ -178,8 +179,8 @@
   int numMeasurers;
 
 
-  T4Message(@"StochasticGradient: training");
-  T4Message(@"StochasticGradient: number of examples",numTrain);
+  T4Message(@"Distribution: training");
+  T4Message(@"Distribution: number of examples",numTrain);
 
 
   numMeasurers = [someMeasurers count];
@@ -206,8 +207,8 @@
       T4Matrix *inputs = [example objectAtIndex: 0];
       
 			
-			currentError -= [self forwardMatrix: inputs];
-			[self accumulateMatrix: inputs logPosterior: 0];
+			currentError -= [self forwardInputs: inputs];
+			[self backwardOutputWithLogPosterior: 0 inputs: inputs];
 
       currentMeasurers = [measurers objectAtIndex: 0];
       numMeasurers = [currentMeasurers count];
@@ -240,7 +241,7 @@
 
       for(t = 0; t < numTest; t++)
       {
-        [self forwardMatrix: [[aTestDataset objectAtIndex: t] objectAtIndex: 0]];
+        [self forwardInputs: [[aTestDataset objectAtIndex: t] objectAtIndex: 0]];
 
         for(i = 0; i < numMeasurers; i++)
         {

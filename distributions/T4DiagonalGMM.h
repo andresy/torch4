@@ -13,8 +13,8 @@
 		T4Matrix* sumLogVarPlusNObsLog2Pi;
 		T4Matrix* minusHalfOverVar;
 		T4Matrix* variancesFlooring;
-		T4Matrix* logProbabilities;
 		T4Matrix* logProbabilitiesGaussians;
+    T4Matrix* logProbabilities;
 }
 
 
@@ -22,9 +22,8 @@
 -(int)numGaussians;
 -setPriorWeights: (real)aValue;
 -setVariancesFlooring:(T4Matrix*)someValues;
--(real)columnLogProbabilityOneGaussian: (int)gaussianIndex inputColumn: (real*) aInputColumn;
--(real)columnLogProbability: (int)columnIndex inputColumn: (real*)aInputColumn;
--accumulateColumn: (int)aColumnIndex inputColumn: (real*)aInputColumn logPosterior: (real)aLogPosterior;
+-(real)frameLogProbabilityOfGaussian: (int)gaussianIndex frame: (real*) aFrame;
+-(real)frameLogProbability: (real*)aFrame index: (int)anIndex;
 
 
 @end

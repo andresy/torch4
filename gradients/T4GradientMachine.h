@@ -32,7 +32,7 @@
 -(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix;
 //    virtual void setPartialBackprop(bool flag=true);
 
--(void)reset;
+-reset;
 
 -(void)setCriterion: (T4Criterion*)aCriterion;
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;

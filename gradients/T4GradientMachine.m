@@ -275,8 +275,9 @@
   [progressBar release];
 }
 
--(void)reset
+-reset
 {
+  return self;
 }
 
 -(int)numberOfInputs

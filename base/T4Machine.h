@@ -6,7 +6,7 @@ T4Allocator *T4ExtractMeasurers(NSArray *someMeasurers, NSArray *aTrainingSet,
                                  NSArray **someSortedDatasets, NSArray **someSortedMeasurers);
 
 @protocol T4Machine
--(void)reset;
+-reset;
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;
 -(void)testWithMeasurers: (NSArray*)someMeasurers;
 @end

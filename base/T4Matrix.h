@@ -37,6 +37,9 @@
 
 -(real)column: (int)aColumnIndex dotColumn: (int)aMatrixColumnIndex ofMatrix: (T4Matrix*)aMatrix;
 -(real)dotMatrix: (T4Matrix*)aMatrix;
+
+-dotValue: (real)aValue1 plusValue: (real)aValue2 dotMatrix: (T4Matrix*)aMatrix1 dotMatrix: (T4Matrix*)aMatrix2;
+
 //    real innerProduct(Matrix *matrix, int column_index=0, int column_index_matrix=0);
 
 // -dotValue: (real)aValue1 

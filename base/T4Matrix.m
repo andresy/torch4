@@ -1,6 +1,35 @@
 #import "T4Matrix.h"
 #import "cblas.h"
 
+inline void T4MatrixDotMatrix(real aValue1, real *destMat, int destStride,
+                              real aValue2, real *srcMat1, int srcStride1,
+                              real *srcMat2, int srcStride2,
+                              int destNumRows, int destNumColumns, int srcNum)
+{
+  if(destNumColumns == 1)
+  {
+#ifdef USE_DOUBLE
+    cblas_dgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
+                aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+#else
+    cblas_sgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
+                aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+#endif
+  }
+  else
+  {
+#ifdef USE_DOUBLE
+    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, destNumRows, destNumColumns,
+                srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                aValue1, destMat, destStride);
+#else
+    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, destNumRows, destNumColumns,
+                srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                aValue1, destMat, destStride);
+#endif
+  }
+}
+
 inline void T4CopyMatrix(real *destAddr, int destStride, real *sourceAddr, int sourceStride, int numRows, int numColumns)
 {
   if( (sourceStride == numRows) && (destStride == numRows) )
@@ -263,6 +292,15 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 #endif
 }
 
+-dotValue: (real)aValue1 plusValue: (real)aValue2 dotMatrix: (T4Matrix*)aMatrix1 dotMatrix: (T4Matrix*)aMatrix2
+{
+  T4MatrixDotMatrix(aValue1, data, stride,
+                    aValue2, aMatrix1->data, aMatrix1->stride,
+                    aMatrix2->data, aMatrix2->stride,
+                    numRows, numColumns, aMatrix1->numColumns);
+
+  return self;
+}
 /*
 void Matrix::dotSaccSdotMdotM(real scalar1, real scalar2, Matrix *matrix1, Matrix *matrix2)
 {

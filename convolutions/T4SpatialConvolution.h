@@ -28,10 +28,10 @@
     int kH;
     
     /// 'x' translation \emph{in the input image} after each application of the kernel.
-    int dX;
+    int dW;
 
     /// 'y' translation \emph{in the input image} after each application of the kernel.
-    int dY;
+    int dH;
 
     /// Number of input images.
     int numInputPlanes;
@@ -71,10 +71,10 @@
         numberOfOutputPlanes: (int)aNumOutputPlanes
                   inputWidth: (int)anInputWidth
                  inputHeight: (int)anInputHeight
-                 kernelWidth: (int)aKWX
-                kernelHeight: (int)aKWY
-             kernelWidthStep: (int)aDX
-            kernelHeightStep: (int)aDY;
+                 kernelWidth: (int)aKW
+                kernelHeight: (int)aKH
+             kernelWidthStep: (int)aDW
+            kernelHeightStep: (int)aDH;
 
 -(int)numberOfOutputPlanes;
 -(int)outputWidth;

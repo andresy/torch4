@@ -29,10 +29,10 @@
     int kH;
 
     /// 'x' translation \emph{in the input image} after each application of the kernel.
-    int dX;
+    int dW;
 
     /// 'y' translation \emph{in the input image} after each application of the kernel.
-    int dY;
+    int dH;
 
     /// Number of input images. The number of output images in sub-sampling is the same.
     int numInputPlanes;
@@ -69,8 +69,8 @@
                 outputHeight: (int)anInputHeight
                  kernelWidth: (int)aKW
                 kernelHeight: (int)aKH
-             kernelWidthStep: (int)aDX
-            kernelHeightStep: (int)aDY;
+             kernelWidthStep: (int)aDW
+            kernelHeightStep: (int)aDH;
 
 
 -(int)outputWidth;

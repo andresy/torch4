@@ -16,11 +16,11 @@
                  inputHeight: (int)anInputHeight
                  kernelWidth: (int)aKW
                 kernelHeight: (int)aKH
-             kernelWidthStep: (int)aDX
-            kernelHeightStep: (int)aDY
+             kernelWidthStep: (int)aDW
+            kernelHeightStep: (int)aDH
 {
-  int anOutputWidth = (anInputWidth - aKW) / aDX + 1;
-  int anOutputHeight = (anInputHeight - aKH) / aDY + 1;
+  int anOutputWidth = (anInputWidth - aKW) / aDW + 1;
+  int anOutputHeight = (anInputHeight - aKH) / aDH + 1;
 
   if(anInputWidth < aKW)
     T4Error(@"SpatialConvolution: input image width is too small (width = %d < kW = %d) ", anInputWidth, aKW);
@@ -45,8 +45,8 @@
     outputHeight = anOutputHeight;
     kW = aKW;
     kH = aKH;
-    dX = aDX;
-    dY = aDY;
+    dW = aDW;
+    dH = aDH;
 
     weights = (real **)[allocator allocPointerArrayWithCapacity: numOutputPlanes];
     for(i = 0; i < numOutputPlanes; i++)
@@ -111,7 +111,7 @@
           for(xx = 0; xx < outputWidth; xx++)
           {
             // Dot product in two dimensions... (between input image and the mask)
-            real *subInputPlane = currentInputPlane+yy*dY*inputWidth+xx*dX;
+            real *subInputPlane = currentInputPlane+yy*dH*inputWidth+xx*dW;
             real sum = 0;
             for(ky = 0; ky < kH; ky++)
             {
@@ -161,7 +161,7 @@
         {
           for(xx = 0; xx < outputWidth; xx++)
           {
-            real *subInputPlane = currentInputPlane+yy*dY*inputWidth+xx*dX;            
+            real *subInputPlane = currentInputPlane+yy*dH*inputWidth+xx*dW;            
             real z = currentGradOutputPlane[yy*outputWidth+xx];
             for(ky = 0; ky < kH; ky++)
             {
@@ -195,7 +195,7 @@
         {
           for(xx = 0; xx < outputWidth; xx++)
           {
-            real *subGradInputPlane = currentGradInputPlane+yy*dY*inputWidth+xx*dX;
+            real *subGradInputPlane = currentGradInputPlane+yy*dH*inputWidth+xx*dW;
             real z = currentGradOutputPlane[yy*outputWidth+xx];
             for(ky = 0; ky < kH; ky++)
             {

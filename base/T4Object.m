@@ -30,6 +30,13 @@
   return self;
 }
 
+-subclassResponsibility:(SEL)aSel
+{
+  NSString *selectorName = NSStringFromSelector(aSel);
+  T4Error(@"Subclass <%s> should override the method <%s>", [[self className] cString], [selectorName cString]);
+  return self;
+}
+
 -(void)dealloc
 {
   [allocator release];

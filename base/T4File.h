@@ -13,7 +13,7 @@
 -(unsigned long long)seekToEndOfFile;
 -(void)seekToBeginningOfFile;
 -(void)writeStringWithFormat: (NSString*)aFormat, ...;
--(void)readStringWithFormat: (NSString*)aFormat, ...;
+-(void)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr;
 -(NSString*)stringToEndOfLine;
 
 @end

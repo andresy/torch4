@@ -12,6 +12,7 @@
 }
 
 -init;
+-subclassResponsibility:(SEL)aSel;
 -(void)dealloc;
 
 @end

@@ -52,7 +52,8 @@
   [self subclassResponsibility: _cmd];
 }
 
--(void)readStringWithFormat: (NSString*)aFormat, ...
+
+-(void)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr
 {
   [self subclassResponsibility: _cmd];
 }

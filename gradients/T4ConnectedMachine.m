@@ -112,15 +112,25 @@
   gradOutputMatrixOffsets[[gradOutputMatrices count]-1] = anOffset;
 }
 
--(void)directOutputConnectionWithOffset: (int)anOffset
+-(void)directOutputConnectionWithOffset: (int)anOffset numberOfOutputs: (int)aNumOutputs
 {
   if([gradOutputMatrices count])
     T4Error(@"ConnectedMachine: trying a direct output connection to a machine which has already output connections");
 
-  hasDirectOutputConnection = NO;
-  hasAlmostDirectOutputConnection = YES;
-  directGradOutputs = nil;
-  gradOutputs = [[T4Matrix alloc] init];
+  if([machine numberOfOutputs] == aNumOutputs)
+  {
+    hasDirectOutputConnection = YES;
+    hasAlmostDirectOutputConnection = NO;
+    directGradOutputs = nil;
+    gradOutputs = nil;
+  }
+  else
+  {
+    hasDirectOutputConnection = NO;
+    hasAlmostDirectOutputConnection = YES;
+    directGradOutputs = nil;
+    gradOutputs = [[T4Matrix alloc] init];
+  }
 
   gradOutputMatrixOffsets = [allocator realloc: gradOutputMatrixOffsets intArrayWithCapacity: 1];
   gradOutputMatrixOffsets[0] = anOffset;
@@ -151,9 +161,9 @@
 -(void)backward
 {
   // If direct connection
-  gradOutputs = directGradOutputs;
-
-  if(!hasDirectOutputConnection)
+  if(hasDirectOutputConnection)
+    gradOutputs = directGradOutputs;
+  else
   {
     // Connected to one machine, with a different number of rows
     if(hasAlmostDirectOutputConnection)
@@ -218,7 +228,7 @@
   NSArray *layer;
   int numLayers = [layers count];
   int numNodes;
-  int i, j;
+  int i, j, offset;
 
   // check the nodes
   for(i = 1; i < numLayers; i++)
@@ -240,8 +250,15 @@
   for(i = 0; i < numNodes; i++)
   {
     node = [layer objectAtIndex: i];
-    [node directOutputConnectionWithOffset: numOutputs];
     numOutputs += [[node machine] numberOfOutputs];
+  }
+
+  offset = 0;
+  for(i = 0; i < numNodes; i++)
+  {
+    node = [layer objectAtIndex: i];
+    [node directOutputConnectionWithOffset: offset numberOfOutputs: numOutputs];
+    offset += [[node machine] numberOfOutputs];
   }
 
   if(![[layers lastObject] count])

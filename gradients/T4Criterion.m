@@ -15,7 +15,7 @@
   return self;
 }
 
--(real)forwardMatrix: (T4Matrix*)aMatrix
+-(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix
 {
   return 0.;
 }
@@ -34,6 +34,11 @@
 -(real)output
 {
   return output;
+}
+
+-(T4Matrix*)gradInputs
+{
+  return gradInputs;
 }
 
 @end

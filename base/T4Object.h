@@ -27,10 +27,10 @@
 -(void)addBoolOption: (NSString*)anOption address:(BOOL*)anAddress initValue:(BOOL)aValue;
 -(void)addObjectOption: (NSString*)anOption address:(NSObject**)anAddress initValue:(NSObject*)aValue;
 
--(void)setOption: (NSString*)anOption withValueAtAddress: (void*)anAddress;
--(void)setIntOption: (NSString*)anOption withValue: (int)aValue;
--(void)setRealOption: (NSString*)anOption withValue: (real)aValue;
--(void)setBoolOption: (NSString*)anOption withValue: (BOOL)aValue;
--(void)setObjectOption: (NSString*)anOption withValue: (NSObject*)aValue;
+-(void)setOption: (NSString*)anOption valueAtAddress: (void*)anAddress;
+-(void)setIntOption: (NSString*)anOption value: (int)aValue;
+-(void)setRealOption: (NSString*)anOption value: (real)aValue;
+-(void)setBoolOption: (NSString*)anOption value: (BOOL)aValue;
+-(void)setObjectOption: (NSString*)anOption value: (NSObject*)aValue;
 
 @end

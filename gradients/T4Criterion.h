@@ -11,10 +11,11 @@
 }
 
 -initWithNumberOfInputs: (int)aNumInputs;
--(real)forwardMatrix: (T4Matrix*)aMatrix;
+-(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix;
 -(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix;
 
 -setDataset: (NSArray*)aDataset;
 -(real)output;
+-(T4Matrix*)gradInputs;
 
 @end

@@ -502,9 +502,17 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -resizeWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns
 {
-  numRows = (aNumRows > 0 ? aNumRows : numRows);
-  numColumns = (aNumColumns > 0 ? aNumColumns : numColumns);
-  stride = numRows;
+  aNumRows = (aNumRows > 0 ? aNumRows : numRows);
+  aNumColumns = (aNumColumns > 0 ? aNumColumns : numColumns);
+
+  if( (aNumRows == numRows) && (aNumColumns = numColumns) )
+    return self;
+  else
+  {
+    numRows = aNumRows;
+    numColumns = aNumColumns;
+    stride = numRows;
+  }
 
   if([allocator isMyPointer: data])
   {
@@ -816,6 +824,23 @@ void Matrix::accSdotMextM(real scalar, Matrix *matrix1, Matrix *matrix2, int col
 -(real*)realData
 {
   return data;
+}
+
+-(NSString*)description
+{
+  NSMutableString *text = [[NSMutableString alloc] init];
+  int r, c;
+
+  for(r = 0; r < numRows; r++)
+  {
+    for(c = 0; c < numColumns-1; c++)
+      [text appendFormat: @"%g ", data[c*stride+r]];
+    [text appendFormat: @"%g", data[(numColumns-1)*stride+r]];
+    if(r != (numRows-1))
+      [text appendString: @"\n"];
+  }
+
+  return [text autorelease];
 }
 
 @end

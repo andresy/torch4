@@ -33,17 +33,17 @@
   real *weightsAddr = [weights realData];
   real *biasesAddr = [biases realData];
   real bound = 1./sqrt((real)numInputs);
+  int stride = [weights stride];
   int i, j;
 
-  for(i = 0; i < numInputs; i++)
+  for(i = 0; i < numOutputs; i++)
   {
-    for(j = 0; j < numOutputs; j++)
-      weightsAddr[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
-    weightsAddr += [weights stride];
+    for(j = 0; j < numInputs; j++)
+      weightsAddr[j*stride+i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+    biasesAddr[i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
   }
-
-  for(j = 0; j < numOutputs; j++)
-    biasesAddr[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+//  T4Print(@"# weights:\n%@\n", weights);
+//  T4Print(@"# biases:\n%@\n", biases);
 
   return self;
 }
@@ -58,11 +58,11 @@
 
 -(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
 {
-  [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
-//  [gradInputs zero];
-
   if(!partialBackpropagation)
+  {
+    [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
     [gradInputs dotValue: 0. addValue: 1. dotTrMatrix: weights dotMatrix: gradOutputMatrix];
+  }
 
   [gradWeights dotValue: 1. addValue: 1. dotMatrix: gradOutputMatrix dotTrMatrix: anInputMatrix];
   [gradBiases addValue: 1. dotSumMatrixColumns: gradOutputMatrix];

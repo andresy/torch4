@@ -4,7 +4,7 @@ T4Allocator *T4ExtractMeasurers(NSArray *someMeasurers, NSArray *aTrainingSet,
                                  NSArray **someSortedDatasets, NSArray **someSortedMeasurers)
 {
   T4Allocator *allocator = [[T4Allocator alloc] init];
-  int numSomeMeasurers = [someMeasurers count];
+  int numSomeMeasurers;
   int numSortedDatasets;
   int i, j;
 
@@ -12,6 +12,11 @@ T4Allocator *T4ExtractMeasurers(NSArray *someMeasurers, NSArray *aTrainingSet,
   NSMutableArray *sortedMeasurers = [[NSMutableArray alloc] init];
   [allocator keepObject: sortedDatasets];
   [allocator keepObject: sortedMeasurers];
+
+  if(someMeasurers)
+    numSomeMeasurers = [someMeasurers count];
+  else
+    numSomeMeasurers = 0;
 
   if(aTrainingSet)
     [sortedDatasets addObject: aTrainingSet];

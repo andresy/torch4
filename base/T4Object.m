@@ -79,7 +79,7 @@
 }
 
 
--(void)setOption: (NSString*)anOption withValueAtAddress: (void*)anAddress
+-(void)setOption: (NSString*)anOption valueAtAddress: (void*)anAddress
 {
   T4ObjectOption *option = [internalObjectOptions objectForKey: anOption];
 
@@ -89,24 +89,24 @@
   memmove([option address], anAddress, [option size]);
 }
 
--(void)setIntOption: (NSString*)anOption withValue: (int)aValue
+-(void)setIntOption: (NSString*)anOption value: (int)aValue
 {
-  [self setOption: anOption withValueAtAddress: &aValue];
+  [self setOption: anOption valueAtAddress: &aValue];
 }
 
--(void)setRealOption: (NSString*)anOption withValue: (real)aValue
+-(void)setRealOption: (NSString*)anOption value: (real)aValue
 {
-  [self setOption: anOption withValueAtAddress: &aValue];
+  [self setOption: anOption valueAtAddress: &aValue];
 }
 
--(void)setBoolOption: (NSString*)anOption withValue: (BOOL)aValue
+-(void)setBoolOption: (NSString*)anOption value: (BOOL)aValue
 {
-  [self setOption: anOption withValueAtAddress: &aValue];
+  [self setOption: anOption valueAtAddress: &aValue];
 }
 
--(void)setObjectOption: (NSString*)anOption withValue: (NSObject*)aValue
+-(void)setObjectOption: (NSString*)anOption value: (NSObject*)aValue
 {
-  [self setOption: anOption withValueAtAddress: &aValue];
+  [self setOption: anOption valueAtAddress: &aValue];
 }
 
 -(void)dealloc

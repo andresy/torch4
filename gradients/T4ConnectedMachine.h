@@ -19,7 +19,7 @@
 -initWithMachine: (T4GradientMachine*)aMachine;
 -(void)addInputConnectionToMachine: (T4GradientMachine*)aMachine;
 -(void)addOutputConnectionToMachine: (T4GradientMachine*)aMachine offset: (int)anOffset;
--(void)directOutputConnectionWithOffset: (int)anOffset;
+-(void)directOutputConnectionWithOffset: (int)anOffset numberOfOutputs: (int)aNumOutputs;
 -(void)forward;
 -(void)backward;
 -(void)setInputs: (T4Matrix*)aMatrix;

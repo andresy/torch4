@@ -213,6 +213,7 @@
   if(capacity <= 0)
     return NULL;
 
+//  T4Message(@"j'alloc");
   ptr = malloc(capacity);
 
   if(!ptr)
@@ -232,9 +233,15 @@
   }
 
   if(anAddress)
+  {
+//    T4Message(@"j'realloc");
     anAddress = realloc(anAddress, capacity);
+  }
   else
+  {
+//    T4Message(@"j'alloc [re]");
     anAddress = malloc(capacity);
+  }
 
   if(!anAddress)
     T4Error(@"Allocator: not enough memory. Buy new ram!!!");

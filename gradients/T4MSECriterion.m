@@ -28,6 +28,7 @@
     for(r = 0; r < numInputs; r++)
     {
       real z = targetColumn[r] - inputColumn[r];
+//      T4Message(@"target = %g, input = %g", targetColumn[r], inputColumn[r]);
       output += z*z;
     }
   }

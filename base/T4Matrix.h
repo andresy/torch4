@@ -2,6 +2,7 @@
 
 @interface T4Matrix : T4Object
 {
+@public
     real *data;
     int dataSize;
     int numRows;
@@ -58,5 +59,7 @@
 -(int)numberOfRows;
 -(int)stride;
 -(real*)realData;
+
+-(NSString*)description;
 
 @end

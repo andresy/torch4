@@ -382,7 +382,8 @@
   outputs = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   
   [aCoder decodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
-  criterion = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+//  criterion = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  criterion = nil;
   [aCoder decodeValueOfObjCType: @encode(real) at: &learningRate];
   [aCoder decodeValueOfObjCType: @encode(real) at: &learningRateDecay];
   [aCoder decodeValueOfObjCType: @encode(real) at: &endAccuracy];
@@ -402,7 +403,7 @@
   [aCoder encodeObject: outputs];
 
   [aCoder encodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
-  [aCoder encodeObject: criterion];
+//  [aCoder encodeObject: criterion];
   [aCoder encodeValueOfObjCType: @encode(real) at: &learningRate];
   [aCoder encodeValueOfObjCType: @encode(real) at: &learningRateDecay];
   [aCoder encodeValueOfObjCType: @encode(real) at: &endAccuracy];

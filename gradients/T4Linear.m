@@ -11,8 +11,7 @@
   {
     real *parametersAddr, *gradParametersAddr;
 
-    [self addRealOption: @"weight decay" address: &weightDecay initValue: 0];
-    [self addBoolOption: @"partial backpropagation" address: &partialBackpropagation initValue: NO];
+    [self setWeightDecay: 0];
 
     parametersAddr = [[parameters objectAtIndex: 0] realData];
     gradParametersAddr = [[gradParameters objectAtIndex: 0] realData];
@@ -35,21 +34,17 @@
 
 -reset
 {
-  // Note: just to be compatible with "Torch II Dev"
-  real *weightsAddr = [weights realData];
-  real *biasesAddr = [biases realData];
+  real *biasesData = [biases realData];
   real bound = 1./sqrt((real)numInputs);
-  int stride = [weights stride];
   int i, j;
 
   for(i = 0; i < numOutputs; i++)
   {
+    real *weightsColumn = [weights columnAtIndex: i];
     for(j = 0; j < numInputs; j++)
-      weightsAddr[i*stride+j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
-    biasesAddr[i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+      weightsColumn[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+    biasesData[i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
   }
-//  T4Print(@"# weights:\n%@\n", weights);
-//  T4Print(@"# biases:\n%@\n", biases);
 
   return self;
 }
@@ -58,15 +53,6 @@
 {
   [outputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
   [outputs copyMatrix: biases];
-//  cblas_scopy(numOutputs, biases->data, 1, outputs->data, 1);
-//  cblas_sgemv(CblasColMajor, CblasNoTrans, numOutputs, numInputs,
-//              1., weights->data, weights->stride, anInputMatrix->data, 1, 1., outputs->data, 1);
-
-//wrong:
-//   cblas_sgemv(CblasRowMajor, CblasNoTrans, numOutputs, numInputs,
-//               1., weights->data, weights->numColumns, anInputMatrix->data, 1, 1., outputs->data, 1);
-  
-//  [outputs dotValue: 1. addValue: 1. dotMatrix: weights dotMatrix: anInputMatrix];
   [outputs dotValue: 1. addValue: 1. dotTrMatrix: weights dotMatrix: anInputMatrix];
   return outputs;
 }
@@ -77,17 +63,27 @@
   {
     [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
     [gradInputs dotValue: 0. addValue: 1. dotMatrix: weights dotMatrix: gradOutputMatrix];
-//    cblas_sgemv(CblasRowMajor, CblasTrans, numOutputs, numInputs, 1., weights->data, numInputs, gradOutputMatrix->data, 1, 0., gradInputs->data, 1);
   }
 
   [gradWeights dotValue: 1. addValue: 1. dotMatrix: anInputMatrix dotTrMatrix: gradOutputMatrix];
-//  cblas_sger(CblasRowMajor, numOutputs, numInputs, 1., gradOutputMatrix->data, 1, anInputMatrix->data, 1, gradWeights->data, numInputs);
   [gradBiases addValue: 1. dotSumMatrixColumns: gradOutputMatrix];
 
   if(weightDecay != 0)
     [gradWeights addValue: weightDecay dotMatrix: weights];
 
   return gradInputs;
+}
+
+-setWeightDecay: (real)aWeightDecay
+{
+  aWeightDecay = weightDecay;
+  return self;
+}
+
+-setPartialBackpropagation: (BOOL)aFlag
+{
+  partialBackpropagation = aFlag;
+  return self;
 }
 
 @end

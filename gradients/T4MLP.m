@@ -74,7 +74,7 @@
   for(l = 0; l < numMachines; l++)
   {
     if(isLinear[l])
-      [[machines objectAtIndex: l] setRealOption: @"weight decay" value: aWeightDecay];
+      [[machines objectAtIndex: l] setWeightDecay: aWeightDecay];
   }
   return self;
 }

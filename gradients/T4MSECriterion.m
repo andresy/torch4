@@ -6,8 +6,8 @@
 {
   if( (self = [super initWithNumberOfInputs: aNumInputs]) )
   {
-    [self addBoolOption: @"average with number of rows" address: &averageWithNumberOfRows initValue: YES];
-    [self addBoolOption: @"average with number of columns" address: &averageWithNumberOfColumns initValue: YES];
+    [self setAveragesWithNumberOfRows: YES];
+    [self setAveragesWithNumberOfColumns: YES];
   }
 
   return self;
@@ -68,6 +68,18 @@
   } 
 
   return gradInputs;
+}
+
+-setAveragesWithNumberOfRows: (BOOL)aFlag
+{
+  averageWithNumberOfRows = aFlag;
+  return self;
+}
+
+-setAveragesWithNumberOfColumns: (BOOL)aFlag
+{
+  averageWithNumberOfColumns = aFlag;
+  return self;
 }
 
 @end

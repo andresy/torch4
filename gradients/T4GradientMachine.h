@@ -6,7 +6,6 @@
 
 @interface T4GradientMachine : T4Object <T4Machine>
 {
-//    bool partial_backprop;
     int numInputs;
     int numOutputs;
 
@@ -30,9 +29,14 @@
 
 -(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix;
 -(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix;
-//    virtual void setPartialBackprop(bool flag=true);
 
 -reset;
+-setPartialBackpropagation: (BOOL)aFlag;
+-setEndAccuracy: (real)aValue;
+-setLearningRate: (real)aValue;
+-setLearningRateDecay: (real)aValue;
+-setMaxNumberOfIterations: (int)aValue;
+-setShuffles: (BOOL)aFlag;
 
 -(void)setCriterion: (T4Criterion*)aCriterion;
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;

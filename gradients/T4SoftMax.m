@@ -7,8 +7,8 @@
   if( (self = [super initWithNumberOfInputs: aNumUnits numberOfOutputs: aNumUnits
                      numberOfParameters: 0]) )
   {
-    [self addRealOption: @"shift" address: &shift initValue: 0.];
-    [self addBoolOption: @"compute shift" address: &computeShift initValue: YES];
+    [self setShift: 0.];
+    [self setComputesShift: YES];
   }
 
   return self;
@@ -70,6 +70,18 @@
       gradInputColumn[r] = outputColumn[r] * (gradOutputColumn[r] - sum);
   }
   return gradInputs;
+}
+
+-setShift: (real)aValue
+{
+  shift = aValue;
+  return self;
+}
+
+-setComputesShift: (BOOL)aFlag
+{
+  computeShift = aFlag;
+  return self;
 }
 
 @end

@@ -79,4 +79,15 @@
   return self;
 }
 
+-setPartialBackpropagation: (BOOL)aFlag
+{
+  [[machines objectAtIndex: 0] setPartialBackpropagation: aFlag];
+  return self;
+}
+
+-(NSArray*)machines
+{
+  return machines;
+}
+
 @end

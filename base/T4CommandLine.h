@@ -22,16 +22,16 @@
 -(void)addText: (NSString*)aText;
 -(void)addMasterSwitch: (NSString*)aSwitch;
 
--(void)addCmdOption: (T4CommandLineOption*)option;
--(void)addIntCmdOption: (NSString*)aName address: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp;
--(void)addRealCmdOption: (NSString*)aName address: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp;
--(void)addBoolCmdOption: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp;
--(void)addStringCmdOption: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefault help: (NSString*)aHelp;
+-(void)addOption: (T4CommandLineOption*)option;
+-(void)addIntOption: (NSString*)aName address: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp;
+-(void)addRealOption: (NSString*)aName address: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp;
+-(void)addBoolOption: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp;
+-(void)addStringOption: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefault help: (NSString*)aHelp;
 
--(void)addCmdArgument: (T4CommandLineOption*)argument;
--(void)addIntCmdArgument: (NSString*)aName address: (int*)anAddress help: (NSString*)aHelp;
--(void)addRealCmdArgument: (NSString*)aName address: (real*)anAddress help: (NSString*)aHelp;
-//-(void)addBoolCmdArgument: (NSString*)aName address: (BOOL*)anAddress help: (NSString*)aHelp; peut pas exister!!!
--(void)addStringCmdArgument: (NSString*)aName address: (NSMutableString*)anAddress help: (NSString*)aHelp;
+-(void)addArgument: (T4CommandLineOption*)argument;
+-(void)addIntArgument: (NSString*)aName address: (int*)anAddress help: (NSString*)aHelp;
+-(void)addRealArgument: (NSString*)aName address: (real*)anAddress help: (NSString*)aHelp;
+//-(void)addBoolArgument: (NSString*)aName address: (BOOL*)anAddress help: (NSString*)aHelp; peut pas exister!!!
+-(void)addStringArgument: (NSString*)aName address: (NSMutableString*)anAddress help: (NSString*)aHelp;
 
 @end

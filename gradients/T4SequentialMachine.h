@@ -7,7 +7,12 @@
 
 -init;
 -addMachine: (T4GradientMachine*)aMachine;
+
+-setPartialBackpropagation: (BOOL)aFlag;
+-(NSArray*)machines;
+
 -(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix;
 -(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix;
+
 
 @end

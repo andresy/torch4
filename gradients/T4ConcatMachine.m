@@ -114,4 +114,20 @@
   return self;
 }
 
+-setPartialBackpropagation: (BOOL)aFlag
+{
+  int numMachines = [machines count];
+  int i;
+
+  for(i = 0; i < numMachines; i++)
+    [[machines objectAtIndex: i] setPartialBackpropagation: aFlag];
+
+  return self;
+}
+
+-(NSArray*)machines
+{
+  return machines;
+}
+
 @end

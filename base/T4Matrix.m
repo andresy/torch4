@@ -548,34 +548,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 }
 
 -resizeWithNumberOfColumns: (int)aNumColumns
-{/*
-  aNumColumns = (aNumColumns > 0 ? aNumColumns : numColumns);
-
-  if(aNumColumns == numColumns)
-    return self;
-  else
-  {
-    numColumns = aNumColumns;
-    stride = numRows;
-  }
-
-  if([allocator isMyPointer: data])
-  {
-    if(numRows*numColumns > dataSize)
-    {
-      [allocator freePointer: data];
-      data = [allocator allocRealArrayWithCapacity: numRows*numColumns];
-      dataSize = numRows*numColumns;
-    }
-  }
-  else
-  {
-    data = [allocator allocRealArrayWithCapacity: numRows*numColumns];
-    dataSize = numRows*numColumns;
-  }
-
-  return self;
- */
+{
   return [self resizeWithNumberOfRows: -1 numberOfColumns: aNumColumns];
 }
 

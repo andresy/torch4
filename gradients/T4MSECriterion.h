@@ -10,4 +10,7 @@
 -(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix;
 -(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix;
 
+-setAveragesWithNumberOfRows: (BOOL)aFlag;
+-setAveragesWithNumberOfColumns: (BOOL)aFlag;
+
 @end

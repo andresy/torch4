@@ -52,11 +52,12 @@
     }
 
     criterion = nil;
-    [self addRealOption: @"end accuracy" address: &endAccuracy initValue: 0.0001];
-    [self addRealOption: @"learning rate" address: &learningRate initValue: 0.01];
-    [self addRealOption: @"learning rate decay" address: &learningRateDecay initValue: 0];
-    [self addIntOption: @"max iter" address: &maxIteration initValue: -1];
-    [self addBoolOption: @"shuffle" address: &doShuffle initValue: YES];
+    [self setPartialBackpropagation: NO];
+    [self setEndAccuracy: 0.0001];
+    [self setLearningRate: 0.01];
+    [self setLearningRateDecay: 0.];
+    [self setMaxNumberOfIterations: -1];
+    [self setShuffles: YES];
   }
 
   return self;
@@ -369,6 +370,41 @@
 -(NSArray*)gradParameters
 {
   return gradParameters;
+}
+
+-setPartialBackpropagation: (BOOL)aFlag
+{
+  return self;
+}
+
+-setEndAccuracy: (real)aValue
+{
+  endAccuracy = aValue;
+  return self;
+}
+
+-setLearningRate: (real)aValue
+{
+  learningRate = aValue;
+  return self;
+}
+
+-setLearningRateDecay: (real)aValue
+{
+  learningRateDecay = aValue;
+  return self;
+}
+
+-setMaxNumberOfIterations: (int)aValue
+{
+  maxIteration = aValue;
+  return self;
+}
+
+-setShuffles: (BOOL)aFlag
+{
+  doShuffle = aFlag;
+  return self;
 }
 
 @end

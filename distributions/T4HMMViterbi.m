@@ -9,7 +9,7 @@
 	if( (self = [super initWithLogTransitions: someInitialLogTransitions states: someStates]) )
 	{
 
-    viterbi = yes;
+    viterbi = YES;
 
 		[self reset];
 	}
@@ -17,6 +17,11 @@
 
 }
 
+-setViterbi: (BOOL)aValue
+{
+  viterbi = aValue;
+  return self;
+}
 
 -logViterbiWithInputs: (T4Matrix*) someInputs
 {
@@ -90,7 +95,7 @@
 
   [self logProbabilitiesWithInputs: someInputs];
 
-  if (viterbi) then {
+  if (viterbi) {
     [argViterbi resizeWithNumberOfColumns: numFrames];
     [viterbiStates resizeWithNumberOfRows: numFrames];
     [self logViterbiWithInputs: someInputs];
@@ -101,7 +106,6 @@
   }
   return logProbability;
 }
-
 
 -backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
 {
@@ -117,7 +121,7 @@
         j = (int)([argViterbi columnAtIndex: f][i]);
         if (j>0) {
           real* a = [accLogTransitions columnAtIndex: i];
-          a[j] = logAdd(a[j],aLogPosterior);
+          a[j] = T4LogAdd(a[j],aLogPosterior);
         }   
       }   
     }       
@@ -126,28 +130,5 @@
   }
 	return self;
 }
-
--update
-{
-  int i,j;
-  // first the states
-  for (i=1;i<numStates-1;i++) {
-    [states[i] update];
-  }
-  // then the transitions;
-  for (i=0;i<numStates-1;i++) {
-    real logSum = LOG_ZERO;
-    for (j=1;j<numStates;j++) {
-      if ([logTransitions columnAtIndex: j][i] != LOG_ZERO)
-        logSum = T4LogAdd(logSum,[accLogTransitions columnAtIndex:j][i]);
-    }
-    for (j=0;j<numStates;j++) {
-      if ([logTransitions columnAtIndex: j][i] != LOG_ZERO)
-        [logTransitions columnAtIndex: j][i] = [accLogTransitions columnAtIndex: j][i] - logSum;
-    }
-  }
-	return self;
-}
-
 
 @end

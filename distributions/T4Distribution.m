@@ -8,7 +8,7 @@
 	if( (self = [super init]) )
 	{
 		numInputs = aNumInputs;
-		logProbability = -INF;
+		logProbability = -T4Inf;
 
 		if(aNumParams > 0)
 		{
@@ -61,7 +61,7 @@
 
 -(real)forwardInputs: (T4Matrix*)someInputs
 {
-  return -INF;
+  return -T4Inf;
 }
 
 -backwardLogPosterior: (real) aLogPosterior inputs: (T4Matrix*)someInputs;
@@ -170,7 +170,7 @@
 {
   int iteration = 0;
   real currentError = 0;
-  real previousError = INF;
+  real previousError = T4Inf;
   int numTrain = [aDataset count];
   NSArray *datasets;
   NSArray  *currentMeasurers, *measurers;

@@ -28,11 +28,11 @@
   int lastArgViterbi = -1;
   int f,i,j;
   int numFrames = [someInputs numberOfColumns];
-  // first, initialize everything to LOG_ZERO
+  // first, initialize everything to T4LogZero
   for (f=0;f<numFrames;f++) {
     real* logAlphaF = [logAlpha columnAtIndex: f];
     for (i=1;i<numStates-1;i++) {
-      logAlphaF[i] = LOG_ZERO;
+      logAlphaF[i] = T4LogZero;
     }
   }   
   // case for first frame
@@ -61,7 +61,7 @@
     }
   }
   // last case
-  logProbability = LOG_ZERO;
+  logProbability = T4LogZero;
   f = numFrames-1;
   i = numStates-1;
   real* logTransitionsI = [logTransitions columnAtIndex: i];
@@ -74,7 +74,7 @@
     }
   }
   // now recall the state sequence
-  if (logProbability > LOG_ZERO) {
+  if (logProbability > T4LogZero) {
     [viterbiStates firstColumn][f] = lastArgViterbi;
     for (f=numFrames-2;f>=0;f--) {
       [viterbiStates firstColumn][f] = [argViterbi columnAtIndex: f+1][(int)[viterbiStates firstColumn][f+1]];
@@ -83,7 +83,7 @@
     T4Warning(@"sequence impossible to train: probably too short for target");
     for (f=0;f<numFrames;f++)
       [viterbiStates firstColumn][f] = -1;
-    logProbability = LOG_ZERO;
+    logProbability = T4LogZero;
   }
   return self;
 }
@@ -107,7 +107,7 @@
   return logProbability;
 }
 
--backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
+-backwardLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
 {
   if (viterbi) {
     int f,i,j;
@@ -116,8 +116,8 @@
     for (f=0;f<numFrames;f++) {
       i = (int)viterbiStatesValues[f];
       if (i>=0) {
-        [partialInputs setMatrixFromRealData: [someInputs columnAtIndex: f] numberOfRows: [someInputs numberOfRows] numberOfColumns: 1 stride: -1];
-        [states[i] backwardOutputWithLogPosterior: aLogPosterior inputs: partialInputs];
+        [partialInputs setMatrixFromRealArray: [someInputs columnAtIndex: f] numberOfRows: [someInputs numberOfRows] numberOfColumns: 1 stride: -1];
+        [states[i] backwardLogPosterior: aLogPosterior inputs: partialInputs];
         j = (int)([argViterbi columnAtIndex: f][i]);
         if (j>0) {
           real* a = [accLogTransitions columnAtIndex: i];
@@ -126,7 +126,7 @@
       }   
     }       
   } else {
-    [super backwardOutputWithLogPosterior: aLogPosterior inputs: someInputs];
+    [super backwardLogPosterior: aLogPosterior inputs: someInputs];
   }
 	return self;
 }

@@ -16,11 +16,11 @@
 		priorOnTransitions = .0001;
 
 		parametersAddr = [[parameters objectAtIndex: 0] firstColumn];
-		logTransitions = [[T4Matrix alloc] initWithRealData: parametersAddr numberOfRows: numStates numberOfColumns: numStates stride: -1];
+		logTransitions = [[T4Matrix alloc] initWithRealArray: parametersAddr numberOfRows: numStates numberOfColumns: numStates stride: -1];
 		[allocator keepObject: logTransitions];
 
 		accumulatorsAddr = [[accumulators objectAtIndex: 0] firstColumn];
-		accLogTransitions = [[T4Matrix alloc] initWithRealData: accumulatorsAddr numberOfRows: numStates numberOfColumns: numStates stride: -1];
+		accLogTransitions = [[T4Matrix alloc] initWithRealArray: accumulatorsAddr numberOfRows: numStates numberOfColumns: numStates stride: -1];
 		[allocator keepObject: accLogTransitions];
 
     initialLogTransitions = someInitialLogTransitions;
@@ -80,17 +80,17 @@
 {
   int f,i,j;
   int numFrames = [someInputs numberOfColumns];
-  // first, initialize everything to LOG_ZERO
+  // first, initialize everything to T4LogZero
   for (f=0;f<numFrames;f++) {
     real* logAlphaF = [logAlpha columnAtIndex: f];
     for (i=1;i<numStates-1;i++) {
-      logAlphaF[i] = LOG_ZERO;
+      logAlphaF[i] = T4LogZero;
     }
   }   
   // case for first frame
   real* logAlpha0 = [logAlpha columnAtIndex: 0];
   for (i=1;i<numStates-1;i++) {
-    if ([logTransitions columnAtIndex: i][0] != LOG_ZERO)
+    if ([logTransitions columnAtIndex: i][0] != T4LogZero)
       logAlpha0[i] = [logProbabilitiesStates firstColumn][i] + 
         [logTransitions columnAtIndex: i][0];
   }
@@ -110,7 +110,7 @@
     }
   }
   // last case
-  logProbability = LOG_ZERO;
+  logProbability = T4LogZero;
   f = numFrames-1;
   i = numStates-1;
   real* logTransitionsI = [logTransitions columnAtIndex: i];
@@ -126,11 +126,11 @@
 {
   int f,i,j;
   int numFrames = [someInputs numberOfColumns];
-  // first, initialize everything to LOG_ZERO
+  // first, initialize everything to T4LogZero
   for (f=0;f<numFrames;f++) {
     real* logBetaF = [logBeta columnAtIndex: f];
     for (i=1;i<numStates-1;i++) {
-      logBetaF[i] = LOG_ZERO;
+      logBetaF[i] = T4LogZero;
     }
   }
   // case for last frame
@@ -191,10 +191,10 @@
     real* logAlphaF = [logAlpha columnAtIndex: f];
     real* logBetaF = [logBeta columnAtIndex: f];
     for (i=1;i<numStates-1;i++) {
-      if (logAlphaF[i] != LOG_ZERO && logBetaF[i] != LOG_ZERO) {
+      if (logAlphaF[i] != T4LogZero && logBetaF[i] != T4LogZero) {
         real logPosteriorIF = aLogPosterior + logAlphaF[i] +
           logBetaF[i] - logProbability;
-        [partialInputs setMatrixFromRealData: [someInputs columnAtIndex: f] numberOfRows: [someInputs numberOfRows] numberOfColumns: 1 stride: -1];
+        [partialInputs setMatrixFromRealArray: [someInputs columnAtIndex: f] numberOfRows: [someInputs numberOfRows] numberOfColumns: 1 stride: -1];
         [states[i] backwardLogPosterior: logPosteriorIF inputs: partialInputs];
       }
     }
@@ -207,7 +207,7 @@
       real* logTransitionsI = [logTransitions columnAtIndex: i];
       real* accLogTransitionsI = [accLogTransitions columnAtIndex: i];
       for (j=1;j<numStates-1;j++) {
-        if (logTransitionsI[j] != LOG_ZERO && logAlphaFm1[j] != LOG_ZERO && logBetaF[i] != LOG_ZERO && logEmitF[i] != LOG_ZERO)
+        if (logTransitionsI[j] != T4LogZero && logAlphaFm1[j] != T4LogZero && logBetaF[i] != T4LogZero && logEmitF[i] != T4LogZero)
           accLogTransitionsI[j] = T4LogAdd(accLogTransitionsI[j],
             aLogPosterior + logAlphaFm1[j] +
             logTransitionsI[j] + logEmitF[i] + logBetaF[i] -
@@ -221,7 +221,7 @@
   for (j=1;j<numStates-1;j++) {
     real* logTransitionsJ = [logTransitions columnAtIndex: j];
     real* accLogTransitionsJ = [accLogTransitions columnAtIndex: j];
-    if (logTransitionsJ[0] != LOG_ZERO && logBeta0[j] != LOG_ZERO && logEmit0[j] != LOG_ZERO)
+    if (logTransitionsJ[0] != T4LogZero && logBeta0[j] != T4LogZero && logEmit0[j] != T4LogZero)
       accLogTransitionsJ[0] = T4LogAdd(accLogTransitionsJ[0],
         aLogPosterior + logBeta0[j] + logEmit0[j] +
         logTransitionsJ[0] - logProbability);
@@ -233,7 +233,7 @@
   real* accLogTransitionsI = [logTransitions columnAtIndex: i];
   real* logAlphaF = [logAlpha columnAtIndex: f];
   for (j=1;j<numStates-1;j++) {
-    if (logTransitionsI[j] != LOG_ZERO && logAlphaF[j] != LOG_ZERO)
+    if (logTransitionsI[j] != T4LogZero && logAlphaF[j] != T4LogZero)
       accLogTransitionsI[j] = T4LogAdd(accLogTransitionsI[j],
         aLogPosterior + logAlphaF[j] + logTransitionsI[j] - 
         logProbability);
@@ -251,13 +251,13 @@
   }
   // then the transitions;
   for (i=0;i<numStates-1;i++) {
-    real logSum = LOG_ZERO;
+    real logSum = T4LogZero;
     for (j=1;j<numStates;j++) {
-      if ([logTransitions columnAtIndex: j][i] != LOG_ZERO)
+      if ([logTransitions columnAtIndex: j][i] != T4LogZero)
         logSum = T4LogAdd(logSum,[accLogTransitions columnAtIndex:j][i]);
     }
     for (j=0;j<numStates;j++) {
-      if ([logTransitions columnAtIndex: j][i] != LOG_ZERO)
+      if ([logTransitions columnAtIndex: j][i] != T4LogZero)
         [logTransitions columnAtIndex: j][i] = [accLogTransitions columnAtIndex: j][i] - logSum;
     }
   }

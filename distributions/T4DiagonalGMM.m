@@ -16,17 +16,17 @@
 		priorWeights = .0001;
 
 		parametersAddr = [[parameters objectAtIndex: 0] firstColumn];
-		logWeights = [[T4Matrix alloc] initWithRealData: parametersAddr numberOfRows: numGaussians numberOfColumns: 1 stride: -1];
-		means = [[T4Matrix alloc] initWithRealData: parametersAddr+numGaussians numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
-		variances = [[T4Matrix alloc] initWithRealData: parametersAddr+numGaussians+(numInputs*numGaussians) numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
+		logWeights = [[T4Matrix alloc] initWithRealArray: parametersAddr numberOfRows: numGaussians numberOfColumns: 1 stride: -1];
+		means = [[T4Matrix alloc] initWithRealArray: parametersAddr+numGaussians numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
+		variances = [[T4Matrix alloc] initWithRealArray: parametersAddr+numGaussians+(numInputs*numGaussians) numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
 		[allocator keepObject: logWeights];
 		[allocator keepObject: means];
 		[allocator keepObject: variances];
 
 		accumulatorsAddr = [[accumulators objectAtIndex: 0] firstColumn];
-		accWeights = [[T4Matrix alloc] initWithRealData: accumulatorsAddr numberOfRows: numGaussians numberOfColumns: 1 stride: -1];
-		accMeans = [[T4Matrix alloc] initWithRealData: accumulatorsAddr+numGaussians numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
-		accVariances = [[T4Matrix alloc] initWithRealData: accumulatorsAddr+numGaussians+(numInputs*numGaussians) numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
+		accWeights = [[T4Matrix alloc] initWithRealArray: accumulatorsAddr numberOfRows: numGaussians numberOfColumns: 1 stride: -1];
+		accMeans = [[T4Matrix alloc] initWithRealArray: accumulatorsAddr+numGaussians numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
+		accVariances = [[T4Matrix alloc] initWithRealArray: accumulatorsAddr+numGaussians+(numInputs*numGaussians) numberOfRows: numInputs numberOfColumns: numGaussians stride: -1];
 		[allocator keepObject: accWeights];
 		[allocator keepObject: accMeans];
 		[allocator keepObject: accVariances];
@@ -79,7 +79,7 @@
 	real *minusAddr = [minusHalfOverVar firstColumn];
 	real *variancesAddr = [variances firstColumn];
 	for (i=0;i<numGaussians;i++) {
-		sumAddr[i] = numInputs * LOG_2_PI;
+		sumAddr[i] = numInputs * T4Log2Pi;
 		for (j=0;j<numInputs;j++) {
 			minusAddr[j] = -0.5 / variancesAddr[j];
 			sumAddr[i] += log(variancesAddr[j]);
@@ -202,7 +202,7 @@
 -(real)frameLogProbability: (real*)aFrame index: (int)anIndex
 {
 	int i;
-	real logProba = LOG_ZERO;
+	real logProba = T4LogZero;
 	real *logWeightsAddr = [logWeights firstColumn];
 	real* logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:anIndex];
 	real* meansAddr = [means firstColumn];
@@ -241,7 +241,7 @@
 		int g;
 		real* meansAddr = [means firstColumn];
 		real* minusAddr = [minusHalfOverVar firstColumn];
-		real logProba = LOG_ZERO;
+		real logProba = T4LogZero;
 		real* logProbabilitiesGaussianAddr = [logProbabilitiesGaussians columnAtIndex:i];
 		real* aFrame = [someInputs columnAtIndex:i];
 

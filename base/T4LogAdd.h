@@ -7,3 +7,4 @@
 real T4LogAdd(real log_a,real log_b);
 real T4LogSub(real log_a,real log_b);
 
+real T4LogAddRealArray(real *array, int numElements);

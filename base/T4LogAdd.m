@@ -47,3 +47,21 @@ real T4LogSub(real log_a, real log_b)
   else
     return log_a + log1p(-exp(minusdif));
 }
+
+real T4LogAddRealArray(real *array, int numElements)
+{
+  int i;
+  real maxValue = -T4Inf;
+  real sumExp = 0;
+
+  for(i = 0; i < numElements; i++)
+  {
+    if(array[i] > maxValue)
+      maxValue = array[i];
+  }
+
+  for(i = 0; i < numElements; i++)
+    sumExp += exp(array[i]-maxValue);
+
+  return( maxValue + log(sumExp) );
+}

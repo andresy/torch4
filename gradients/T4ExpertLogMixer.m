@@ -14,16 +14,16 @@
   return self;
 }
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix
+-(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
-  int numColumns = [anInputMatrix numberOfColumns];
+  int numColumns = [someInputs numberOfColumns];
   int c, r, e;
 
   [outputs resizeWithNumberOfColumns: numColumns];
   [outputs fillWithValue: LOG_ZERO];
   for(c = 0; c < numColumns; c++)
   {
-    real *weightColumn = [anInputMatrix columnAtIndex: c];
+    real *weightColumn = [someInputs columnAtIndex: c];
     real *expertInputColumn = weightColumn+numExperts;
     real *outputColumn = [outputs columnAtIndex: c];
 
@@ -38,21 +38,21 @@
   return outputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
-  int numColumns = [anInputMatrix numberOfColumns];
+  int numColumns = [someInputs numberOfColumns];
   int c, r, e;
 
-  [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
+  [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
 
   for(c = 0; c < numColumns; c++)
   {
-    real *weightColumn = [anInputMatrix columnAtIndex: c];
+    real *weightColumn = [someInputs columnAtIndex: c];
     real *expertInputColumn = weightColumn+numExperts;
     real *weightGradInputColumn = [gradInputs columnAtIndex: c];
     real *expertGradInputColumn = weightGradInputColumn+numExperts;
     real *outputColumn = [outputs columnAtIndex: c];
-    real *gradOutputColumn = [gradOutputMatrix columnAtIndex: c];
+    real *gradOutputColumn = [someGradOutputs columnAtIndex: c];
 
     for(e = 0; e < numExperts; e++)
     {

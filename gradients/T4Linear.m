@@ -49,24 +49,24 @@
   return self;
 }
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix
+-(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
-  [outputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
+  [outputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
   [outputs copyMatrix: biases];
-  [outputs dotValue: 1. addValue: 1. dotTrMatrix: weights dotMatrix: anInputMatrix];
+  [outputs dotValue: 1. addValue: 1. dotTrMatrix: weights dotMatrix: someInputs];
   return outputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   if(!partialBackpropagation)
   {
-    [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
-    [gradInputs dotValue: 0. addValue: 1. dotMatrix: weights dotMatrix: gradOutputMatrix];
+    [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
+    [gradInputs dotValue: 0. addValue: 1. dotMatrix: weights dotMatrix: someGradOutputs];
   }
 
-  [gradWeights dotValue: 1. addValue: 1. dotMatrix: anInputMatrix dotTrMatrix: gradOutputMatrix];
-  [gradBiases addValue: 1. dotSumMatrixColumns: gradOutputMatrix];
+  [gradWeights dotValue: 1. addValue: 1. dotMatrix: someInputs dotTrMatrix: someGradOutputs];
+  [gradBiases addValue: 1. dotSumMatrixColumns: someGradOutputs];
 
   if(weightDecay != 0)
     [gradWeights addValue: weightDecay dotMatrix: weights];

@@ -33,27 +33,27 @@
 }
 
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix
+-(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
   int numMachines = [machines count];
   T4Matrix *currentOutputs;
   int i;
   
-  currentOutputs = anInputMatrix;
+  currentOutputs = someInputs;
   for(i = 0; i < numMachines; i++)
     currentOutputs = [[machines objectAtIndex: i] forwardMatrix: currentOutputs];
 
   return currentOutputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   T4GradientMachine *currentMachine, *previousMachine;
   int numMachines = [machines count];
   T4Matrix *currentGradOutputs;
   int i;
 
-  currentGradOutputs = gradOutputMatrix;
+  currentGradOutputs = someGradOutputs;
   currentMachine = [machines lastObject];
 
   for(i = numMachines-2; i >= 0; i--)
@@ -63,7 +63,7 @@
     currentMachine = previousMachine;
   }
 
-  currentGradOutputs = [currentMachine backwardMatrix: currentGradOutputs inputs: anInputMatrix];
+  currentGradOutputs = [currentMachine backwardMatrix: currentGradOutputs inputs: someInputs];
 
   return currentGradOutputs;
 }

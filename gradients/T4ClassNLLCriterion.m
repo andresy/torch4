@@ -12,26 +12,26 @@
   return self;
 }
 
--(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix
+-(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs
 {
   T4Matrix *targets = [[dataset objectAtIndex: anIndex] objectAtIndex: 1];
-  int numColumns = [anInputMatrix numberOfColumns];
+  int numColumns = [someInputs numberOfColumns];
   int c;
 
   output = 0;
   for(c = 0; c < numColumns; c++)
   {
     int theClass = [classFormat classFromRealData: [targets columnAtIndex: c]];
-    output -= [anInputMatrix columnAtIndex: c][theClass];
+    output -= [someInputs columnAtIndex: c][theClass];
   }
   
   return output;
 }
 
--(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs
 {  
   T4Matrix *targets = [[dataset objectAtIndex: anIndex] objectAtIndex: 1];
-  int numColumns = [anInputMatrix numberOfColumns];
+  int numColumns = [someInputs numberOfColumns];
   int c;
 
   [gradInputs resizeWithNumberOfColumns: numColumns];

@@ -1,6 +1,6 @@
-#import "T4MSECriterion.h"
+#import "T4WeightedMSECriterion.h"
 
-@implementation T4MSECriterion
+@implementation T4WeightedMSECriterion
 
 -initWithNumberOfInputs: (int)aNumInputs
 {
@@ -15,7 +15,9 @@
 
 -(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs
 {
-  T4Matrix *targets = [[dataset objectAtIndex: anIndex] objectAtIndex: 1];
+  NSArray *example = [dataset objectAtIndex: anIndex];
+  T4Matrix *targets = [example objectAtIndex: 1];
+  real weight = [[example objectAtIndex: 2] realData][0];
   int numColumns = [someInputs numberOfColumns];
   int c, r;
 
@@ -33,6 +35,8 @@
     }
   }
   
+  output *= weight;
+
   if(averageWithNumberOfRows)
     output /= (real)numInputs;
 
@@ -44,9 +48,10 @@
 
 -(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs
 {  
-  T4Matrix *targets = [[dataset objectAtIndex: anIndex] objectAtIndex: 1];
+  NSArray *example = [dataset objectAtIndex: anIndex];
+  T4Matrix *targets = [example objectAtIndex: 1];
   int numColumns = [someInputs numberOfColumns];
-  real norm = 2.;
+  real norm = 2.*[[example objectAtIndex: 2] realData][0];
   int c, r;
 
   [gradInputs resizeWithNumberOfColumns: numColumns];

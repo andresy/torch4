@@ -15,12 +15,12 @@
   return self;
 }
 
--(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix
+-(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs
 {
   return 0.;
 }
 
--(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs
 {
   return nil;
 }
@@ -39,6 +39,11 @@
 -(T4Matrix*)gradInputs
 {
   return gradInputs;
+}
+
+-(int)numberOfInputs
+{
+  return numInputs;
 }
 
 @end

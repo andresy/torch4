@@ -13,13 +13,13 @@
   return self;
 }
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix
+-(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
-  real *inputData = [anInputMatrix realData];
-  int inputStride = [anInputMatrix stride];
+  real *inputData = [someInputs realData];
+  int inputStride = [someInputs stride];
   int i;
 
-  [outputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
+  [outputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
   [outputs zero];
 
   for(i = 0; i < numMachines; i++)
@@ -28,18 +28,18 @@
   return outputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   real *gradInputData;
   int gradInputStride;
   int i;
 
-  [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
+  [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
   gradInputData = [gradInputs realData];
   gradInputStride = [gradInputs stride];
 
   for(i = 0; i < numMachines; i++)
-    [gradOutputMatrix copyToRealData: gradInputData+i*numOutputs stride: gradInputStride];
+    [someGradOutputs copyToRealData: gradInputData+i*numOutputs stride: gradInputStride];
 
   return gradInputs;
 }

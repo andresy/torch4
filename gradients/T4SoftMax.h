@@ -11,7 +11,7 @@
 -setShift: (real)aValue;
 -setComputesShift: (BOOL)aFlag;
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix;
--(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix;
+-(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs;
+-(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs;
 
 @end

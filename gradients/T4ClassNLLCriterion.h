@@ -7,7 +7,7 @@
 }
 
 -initWithClassFormat: (T4ClassFormat*)aClassFormat;
--(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix;
--(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)anInputMatrix;
+-(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
+-(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
 
 @end

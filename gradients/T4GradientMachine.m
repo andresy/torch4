@@ -77,14 +77,14 @@
 // {
 // }
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix
+-(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
-  return anInputMatrix;
+  return someInputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
-  return gradOutputMatrix;
+  return someGradOutputs;
 }
 
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers

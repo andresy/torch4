@@ -1,6 +1,6 @@
 #import "T4Criterion.h"
 
-@interface T4MSECriterion : T4Criterion
+@interface T4WeightedMSECriterion : T4Criterion
 {
     BOOL averageWithNumberOfRows;
     BOOL averageWithNumberOfColumns;

@@ -2,15 +2,15 @@
 
 @implementation T4StandardNormalizer
 
--initWithMean: (T4Matrix*)aMean standardDeviation: (T4Matrix*)aStandardDeviation
+-initWithMeans: (T4Matrix*)someMeans standardDeviations: (T4Matrix*)someStandardDeviations
 {
   if( (self = [super init]) )
   {
-    if([aMean numberOfRows] != [aStandardDeviation numberOfRows])
+    if([someMeans numberOfRows] != [someStandardDeviations numberOfRows])
       T4Error(@"StandardNormalizer: mean and standard deviation matrices do not match!!!");
 
-    mean = [aMean retainAndKeepWithAllocator: allocator];
-    standardDeviation = [aStandardDeviation retainAndKeepWithAllocator: allocator];
+    means = [someMeans retainAndKeepWithAllocator: allocator];
+    standardDeviations = [someStandardDeviations retainAndKeepWithAllocator: allocator];
   }
 
   return self;
@@ -21,20 +21,20 @@
   int numRows;
   int numExamples;
   int totalNumColumns;
-  T4Matrix *aMean;
-  T4Matrix *aStandardDeviation;
+  T4Matrix *someMeans;
+  T4Matrix *someStandardDeviations;
   real *meanColumn;
   real *standardDeviationColumn;
   int r, c, e;
 
   numExamples = [aDataset count];
   numRows = [[[aDataset objectAtIndex: 0] objectAtIndex: anIndex] numberOfRows];
-  aMean = [[[T4Matrix alloc] initWithNumberOfRows: numRows] keepWithAllocator: allocator];
-  aStandardDeviation = [[[T4Matrix alloc] initWithNumberOfRows: numRows] keepWithAllocator: allocator];
-  meanColumn = [aMean firstColumn];
-  standardDeviationColumn = [aStandardDeviation firstColumn];
-  [aMean zero];
-  [aStandardDeviation zero];
+  someMeans = [[[T4Matrix alloc] initWithNumberOfRows: numRows] keepWithAllocator: allocator];
+  someStandardDeviations = [[[T4Matrix alloc] initWithNumberOfRows: numRows] keepWithAllocator: allocator];
+  meanColumn = [someMeans firstColumn];
+  standardDeviationColumn = [someStandardDeviations firstColumn];
+  [someMeans zero];
+  [someStandardDeviations zero];
   totalNumColumns = 0;
 
   for(e = 0; e < numExamples; e++)
@@ -64,7 +64,7 @@
     standardDeviationColumn[r] = sqrt(standardDeviationColumn[r]);
   }
 
-  return [self initWithMean: aMean standardDeviation: aStandardDeviation];
+  return [self initWithMeans: someMeans standardDeviations: someStandardDeviations];
 }
 
 -initWithDataset: (NSArray*)aDataset
@@ -94,8 +94,8 @@
 {
   int numColumns = [aMatrix numberOfColumns];
   int numRows = [aMatrix numberOfRows];
-  real *meanColumn = [mean firstColumn];
-  real *standardDeviationColumn = [standardDeviation firstColumn];
+  real *meanColumn = [means firstColumn];
+  real *standardDeviationColumn = [standardDeviations firstColumn];
   int r, c;
 
   for(c = 0; c < numColumns; c++)
@@ -112,29 +112,29 @@
   return self;
 }
 
--(T4Matrix*)mean
+-(T4Matrix*)means
 {
-  return mean;
+  return means;
 }
 
--(T4Matrix*)standardDeviation
+-(T4Matrix*)standardDeviations
 {
-  return standardDeviation;
+  return standardDeviations;
 }
 
 -initWithCoder: (NSCoder*)aCoder
 {
   self = [super initWithCoder: aCoder];
-  mean = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
-  standardDeviation = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  means = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  standardDeviations = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   return self;
 }
 
 -(void)encodeWithCoder: (NSCoder*)aCoder
 {
   [super encodeWithCoder: aCoder];
-  [aCoder encodeObject: mean];
-  [aCoder encodeObject: standardDeviation];
+  [aCoder encodeObject: means];
+  [aCoder encodeObject: standardDeviations];
 }
 
 @end

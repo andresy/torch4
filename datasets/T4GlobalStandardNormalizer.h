@@ -1,13 +1,13 @@
 #import "T4Object.h"
 #import "T4Matrix.h"
 
-@interface T4StandardNormalizer : T4Object <NSCoding>
+@interface T4GlobalStandardNormalizer : T4Object <NSCoding>
 {
-    T4Matrix *means;
-    T4Matrix *standardDeviations;
+    real mean;
+    real standardDeviation;
 }
 
--initWithMeans: (T4Matrix*)someMeans standardDeviations: (T4Matrix*)someStandardDeviations;
+-initWithMean: (real)aMean standardDeviation: (real)aStandardDeviation;
 -initWithDataset: (NSArray*)aDataset columnIndex: (int)anIndex;
 -initWithDataset: (NSArray*)aDataset;
 
@@ -15,7 +15,7 @@
 -normalizeDataset: (NSArray*)aDataset;
 -normalizeMatrix: (T4Matrix*)aMatrix;
 
--(T4Matrix*)means;
--(T4Matrix*)standardDeviations;
+-(real)mean;
+-(real)standardDeviation;
 
 @end

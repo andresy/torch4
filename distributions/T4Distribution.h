@@ -5,14 +5,14 @@
 
 @interface T4Distribution : T4Object <T4Machine>
 {
-    int numInputs;
-		real logProbability;
-		real endAccuracy;
+  int numInputs;
+  real logProbability;
+  real endAccuracy;
 
-    NSMutableArray *parameters;
-    NSMutableArray *accumulators;
+  NSMutableArray *parameters;
+  NSMutableArray *accumulators;
 
-    int maxIteration;
+  int maxIteration;
     
 }
 

@@ -2,19 +2,19 @@
 
 @interface T4DiagonalGMM : T4Distribution
 {
-    int numGaussians;
-		real priorWeights;
-		T4Matrix* means;
-		T4Matrix* variances;
-		T4Matrix* logWeights;
-		T4Matrix* accMeans;
-		T4Matrix* accVariances;
-		T4Matrix* accWeights;
-		T4Matrix* sumLogVarPlusNObsLog2Pi;
-		T4Matrix* minusHalfOverVar;
-		T4Matrix* variancesFlooring;
-		T4Matrix* logProbabilitiesGaussians;
-    T4Matrix* logProbabilities;
+  int numGaussians;
+  real priorWeights;
+  T4Matrix* means;
+  T4Matrix* variances;
+  T4Matrix* logWeights;
+  T4Matrix* accMeans;
+  T4Matrix* accVariances;
+  T4Matrix* accWeights;
+  T4Matrix* sumLogVarPlusNObsLog2Pi;
+  T4Matrix* minusHalfOverVar;
+  T4Matrix* variancesFlooring;
+  T4Matrix* logProbabilitiesGaussians;
+  T4Matrix* logProbabilities;
 }
 
 

@@ -42,8 +42,8 @@
   mappedSizes = [allocator reallocIntArray: mappedSizes withCapacity: numMapped+1];
   mappedAddresses = (real**)[allocator reallocPointerArray: (void**)mappedAddresses withCapacity: numMapped+1];
   mappedSizes[numMapped] = numRows*numColumns*sizeof(real);
-  mappedAddresses[numMapped] = (real*)mmap(0, mappedSizes[numMapped], PROT_READ | PROT_WRITE, MAP_PRIVATE, [aFile fileDescriptor], 0);
-//  mappedAddresses[numMapped] = (real*)mmap(0, mappedSizes[numMapped], PROT_READ | PROT_WRITE, MAP_SHARED, [aFile fileDescriptor], 0);
+//  mappedAddresses[numMapped] = (real*)mmap(0, mappedSizes[numMapped], PROT_READ | PROT_WRITE, MAP_PRIVATE, [aFile fileDescriptor], 0);
+  mappedAddresses[numMapped] = (real*)mmap(0, mappedSizes[numMapped], PROT_READ, MAP_SHARED, [aFile fileDescriptor], 0);
   if(mappedAddresses[numMapped] == MAP_FAILED)
     T4Error(@"MappedBinaryLoader: cannot map the file. If it is a memory problem, buy a new processor!");
 

@@ -57,7 +57,7 @@
     [self setLearningRate: 0.01];
     [self setLearningRateDecay: 0.];
     [self setMaxNumberOfIterations: -1];
-    [self setShuffles: YES];
+    [self setShufflesExamples: YES];
   }
 
   return self;
@@ -123,7 +123,7 @@
 
   localAllocator = T4ExtractMeasurers(someMeasurers, aDataset, &datasets, &measurers);
 
-  if(doShuffle)
+  if(shufflesExamples)
     [T4Random getArrayOfShuffledIndices: shuffledIndices capacity: numTrain];
   else
   {
@@ -402,9 +402,9 @@
   return self;
 }
 
--setShuffles: (BOOL)aFlag
+-setShufflesExamples: (BOOL)aFlag
 {
-  doShuffle = aFlag;
+  shufflesExamples = aFlag;
   return self;
 }
 

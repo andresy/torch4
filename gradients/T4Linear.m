@@ -42,8 +42,8 @@
   {
     real *weightsColumn = [weights columnAtIndex: i];
     for(j = 0; j < numInputs; j++)
-      weightsColumn[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
-    biasesData[i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+      weightsColumn[j] = [T4Random uniformBoundedWithValue: -bound value: bound];
+    biasesData[i] = [T4Random uniformBoundedWithValue: -bound value: bound];
   }
 
   return self;

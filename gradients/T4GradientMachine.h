@@ -22,7 +22,7 @@
     real learningRateDecay;
     real endAccuracy;
     int maxIteration;
-    BOOL doShuffle;
+    BOOL shufflesExamples;
 }
 
 -initWithNumberOfInputs: (int)aNumInputs numberOfOutputs: (int)aNumOutputs numberOfParameters: (int)aNumParams;
@@ -38,7 +38,7 @@
 -setLearningRate: (real)aValue;
 -setLearningRateDecay: (real)aValue;
 -setMaxNumberOfIterations: (int)aValue;
--setShuffles: (BOOL)aFlag;
+-setShufflesExamples: (BOOL)aFlag;
 
 -(void)setCriterion: (T4Criterion*)aCriterion;
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;

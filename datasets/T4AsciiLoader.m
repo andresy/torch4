@@ -1,5 +1,31 @@
 #import "T4AsciiLoader.h"
 
+NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumElements)
+{
+  NSString *string;
+  NSScanner *scanner;
+  int numElements = 0;
+  real dummy;
+
+  while(numElements == 0)
+  {
+    string = [aFile stringToEndOfLine];
+
+    if(!string)
+      break;
+
+    scanner = [NSScanner scannerWithString: string];
+    numElements = 0;
+    
+    while([scanner scanReal: &dummy])
+      numElements++;
+  }
+
+  *aNumElements = numElements;
+
+  return string;
+}
+
 @implementation T4AsciiLoader
 
 -init
@@ -7,7 +33,7 @@
   if( (self = [super init]) )
   {
     [self setTransposesMatrix: YES];
-    [self setHasHeader: NO];
+    [self setAutodetectsSize: YES];
     [self setMaxNumberOfColumns: -1];
   }
 
@@ -20,39 +46,91 @@
   real *data;
   int numRows, numColumns;
 
-//  if(hasHeader || (!autodetectsSize) )
-  if(0)
+  if(autodetectsSize)
   {
-    if(![aFile readStringWithFormat: @"%d" into: &numRows])
-      T4Error(@"AsciiLoader: file corrupted");
+    numRows = 0;
+    numColumns = 0;
+    int numElements;
+    NSString *currentLine;
+    BOOL hasHeader = NO;
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-    if(![aFile readStringWithFormat: @"%d" into: &numColumns])
-      T4Error(@"AsciiLoader: file corrupted");
+    while( (currentLine = T4AsciiLoaderNextLineAndGetNumberOfElements(aFile, &numElements)) )
+    {
+      if(numRows == 0)
+      {
+        numColumns = numElements;
+      }
+
+      if(numRows == 1)
+      {
+        if(numColumns != numElements)
+        {
+          if(numColumns == 2)
+          {
+            hasHeader = YES;
+            break;
+          }
+          else
+            T4Error(@"AsciiLoader: file has not a valid format at line %d", numRows+1);
+        }
+        else
+        {
+          if(numColumns == 2)
+          {
+            
+          }
+        }
+      }
+
+      if(numRows > 1)
+      {
+        if(numColumns != numElements)
+          T4Error(@"AsciiLoader: file has not a valid format at line %d", numRows+1);
+      }
+
+      numRows++;
+    }
+
+    [pool release];
+
+    if(hasHeader)
+    {
+      T4Message(@"AsciiLoader: header found");
+
+      [aFile seekToBeginningOfFile];
+
+      if(![aFile readStringWithFormat: @"%d" into: &numRows])
+        T4Error(@"AsciiLoader: file header corrupted");
+      
+      if(![aFile readStringWithFormat: @"%d" into: &numColumns])
+        T4Error(@"AsciiLoader: file header corrupted");
+    }
+    else
+    {
+      if( (numColumns == 2) && (numRows == 3) )
+      {
+        int fakeNumRows, fakeNumColumns;
+
+        [aFile seekToBeginningOfFile];
+
+        if([aFile readStringWithFormat: @"%d" into: &fakeNumRows] && [aFile readStringWithFormat: @"%d" into: &fakeNumColumns])
+        {
+          if( (fakeNumColumns == 2) && (fakeNumRows == 2) )
+            T4Error(@"AsciiLoader: cannot be sure that you have a header [exceptional case, sorry]");
+        }
+      }
+
+      [aFile seekToBeginningOfFile];
+    }
   }
   else
   {
-    BOOL finishedReading = NO;
-    numRows = 0;
-    numColumns = -1;
-    
-    while(![aFile isEndOfFile])
-    {
-      NSString *string = [aFile stringToEndOfLine];
-      if(string)
-      {
-        NSScanner *scanner = [NSScanner scannerWithString: string];
-        int numberElements = 0;
-        real dummy;
+    if(![aFile readStringWithFormat: @"%d" into: &numRows])
+      T4Error(@"AsciiLoader: file header corrupted");
 
-        while([scanner scanReal: &dummy])
-          numberElements++;
-
-        T4Message(@"[%d] %s", numberElements, [string cString]);
-      }
-      else
-        T4Message(@"string is null");
-    }
-    exit(0);
+    if(![aFile readStringWithFormat: @"%d" into: &numColumns])
+      T4Error(@"AsciiLoader: file header corrupted");
   }
 
   if(transposesMatrix)
@@ -76,10 +154,10 @@
     {
 #ifdef USE_DOUBLE
       if(![aFile readStringWithFormat: @"%lg" into: &data[i]])
-        T4Error(@"AsciiLoader: file corrupted");
+        T4Error(@"AsciiLoader: file corrupted at line %d", i % numRows ? i/numRows+1 : i/numRows);
 #else
       if(![aFile readStringWithFormat: @"%g" into: &data[i]])
-        T4Error(@"AsciiLoader: file corrupted");
+        T4Error(@"AsciiLoader: file corrupted at line %d", i % numRows ? i/numRows+1 : i/numRows);
 #endif
     }
   }
@@ -94,10 +172,10 @@
       {
 #ifdef USE_DOUBLE
         if(![aFile readStringWithFormat: @"%lg" into: &data[c*stride+r]])
-          T4Error(@"AsciiLoader: file corrupted");
+          T4Error(@"AsciiLoader: file corrupted at line %d", numRows+1);
 #else
         if(![aFile readStringWithFormat: @"%g" into: &data[c*stride+r]])
-          T4Error(@"AsciiLoader: file corrupted");
+          T4Error(@"AsciiLoader: file corrupted at line %d", numRows+1);
 #endif
       }
     }
@@ -111,9 +189,9 @@
   transposesMatrix = aFlag;
 }
 
--(void)setHasHeader: (BOOL)aFlag
+-(void)setAutodetectsSize: (BOOL)aFlag
 {
-  hasHeader = aFlag;
+  autodetectsSize = aFlag;
 }
 
 -(void)setMaxNumberOfColumns: (int)aMaxNumber

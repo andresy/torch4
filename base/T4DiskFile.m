@@ -275,8 +275,8 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
     int numByteRead;
     int i;
 
-    stringBuffer = [allocator reallocCharArray: stringBuffer
-                              withCapacity: stringSize + T4FileStringChunkSizeForReading/* + 1*/];
+    stringBuffer = [T4Allocator sysReallocCharArray: stringBuffer
+                                withCapacity: stringSize + T4FileStringChunkSizeForReading/* + 1*/];
 
     numByteRead = fread(stringBuffer+stringSize, 1, T4FileStringChunkSizeForReading, file);
 

@@ -2,6 +2,8 @@
 
 @implementation T4Allocator
 
+// Basic stuff ////////////////////////////////////////////////////////////////////////////
+
 -init
 {
   if( (self = [super init]) )
@@ -187,29 +189,38 @@
 -(void)dealloc
 {
   int i;
-  int nObjects = [objects count];
-  int nPointers = [pointers count];
 
-  for(i = nObjects-1; i >= 0; i--)
+  if(objects)
   {
-    NSObject *object = [objects objectAtIndex: i];
-    [objects removeObjectAtIndex: i];
-    [object release];
+    int nObjects = [objects count];
+    for(i = nObjects-1; i >= 0; i--)
+    {
+      NSObject *object = [objects objectAtIndex: i];
+      [objects removeObjectAtIndex: i];
+      [object release];
+    }
+    [objects release];
   }
-  [objects release];
 
-  for(i = nPointers-1; i >= 0; i--)
+  if(pointers)
   {
-    NSObject *pointer = [pointers objectAtIndex: i];
-    [pointers removeObjectAtIndex: i];
-    [pointer release];
+    int nPointers = [pointers count];
+    T4Message(@"%d pointers to release", nPointers);
+    for(i = nPointers-1; i >= 0; i--)
+    {
+      NSObject *pointer = [pointers objectAtIndex: i];
+      [pointers removeObjectAtIndex: i];
+      [pointer release];
+    }
+    [pointers release];
   }
-  [pointers release];
 
   [super dealloc];
 }
 
-+(void*)sysAllocWithCapacity: (int)capacity
+// Direct system allocs ///////////////////////////////////////////////////////////////////
+
++(void*)sysAllocByteArrayWithCapacity: (int)capacity
 {
   void *ptr;
 
@@ -225,7 +236,35 @@
   return ptr;
 }
 
-+(void*)sysRealloc: (void*)anAddress withCapacity: (int)capacity
++(id*)sysAllocIdArrayWithCapacity: (int)aCapacity
+{
+  return (id*)[T4Allocator sysAllocByteArrayWithCapacity: aCapacity*sizeof(id)];
+}
+
++(char*)sysAllocCharArrayWithCapacity: (int)aCapacity
+{
+  return (char*)[T4Allocator sysAllocByteArrayWithCapacity: aCapacity];
+}
+
+
++(int*)sysAllocIntArrayWithCapacity: (int)aCapacity
+{
+  return (int*)[T4Allocator sysAllocByteArrayWithCapacity: aCapacity*sizeof(int)];
+}
+
++(real*)sysAllocRealArrayWithCapacity: (int)aCapacity
+{
+  return (real*)[T4Allocator sysAllocByteArrayWithCapacity: aCapacity*sizeof(real)];
+}
+
++(BOOL*)sysAllocBoolArrayWithCapacity: (int)aCapacity
+{
+  return (BOOL*)[T4Allocator sysAllocByteArrayWithCapacity: aCapacity*sizeof(BOOL)];
+}
+
+// Direct system reallocs /////////////////////////////////////////////////////////////////
+
++(void*)sysReallocByteArray: (void*)anAddress withCapacity: (int)capacity
 {
   if(capacity <= 0)
   {
@@ -252,20 +291,49 @@
   return anAddress;
 }
 
++(id*)sysReallocIdArray: (id*)aPointer withCapacity: (int)aCapacity
+{
+  return [T4Allocator sysReallocByteArray: aPointer withCapacity: aCapacity*sizeof(id)];
+}
+
++(char*)sysReallocCharArray: (void*)aPointer withCapacity: (int)aCapacity
+{
+  return [T4Allocator sysReallocByteArray: aPointer withCapacity: aCapacity];
+}
+
++(int*)sysReallocIntArray: (void*)aPointer withCapacity: (int)aCapacity
+{
+  return [T4Allocator sysReallocByteArray: aPointer withCapacity: aCapacity*sizeof(int)];
+}
+
++(real*)sysReallocRealArray: (void*)aPointer withCapacity: (int)aCapacity
+{
+  return [T4Allocator sysReallocByteArray: aPointer withCapacity: aCapacity*sizeof(real)];
+}
+
++(BOOL*)sysReallocBoolArray: (void*)aPointer withCapacity: (int)aCapacity
+{
+  return [T4Allocator sysReallocByteArray: aPointer withCapacity: aCapacity*sizeof(BOOL)];
+}
+
+// Direct system free /////////////////////////////////////////////////////////////////////
+
 +(void)sysFree: (void*)ptr
 {
   if(ptr)
     free(ptr);
 }
 
--(id*)allocIdArrayWithCapacity: (int)aCapacity
-{
-  return (id*)[self keepPointer: [T4Allocator sysAllocWithCapacity: aCapacity*sizeof(id)]];
-}
+// Allocator allocs ///////////////////////////////////////////////////////////////////////
 
 -(void*)allocByteArrayWithCapacity: (int)aCapacity
 {
-  return [self keepPointer: [T4Allocator sysAllocWithCapacity: aCapacity]];
+  return [self keepPointer: [T4Allocator sysAllocByteArrayWithCapacity: aCapacity]];
+}
+
+-(id*)allocIdArrayWithCapacity: (int)aCapacity
+{
+  return (id*)[self allocByteArrayWithCapacity: aCapacity*sizeof(id)];
 }
 
 -(char*)allocCharArrayWithCapacity: (int)aCapacity
@@ -289,10 +357,7 @@
   return (BOOL*)[self allocByteArrayWithCapacity: aCapacity*sizeof(BOOL)];
 }
 
--(id*)reallocIdArray: (id*)aPointer withCapacity: (int)aCapacity
-{
-  return (id*)[self reallocByteArray: aPointer withCapacity: aCapacity*sizeof(id)];
-}
+// Allocator reallocs /////////////////////////////////////////////////////////////////////
 
 -(void*)reallocByteArray: (void*)aPointer withCapacity: (int)aCapacity
 {
@@ -321,10 +386,15 @@
   if(index == NSNotFound)
     T4Error(@"Allocator: cannot realloc a pointer which is not mine!");
 
-  anAddress = [T4Allocator sysRealloc: [pointer address] withCapacity: aCapacity];
+  anAddress = [T4Allocator sysReallocByteArray: [pointer address] withCapacity: aCapacity];
   [pointer setAddress: anAddress];
 
   return anAddress;
+}
+
+-(id*)reallocIdArray: (id*)aPointer withCapacity: (int)aCapacity
+{
+  return [self reallocByteArray: aPointer withCapacity: aCapacity*sizeof(id)];
 }
 
 -(char*)reallocCharArray: (void*)aPointer withCapacity: (int)aCapacity
@@ -348,6 +418,8 @@
 }
 
 @end
+
+// AllocatorPointer class /////////////////////////////////////////////////////////////////
 
 @implementation T4AllocatorPointer
 

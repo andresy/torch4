@@ -3,12 +3,12 @@
 @interface T4AsciiLoader : T4Loader
 {
     BOOL transposesMatrix;
-    BOOL hasHeader;
+    BOOL autodetectsSize;
     int maxNumColumns;
 }
 
 -(void)setTransposesMatrix: (BOOL)aFlag;
--(void)setHasHeader: (BOOL)aFlag;
+-(void)setAutodetectsSize: (BOOL)aFlag;
 -(void)setMaxNumberOfColumns: (int)aMaxNumber;
 
 @end

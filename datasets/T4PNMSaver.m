@@ -5,6 +5,46 @@
 //       les bits pour avoir la meme chose qu'en gris. (Cause 1 c'est normalement
 //       blanc! Ceci au chargement et a la sauvegarde.
 
+static void T4PNMSaverNormalizeImage(T4Matrix *inputImage, T4Matrix *outputImage, real imageMinValue, real imageMaxValue, real pnmMaxValue)
+{
+  int numRows = [inputImage numberOfRows];
+  real *inputData = [inputImage firstColumn];
+  real *outputData = [outputImage firstColumn];
+  real minValue, maxValue;
+  int i;
+
+  if(imageMinValue >= imageMaxValue)
+  {
+    minValue = T4Inf;
+    maxValue = -T4Inf;
+
+    for(i = 0; i < numRows; i++)
+    {
+      real z = inputData[i];
+      
+      if(z < minValue)
+        minValue = z;
+      
+      if(z > maxValue)
+        maxValue = z;
+    }
+
+    if(minValue == maxValue)
+      maxValue += 1;
+  }
+  else
+  {
+    minValue = imageMinValue;
+    maxValue = imageMaxValue;
+  }
+
+  if(pnmMaxValue < 0)
+    pnmMaxValue = 255;
+
+  for(i = 0; i < numRows; i++)
+    outputData[i] = (inputData[i]-minValue)/(maxValue-minValue)*pnmMaxValue;
+}
+
 @implementation T4PNMSaver
 
 -initWithImageWidth: (int)aWidth imageHeight: (int)aHeight imageType: (int)aType
@@ -14,8 +54,13 @@
     imageWidth = aWidth;
     imageHeight = aHeight;
     imageType = aType;
+    normalizedImage = nil;
 
-    [self setImageMaxValue: -1];
+    [self setImageMinValue: 0];
+    [self setImageMaxValue: 0];
+    [self setNormalizesImage: YES];
+    
+    [self setPNMMaxValue: -1];
   }
 
   return self;
@@ -26,9 +71,15 @@
   T4File *file = aFile;
   unsigned char *ucharBuffer;
   int numBytesPerRow;
-  real myImageMaxValue;
+  real myPnmMaxValue;
   unsigned char *currentUcharBuffer;
   int h, i, j;
+
+  if(normalizedImage)
+  {
+    T4PNMSaverNormalizeImage(aMatrix, normalizedImage, imageMinValue, imageMaxValue, (real)pnmMaxValue);
+    aMatrix = normalizedImage;
+  }
 
   real *matrixData = [aMatrix firstColumn];
   int matrixSize = [aMatrix numberOfRows];
@@ -96,34 +147,34 @@
         [file writeStringWithFormat: @"P6\n"];
 
       // Max value ?
-      myImageMaxValue = -T4Inf;
+      myPnmMaxValue = -T4Inf;
       for(i = 0; i < matrixSize; i++)
       {
         real z = matrixData[i];
         if(z < 0)
           T4Error(@"PNMSaver: your image has negative values [%g]", z);
 
-        if(z > myImageMaxValue)
-          myImageMaxValue = matrixData[i];
+        if(z > myPnmMaxValue)
+          myPnmMaxValue = matrixData[i];
       }
 
-      if((int)myImageMaxValue > 65535)
+      if((int)myPnmMaxValue > 65535)
         T4Error(@"PNMSaver: too large value in your image");
 
-      if(imageMaxValue < (int)myImageMaxValue)
+      if(pnmMaxValue < (int)myPnmMaxValue)
       {
-        if(imageMaxValue > 0)
-          T4Warning(@"PNMSaver: overriding the provided max value which is too small [%g]", myImageMaxValue);
+        if(pnmMaxValue > 0)
+          T4Warning(@"PNMSaver: overriding the provided max value which is too small [%g]", myPnmMaxValue);
 
-        int z = (int)myImageMaxValue;
-        imageMaxValue = 1;
-        while(imageMaxValue-1 < z)
-          imageMaxValue <<= 1;
-        imageMaxValue -= 1;
+        int z = (int)myPnmMaxValue;
+        pnmMaxValue = 1;
+        while(pnmMaxValue-1 < z)
+          pnmMaxValue <<= 1;
+        pnmMaxValue -= 1;
       }
 
-      [file writeStringWithFormat: @"%d %d\n%d\n", imageWidth, imageHeight, imageMaxValue];
-      if(imageMaxValue > 255)
+      [file writeStringWithFormat: @"%d %d\n%d\n", imageWidth, imageHeight, pnmMaxValue];
+      if(pnmMaxValue > 255)
       {
         ucharBuffer = (unsigned char *)[T4Allocator sysAllocByteArrayWithCapacity: matrixSize*2];
 
@@ -159,9 +210,48 @@
   return self;
 }
 
--setImageMaxValue: (int)aValue
+-setImageMinValue: (real)aValue
+{
+  imageMinValue = aValue;
+  return self;
+}
+
+-setImageMaxValue: (real)aValue
 {
   imageMaxValue = aValue;
+  return self;
+}
+
+-setNormalizesImage: (BOOL)aFlag
+{
+  if(aFlag)
+  {
+    int matrixSize;
+
+    if( (imageType == T4PNMBitMap) ||  (imageType == T4PNMGrayMap) )
+      matrixSize =   imageWidth*imageHeight;
+    else
+      matrixSize = 3*imageWidth*imageHeight;
+
+    if(!normalizedImage)
+      normalizedImage = [[[T4Matrix alloc] initWithNumberOfRows: matrixSize] keepWithAllocator: allocator];
+  }
+  else
+  {
+    [allocator freeObject: normalizedImage];
+    normalizedImage = nil;
+  }
+  
+  return self;
+}
+
+-setPNMMaxValue: (int)aValue
+{
+  pnmMaxValue = aValue;
+
+  if(pnmMaxValue > 65535)
+    T4Error(@"PNMSaver: the provider max value is too large (%d > 65535)", pnmMaxValue);
+
   return self;
 }
 

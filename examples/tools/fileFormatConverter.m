@@ -26,7 +26,9 @@ int main( int argc, char *argv[] )
   
   BOOL obtranspose, obfloat, obdouble, oblittle, obbig;
  
-  int oiwidth, oiheight, oitype, oimaxvalue;
+  int oiwidth, oiheight, oitype, oipnmmaxvalue;
+  real oiimgminvalue, oiimgmaxvalue;
+  BOOL oiimgnormalize;
 
   // command line ----------------------------------------------------------------------------------
 
@@ -53,8 +55,6 @@ int main( int argc, char *argv[] )
   [cmdLine addBoolOption: @"-ibBigEndian" at: &ibbig default: NO help: @"enforces big endian encoding"];
   [cmdLine addIntOption: @"-ibMaxLoad" at: &ibmaxload default: -1 help: @"maximum number of columns to load"];
 
-  [cmdLine addText: @"\n * image:\n"];
-
   [cmdLine addText: @"\nOuput Options:"];
   [cmdLine addText: @"--------------\n"];
   [cmdLine addText: @" * ascii:\n"];
@@ -72,7 +72,11 @@ int main( int argc, char *argv[] )
   [cmdLine addIntOption: @"-oiWidth" at: &oiwidth default: 0 help: @"image width"];
   [cmdLine addIntOption: @"-oiHeight" at: &oiheight default: 0 help: @"image height"];
   [cmdLine addIntOption: @"-oiType" at: &oitype default: 1 help: @"image type (bit: 0 gray: 1 pixel: 2)"];
-  [cmdLine addIntOption: @"-oiMaxValue" at: &oimaxvalue default: -1 help: @"image max value"];
+  [cmdLine addRealOption: @"-oiImgMinValue" at: &oiimgminvalue default: 0 help: @"image min value"];
+  [cmdLine addRealOption: @"-oiImgMaxValue" at: &oiimgmaxvalue default: 0 help: @"image max value"];
+  [cmdLine addBoolOption: @"-oiNoNormalization" at: &oiimgnormalize default: YES help: @"normalize image 0-PNMMaxValue"];
+  [cmdLine addIntOption: @"-oiType" at: &oitype default: 1 help: @"image type (bit: 0 gray: 1 pixel: 2)"];
+  [cmdLine addIntOption: @"-oiPNMMaxvalue" at: &oipnmmaxvalue default: -1 help: @"PNM max value"];
 
   [cmdLine addText: @"\n"];
   [cmdLine read];
@@ -165,7 +169,10 @@ int main( int argc, char *argv[] )
   else if([outputFormat isEqualToString: @"image"])
   {
     T4PNMSaver *saver = [[T4PNMSaver alloc] initWithImageWidth: oiwidth imageHeight: oiheight imageType: oitype];
-    [saver setImageMaxValue: oimaxvalue];
+    [saver setImageMinValue: oiimgminvalue];
+    [saver setImageMaxValue: oiimgmaxvalue];
+    [saver setNormalizesImage: oiimgnormalize];
+    [saver setPNMMaxValue: oipnmmaxvalue];
     [saver saveMatrix: matrix atPath: outputFileName];
     [saver release];
   }

@@ -5,10 +5,21 @@
     int imageWidth;
     int imageHeight;
     int imageType;
-    int imageMaxValue;
+
+    real imageMaxValue;
+    real imageMinValue;
+
+    int pnmMaxValue;
+
+    T4Matrix *normalizedImage;
 }
 
 -initWithImageWidth: (int)aWidth imageHeight: (int)aHeight imageType: (int)aType;
--setImageMaxValue: (int)aValue;
+
+-setImageMinValue: (real)aValue;
+-setImageMaxValue: (real)aValue;
+-setNormalizesImage: (BOOL)aFlag;
+
+-setPNMMaxValue: (int)aValue;
 
 @end

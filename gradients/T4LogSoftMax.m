@@ -1,6 +1,7 @@
-#import "T4Tanh.h"
+#import "T4LogSoftMax.h"
+#import "T4LogAdd.h"
 
-@implementation T4Tanh
+@implementation T4LogSoftMax
 
 -initWithNumberOfUnits: (int)aNumUnits
 {
@@ -23,8 +24,17 @@
   {
     real *inputColumn = [anInputMatrix columnAtIndex: c];
     real *outputColumn = [outputs columnAtIndex: c];
+
+    real sum = LOG_ZERO;
     for(r = 0; r < numInputs; r++)
-      outputColumn[r] = tanh(inputColumn[r]);
+    {
+      real z = inputColumn[r];
+      outputColumn[r] = z;
+      sum = T4LogAdd(sum, z);
+    }
+
+    for(r = 0; r < numInputs; r++)
+      outputColumn[r] -= sum;
   }
   return outputs;
 }
@@ -40,11 +50,13 @@
     real *outputColumn = [outputs columnAtIndex: c];
     real *gradInputColumn = [gradInputs columnAtIndex: c];
     real *gradOutputColumn = [gradOutputMatrix columnAtIndex: c];
+
+    real sum = 0;
     for(r = 0; r < numInputs; r++)
-    {
-      real z = outputColumn[r];
-      gradInputColumn[r] = gradOutputColumn[r] * (1. - z*z);
-    }
+      sum += gradOutputColumn[r];
+
+    for(r = 0; r < numInputs; r++)
+      gradInputColumn[r] = gradOutputColumn[r] - exp(outputColumn[r]) * sum;
   }
   return gradInputs;
 }

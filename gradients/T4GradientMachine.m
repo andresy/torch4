@@ -98,7 +98,7 @@
   NSArray  *currentMeasurers, *measurers;
   T4Measurer*measurer;
   T4Allocator *localAllocator;
-  int t, i, j, julie;
+  int t, i, julie;
   int numMeasurers;
 
   if(!criterion)

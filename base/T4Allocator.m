@@ -276,6 +276,11 @@
   return (real*)[self allocByteArrayWithCapacity: aCapacity*sizeof(real)];
 }
 
+-(BOOL*)allocBoolArrayWithCapacity: (int)aCapacity
+{
+  return (BOOL*)[self allocByteArrayWithCapacity: aCapacity*sizeof(BOOL)];
+}
+
 -(void*)realloc: (void*)aPointer byteArrayWithCapacity: (int)aCapacity
 {
   T4AllocatorPointer *pointer = nil;
@@ -322,6 +327,11 @@
 -(real*)realloc: (void*)aPointer realArrayWithCapacity: (int)aCapacity
 {
   return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(real)];
+}
+
+-(BOOL*)realloc: (void*)aPointer boolArrayWithCapacity: (int)aCapacity
+{
+  return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(BOOL)];
 }
 
 @end

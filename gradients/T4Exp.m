@@ -1,6 +1,6 @@
-#import "T4Tanh.h"
+#import "T4Sigmoid.h"
 
-@implementation T4Tanh
+@implementation T4Sigmoid
 
 -initWithNumberOfUnits: (int)aNumUnits
 {
@@ -24,7 +24,7 @@
     real *inputColumn = [anInputMatrix columnAtIndex: c];
     real *outputColumn = [outputs columnAtIndex: c];
     for(r = 0; r < numInputs; r++)
-      outputColumn[r] = tanh(inputColumn[r]);
+      outputColumn[r] = exp(inputColumn[r]);
   }
   return outputs;
 }
@@ -41,10 +41,7 @@
     real *gradInputColumn = [gradInputs columnAtIndex: c];
     real *gradOutputColumn = [gradOutputMatrix columnAtIndex: c];
     for(r = 0; r < numInputs; r++)
-    {
-      real z = outputColumn[r];
-      gradInputColumn[r] = gradOutputColumn[r] * (1. - z*z);
-    }
+      gradInputColumn[r] = gradOutputColumn[r] * outputColumn[r];
   }
   return gradInputs;
 }

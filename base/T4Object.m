@@ -1,5 +1,21 @@
 #import "T4Object.h"
 
+@implementation NSObject (T4NSObjectAllocator)
+
+-keepWithAllocator: (T4Allocator*)anAllocator
+{
+  [anAllocator keepObject: self];
+  return self;
+}
+
+-retainAndKeepWithAllocator: (T4Allocator*)anAllocator
+{
+  [anAllocator retainAndKeepObject: self];
+  return self;
+}
+
+@end
+
 @implementation T4ObjectOption
 
 -initWithAddress: (void*)anAddress size: (int)aSize

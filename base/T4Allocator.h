@@ -18,11 +18,13 @@
 -(char*)allocCharArrayWithCapacity: (int)aCapacity;
 -(int*)allocIntArrayWithCapacity: (int)aCapacity;
 -(real*)allocRealArrayWithCapacity: (int)aCapacity;
+-(BOOL*)allocBoolArrayWithCapacity: (int)aCapacity;
 
 -(void*)realloc: (void*)aPointer byteArrayWithCapacity: (int)aCapacity;
 -(char*)realloc: (void*)aPointer charArrayWithCapacity: (int)aCapacity;
 -(int*)realloc: (void*)aPointer intArrayWithCapacity: (int)aCapacity;
 -(real*)realloc: (void*)aPointer realArrayWithCapacity: (int)aCapacity;
+-(BOOL*)realloc: (void*)aPointer boolArrayWithCapacity: (int)aCapacity;
 
 +(void*)sysAllocWithCapacity: (int)capacity;
 +(void*)sysRealloc: (void*)anAddress withCapacity: (int)capacity;

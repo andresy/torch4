@@ -1,6 +1,6 @@
-#import "T4Tanh.h"
+#import "T4SoftPlus.h"
 
-@implementation T4Tanh
+@implementation T4SoftPlus
 
 -initWithNumberOfUnits: (int)aNumUnits
 {
@@ -24,7 +24,7 @@
     real *inputColumn = [anInputMatrix columnAtIndex: c];
     real *outputColumn = [outputs columnAtIndex: c];
     for(r = 0; r < numInputs; r++)
-      outputColumn[r] = tanh(inputColumn[r]);
+      outputColumn[r] = log1p(exp(inputColumn[r]));
   }
   return outputs;
 }
@@ -42,8 +42,8 @@
     real *gradOutputColumn = [gradOutputMatrix columnAtIndex: c];
     for(r = 0; r < numInputs; r++)
     {
-      real z = outputColumn[r];
-      gradInputColumn[r] = gradOutputColumn[r] * (1. - z*z);
+      real z = exp(outputColumn[r]);
+      gradInputColumn[r] = gradOutputColumn[r] * (z - 1.)/z;
     }
   }
   return gradInputs;

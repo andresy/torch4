@@ -15,13 +15,19 @@
 
 -addMachine: (T4GradientMachine*)aMachine
 {
-  [machines addObject: aMachine];
-
-  if([machines count] == 1)
+  if([machines count] == 0)
   {
     gradInputs = [aMachine gradInputs];
     numInputs = [aMachine numberOfInputs];
   }
+  else
+  {
+    if([aMachine numberOfInputs] != numOutputs)
+      T4Error(@"SequentialMachine: machines <%@> and <%@> have incompatible number of outputs [%d] and inputs [%d]", 
+              [[machines lastObject] class], [aMachine class], numOutputs, [aMachine numberOfInputs]);
+  }
+
+  [machines addObject: aMachine];
 
   outputs = [aMachine outputs];
   numOutputs = [aMachine numberOfOutputs];

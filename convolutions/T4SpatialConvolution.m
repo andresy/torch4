@@ -212,5 +212,20 @@
   else
     return gradInputs;
 }
+
+-(int)numberOfOutputPlanes
+{
+  return numOutputPlanes;
+}
+
+-(int)outputHeight
+{
+  return outputHeight;
+}
+
+-(int)outputWidth
+{
+  return outputWidth;
+}
   
 @end

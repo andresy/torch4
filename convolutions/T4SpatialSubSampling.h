@@ -65,9 +65,13 @@
 
 -initWithNumberOfInputPlanes: (int)aNumInputPlanes
                   inputWidth: (int)anInputWidth
-                intputHeight: (int)anInputHeight
+                outputHeight: (int)anInputHeight
                   kernelSize: (int)aKW
                           dX: (int)aDX
                           dY: (int)aDY;
+
+
+-(int)outputWidth;
+-(int)outputHeight;
 
 @end

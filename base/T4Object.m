@@ -33,7 +33,7 @@
 -subclassResponsibility:(SEL)aSel
 {
   NSString *selectorName = NSStringFromSelector(aSel);
-  T4Error(@"Subclass <%s> should override the method <%s>", [[self className] cString], [selectorName cString]);
+  T4Error(@"Subclass <%@> should override the method <%s>", [self class], [selectorName cString]);
   return self;
 }
 

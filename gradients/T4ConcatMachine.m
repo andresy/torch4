@@ -20,9 +20,7 @@
 
 -addMachine: (T4GradientMachine*)aMachine
 {
-  [machines addObject: aMachine];
-
-  if([machines count] == 1)
+  if([machines count] == 0)
   {
     numInputs = [aMachine numberOfInputs];
     [gradInputs resizeWithNumberOfRows: numInputs];
@@ -30,8 +28,11 @@
   else
   {
     if([aMachine numberOfInputs] != numInputs)
-      T4Error(@"ConcatMachine: all machines must have the same number of inputs!!!");
+      T4Error(@"ConcatMachine: machines <%@> and <%@> have incompatible number of inputs [%d] inputs [%d]", 
+              [[machines lastObject] class], [aMachine class], numInputs, [aMachine numberOfInputs]);
   }
+
+  [machines addObject: aMachine];
 
   offsets = [allocator reallocIntArray: offsets withCapacity: [machines count]];
   offsets[[machines count]-1] = numOutputs;

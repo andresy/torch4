@@ -408,4 +408,16 @@
   return self;
 }
 
+-(int)numberOfParameters
+{
+  int numParameters = 0;
+  int numVectors = [parameters count];
+  int i;
+
+  for(i = 0; i < numVectors; i++)
+    numParameters += [[parameters objectAtIndex: i] numberOfRows];
+
+  return numParameters;
+}
+
 @end

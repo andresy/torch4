@@ -5,7 +5,7 @@
 
 -initWithNumberOfInputPlanes: (int)aNumInputPlanes
                   inputWidth: (int)anInputWidth
-                intputHeight: (int)anInputHeight
+                outputHeight: (int)anInputHeight
                   kernelSize: (int)aKW
                           dX: (int)aDX
                           dY: (int)aDY
@@ -157,7 +157,7 @@
     [gradInputs resizeWithNumberOfColumns: numColumns];
     [gradInputs zero];
     
-    currentGradInputPlane = [someInputs columnAtIndex: c];
+    currentGradInputPlane = [gradInputs columnAtIndex: c];
     currentGradOutputPlane = [someGradOutputs columnAtIndex: c];
 
     for(k = 0; k < numInputPlanes; k++)
@@ -185,6 +185,16 @@
     return nil;
   else
     return gradInputs;
+}
+
+-(int)outputHeight
+{
+  return outputHeight;
+}
+
+-(int)outputWidth
+{
+  return outputWidth;
 }
 
 @end

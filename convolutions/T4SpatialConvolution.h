@@ -74,4 +74,8 @@
                           dX: (int)aDX
                           dY: (int)aDY;
 
+-(int)numberOfOutputPlanes;
+-(int)outputWidth;
+-(int)outputHeight;
+
 @end

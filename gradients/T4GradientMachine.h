@@ -48,6 +48,7 @@
 -(int)numberOfOutputs;
 -(T4Matrix*)outputs;
 -(T4Matrix*)gradInputs;
+-(int)numberOfParameters;
 -(NSArray*)parameters;
 -(NSArray*)gradParameters;
 

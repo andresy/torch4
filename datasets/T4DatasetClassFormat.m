@@ -30,7 +30,7 @@
   if( (self = [super initWithNumberOfClasses: [aClassTable numberOfColumns]
                      encodingSize: [aClassTable numberOfRows]]) )
   {
-    T4Message(@"DatasetClassFormat: %d classes detected", [aClassTable numberOfColumns]);
+    T4Message(@"DatasetClassFormat: %d classes detected [%d originally]", [aClassTable numberOfColumns], [aClassTable numberOfRows]);
     [classLabels copyMatrix: aClassTable];
     directEncoding = NO;
   }

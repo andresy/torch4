@@ -33,6 +33,7 @@ int main( int argc, char *argv[] )
   NSString *validFileName;
   NSString *modelFileName;
   int seed;
+  int maxLoad, maxLoadValid;
 
   int inputWidth, inputHeight;
   int convNumPlanes, convKW, convKH, convDW, convDH;
@@ -71,12 +72,17 @@ int main( int argc, char *argv[] )
   [cmdLine addIntOption: @"-seed" at: &seed default: 5776 help: @"the random seed"];
   [cmdLine addStringOption: @"-valid" at: &validFileName default: @"" help: @"validation file"];
   [cmdLine addStringOption: @"-save" at: &modelFileName default: @"" help: @"save into a model file"];
+  [cmdLine addIntOption: @"-load" at: &maxLoad default: -1 help: @"max number of examples to load"];
+  [cmdLine addIntOption: @"-loadValid" at: &maxLoadValid default: -1 help: @"max number of examples to load for validation"];
 
   [cmdLine addMasterSwitch: @"--test"];
   [cmdLine addStringArgument: @"model" at: &modelFileName help: @"model file"];
   [cmdLine addStringArgument: @"file" at: &trainFileName help: @"testing file"];
   [cmdLine addText: @"\nTesting options:\n"];
   [cmdLine addIntOption: @"-class" at: &trainingClass default: -1 help: @"class to train against the others"];
+
+  [cmdLine addText: @"\nMisc options:\n"];
+  [cmdLine addIntOption: @"-load" at: &maxLoad default: -1 help: @"max number of examples to load"];
                                                          
   [cmdLine addText: @"\n"];
   int cmdLineMode = [cmdLine read];
@@ -101,7 +107,8 @@ int main( int argc, char *argv[] )
   T4ExampleDealer *dealer = [[[T4ExampleDealer alloc] init] autorelease];
   [T4DiskFile setLittleEndianEncoding];
   [loader setEnforcesFloatEncoding: YES];
-  
+  [loader setMaxNumberOfColumns: maxLoad];
+
   NSArray *examples = [dealer columnExamplesWithMatrix: [loader loadMatrixAtPath: trainFileName] elementSize: -1 elementSize: 1];
   
   T4StandardNormalizer *normalizer;
@@ -118,6 +125,7 @@ int main( int argc, char *argv[] )
   {
     if(![validFileName isEqualToString: @""])
     {
+      [loader setMaxNumberOfColumns: maxLoadValid];
       validExamples = [dealer columnExamplesWithMatrix: [loader loadMatrixAtPath: validFileName] elementSize: -1 elementSize: 1];
       [normalizer normalizeDataset: validExamples];
     }
@@ -244,7 +252,7 @@ int main( int argc, char *argv[] )
       archiver = [[[NSArchiver alloc] initForWritingWithMutableData: data] autorelease];
       [archiver encodeObject: normalizer];
       [archiver encodeObject: mlp];
-      [data writeToFile: modelFileName atomically: YES];
+      [data writeToFile: modelFileName atomically: NO];
     }
   }
   else

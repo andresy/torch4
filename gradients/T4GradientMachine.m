@@ -425,6 +425,8 @@
   [aCoder encodeValueOfObjCType: @encode(int) at: &numOutputs];
   [aCoder encodeObject: parameters];
   [aCoder encodeObject: gradParameters];
+  if(partialBackpropagation) // otherwise valgrind yells
+    [gradInputs zero];
   [aCoder encodeObject: gradInputs];
   [aCoder encodeObject: outputs];
 

@@ -321,6 +321,14 @@
   return [self addOption: option];
 }
 
+-addArrayFileOption: (NSString*)aName at: (NSArray**)anAddress default: (NSArray*)aDefault help: (NSString*)aHelp
+{
+  T4ArrayFileCommandLineOption *option = [T4ArrayFileCommandLineOption alloc];
+  [option initWithName: aName at: anAddress default: aDefault help: aHelp];
+  [allocator keepObject: option];
+  return [self addOption: option];
+}
+
 -addArgument: (T4CommandLineOption*)argument
 {
   NSMutableArray *currentArguments = [arguments objectForKey: currentSwitch];
@@ -351,6 +359,14 @@
   [option initWithName: aName at: anAddress default: @"" help: aHelp];
   [allocator keepObject: option];
   return [self addArgument: option];
+}
+
+-addArrayFileArgument: (NSString*)aName at: (NSArray**)anAddress help: (NSString*)aHelp
+{
+  T4ArrayFileCommandLineOption *option = [T4ArrayFileCommandLineOption alloc];
+  [option initWithName: aName at: anAddress default: nil help: aHelp];
+  [allocator keepObject: option];
+  return [self addArgument: option];  
 }
 
 @end

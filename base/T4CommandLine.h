@@ -27,11 +27,13 @@
 -addRealOption: (NSString*)aName at: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp;
 -addBoolOption: (NSString*)aName at: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp;
 -addStringOption: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefault help: (NSString*)aHelp;
+-addArrayFileOption: (NSString*)aName at: (NSArray**)anAddress default: (NSArray*)aDefault help: (NSString*)aHelp;
 
 -addArgument: (T4CommandLineOption*)argument;
 -addIntArgument: (NSString*)aName at: (int*)anAddress help: (NSString*)aHelp;
 -addRealArgument: (NSString*)aName at: (real*)anAddress help: (NSString*)aHelp;
 //-addBoolArgument: (NSString*)aName at: (BOOL*)anAddress help: (NSString*)aHelp; peut pas exister!!!
 -addStringArgument: (NSString*)aName at: (NSString**)anAddress help: (NSString*)aHelp;
+-addArrayFileArgument: (NSString*)aName at: (NSArray**)anAddress help: (NSString*)aHelp;
 
 @end

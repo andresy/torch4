@@ -1,4 +1,5 @@
 #import "T4CommandLineOption.h"
+#import "T4DiskFile.h"
 
 @implementation T4CommandLineOption
 
@@ -233,6 +234,72 @@
     return [[[NSString alloc] initWithString: *address] autorelease];
   else
     return [[[NSString alloc] initWithString: defaultValue] autorelease];
+}
+
+@end
+
+@implementation T4ArrayFileCommandLineOption
+
+-initWithName: (NSString*)aName at: (NSArray**)anAddress default: (NSArray*)aDefaultValue help: (NSString*)aHelp
+{
+  if( (self = [super initWithName: aName type: @"<string>" help: aHelp]) )
+  {
+    address = anAddress;
+    defaultValue = aDefaultValue;
+  }
+  
+  return self;
+}
+
+-read: (NSMutableArray*)arguments
+{
+  if([arguments count] > 0)
+  {
+    NSString *fileName = [arguments objectAtIndex: 0];
+    T4DiskFile *file = [[T4DiskFile alloc] initForReadingAtPath: fileName];
+    NSMutableArray *array = [[[NSMutableArray alloc] init] keepWithAllocator: allocator];
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSCharacterSet *whitespaceAndNewlineCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    while(![file isEndOfFile])
+    {
+      NSString *currentLine = [[file stringToEndOfLine] stringByTrimmingCharactersInSet: whitespaceAndNewlineCharacterSet];
+      if([currentLine length] > 0)
+        [array addObject: currentLine];
+    }      
+    [pool release];
+    *address = array;
+    [file release];
+    [arguments removeObjectAtIndex: 0];
+  }
+  else
+    T4Error(@"ArrayFileCommandLineOption: cannot correctly set <%@>", name);
+  
+  isSet = YES;
+
+  return self;
+}
+
+-initToDefaultValue
+{
+  if(defaultValue)
+    *address = [[[NSArray alloc] initWithArray: defaultValue] keepWithAllocator: allocator];
+  else
+    *address = [[[NSArray alloc] init] keepWithAllocator: allocator];
+
+  return self;
+}
+
+-(NSString*)textValue
+{
+  if(isSet)
+    return [*address description];
+  else
+  {
+    if(defaultValue)
+      return [defaultValue description];
+    else
+      return [NSString stringWithString: @""];
+  }
 }
 
 @end

@@ -62,3 +62,13 @@
 -initWithName: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp;
 
 @end
+
+@interface T4ArrayFileCommandLineOption : T4CommandLineOption
+{
+  NSArray **address;
+  NSArray *defaultValue;
+}
+
+-initWithName: (NSString*)aName at: (NSArray**)anAddress default: (NSArray*)aDefaultValue help: (NSString*)aHelp;
+
+@end

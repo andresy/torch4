@@ -6,6 +6,7 @@
 
 #import "T4BinaryLoader.h"
 #import "T4BinarySaver.h"
+#import "T4DiskFile.h"
 
 int main( int argc, char *argv[] )
 {
@@ -15,13 +16,13 @@ int main( int argc, char *argv[] )
   BOOL iatranspose, iaautodetect;
   int iamaxload;
 
-  BOOL ibtranspose, ibfloat, ibdouble;
+  BOOL ibtranspose, ibfloat, ibdouble, iblittle, ibbig;
   int ibmaxload;
 
   BOOL oatranspose, oaheader;
   
-  BOOL obtranspose, obfloat, obdouble;
-
+  BOOL obtranspose, obfloat, obdouble, oblittle, obbig;
+  
   // command line ----------------------------------------------------------------------------------
 
   T4CommandLine *cmdLine = [[[T4CommandLine alloc] initWithArgv: argv argc: argc] autorelease];
@@ -43,6 +44,8 @@ int main( int argc, char *argv[] )
   [cmdLine addBoolOption: @"-ibNoTranspose" at: &ibtranspose default: YES help: @"do not transpose"];
   [cmdLine addBoolOption: @"-ibFloat" at: &ibfloat default: NO help: @"enforces float encoding"];
   [cmdLine addBoolOption: @"-ibDouble" at: &ibdouble default: NO help: @"enforces double encoding"];
+  [cmdLine addBoolOption: @"-ibLittleEndian" at: &iblittle default: NO help: @"enforces little endian encoding"];
+  [cmdLine addBoolOption: @"-ibBigEndian" at: &ibbig default: NO help: @"enforces big endian encoding"];
   [cmdLine addIntOption: @"-ibMaxLoad" at: &ibmaxload default: -1 help: @"maximum number of columns to load"];
 
   [cmdLine addText: @"\nOuput Options:"];
@@ -55,6 +58,8 @@ int main( int argc, char *argv[] )
   [cmdLine addBoolOption: @"-obNoTranspose" at: &obtranspose default: YES help: @"do not transpose"];
   [cmdLine addBoolOption: @"-obFloat" at: &obfloat default: NO help: @"enforces float encoding"];
   [cmdLine addBoolOption: @"-obDouble" at: &obdouble default: NO help: @"enforces double encoding"];
+  [cmdLine addBoolOption: @"-obLittleEndian" at: &oblittle default: NO help: @"enforces little endian encoding"];
+  [cmdLine addBoolOption: @"-obBigEndian" at: &obbig default: NO help: @"enforces big endian encoding"];
 
   [cmdLine addText: @"\n"];
   [cmdLine read];
@@ -84,6 +89,15 @@ int main( int argc, char *argv[] )
       [loader setEnforcesFloatEncoding: ibfloat];
     if(ibdouble)
       [loader setEnforcesDoubleEncoding: ibdouble];
+
+    if(iblittle && ibbig)
+      T4Error(@"Input binary format error: cannot select both little endian and big endian encoding");
+
+    if(iblittle)
+      [T4DiskFile setLittleEndianEncoding];
+
+    if(ibbig)
+      [T4DiskFile setBigEndianEncoding];
 
     [loader setMaxNumberOfColumns: iamaxload];
     matrix = [loader loadMatrixAtPath: inputFileName];
@@ -116,6 +130,15 @@ int main( int argc, char *argv[] )
       [saver setEnforcesFloatEncoding: obfloat];
     if(obdouble)
       [saver setEnforcesDoubleEncoding: obdouble];
+
+    if(oblittle && obbig)
+      T4Error(@"Output binary format error: cannot select both little endian and big endian encoding");
+
+    if(oblittle)
+      [T4DiskFile setLittleEndianEncoding];
+
+    if(obbig)
+      [T4DiskFile setBigEndianEncoding];
 
     [saver saveMatrix: matrix atPath: outputFileName];
     [saver release];    

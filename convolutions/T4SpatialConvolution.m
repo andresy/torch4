@@ -104,24 +104,30 @@
       
         // Get the input image
         real *currentInputPlane = inputColumn+i*inputWidth*inputHeight;
-      
+        real *currentOutputPlaneRow = currentOutputPlane;
+
         // For all output pixels...
         for(yy = 0; yy < outputHeight; yy++)
         {
           for(xx = 0; xx < outputWidth; xx++)
           {
             // Dot product in two dimensions... (between input image and the mask)
-            real *subInputPlane = currentInputPlane+yy*dH*inputWidth+xx*dW;
+            real *subInputPlaneRow = currentInputPlane+yy*dH*inputWidth+xx*dW;
+            real *ptrWRow = ptrW;
+
             real sum = 0;
             for(ky = 0; ky < kH; ky++)
             {
               for(kx = 0; kx < kW; kx++)
-                sum += subInputPlane[ky*inputWidth+kx]*ptrW[ky*kW+kx];
+                sum += subInputPlaneRow[kx]*ptrWRow[kx];
+              subInputPlaneRow += inputWidth;
+              ptrWRow += kW;
             }
             
             // Update output
-            currentOutputPlane[yy*outputWidth+xx] += sum;
+            currentOutputPlaneRow[xx] += sum;            
           }
+          currentOutputPlaneRow += outputWidth;
         }
       }
       
@@ -157,18 +163,25 @@
       {
         real *gradPtrW = gradWeights[k] + i*kW*kH;
         real *currentInputPlane = inputColumn+i*inputWidth*inputHeight;
+        real *currentGradOutputPlaneRow = currentGradOutputPlane;
+
         for(yy = 0; yy < outputHeight; yy++)
         {
           for(xx = 0; xx < outputWidth; xx++)
           {
-            real *subInputPlane = currentInputPlane+yy*dH*inputWidth+xx*dW;            
-            real z = currentGradOutputPlane[yy*outputWidth+xx];
+            real *subInputPlaneRow = currentInputPlane+yy*dH*inputWidth+xx*dW;            
+            real *gradPtrWRow = gradPtrW;
+
+            real z = currentGradOutputPlaneRow[xx];
             for(ky = 0; ky < kH; ky++)
             {
               for(kx = 0; kx < kW; kx++)
-                gradPtrW[ky*kW+kx] += z * subInputPlane[ky*inputWidth+kx];
+                gradPtrWRow[kx] += z * subInputPlaneRow[kx];
+              subInputPlaneRow += inputWidth;
+              gradPtrWRow += kW;
             }
           }
+          currentGradOutputPlaneRow += outputWidth;
         }
       }
       currentGradOutputPlane += outputWidth*outputHeight;
@@ -191,18 +204,25 @@
       {
         real *ptrW = weights[k]+i*kW*kH;
         real *currentGradInputPlane = gradInputColumn+i*inputWidth*inputHeight;
+        real *currentGradOutputPlaneRow = currentGradOutputPlane;
+
         for(yy = 0; yy < outputHeight; yy++)
         {
           for(xx = 0; xx < outputWidth; xx++)
           {
-            real *subGradInputPlane = currentGradInputPlane+yy*dH*inputWidth+xx*dW;
-            real z = currentGradOutputPlane[yy*outputWidth+xx];
+            real *subGradInputPlaneRow = currentGradInputPlane+yy*dH*inputWidth+xx*dW;
+            real *ptrWRow = ptrW;
+
+            real z = currentGradOutputPlaneRow[xx];
             for(ky = 0; ky < kH; ky++)
             {
               for(kx = 0; kx < kW; kx++)
-                subGradInputPlane[ky*inputWidth+kx] += z * ptrW[ky*kW+kx];
+                subGradInputPlaneRow[kx] += z * ptrWRow[kx];
+              subGradInputPlaneRow += inputWidth;
+              ptrWRow += kW;
             }
           }
+          currentGradOutputPlaneRow += outputWidth;
         }
       }
       currentGradOutputPlane += outputWidth*outputHeight;

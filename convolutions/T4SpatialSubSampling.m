@@ -83,24 +83,28 @@
       
       // Get the good mask for (k,i) (k out, i in)
       real theWeight = weights[k];
-      
+      real *currentOutputPlaneRow = currentOutputPlane;
+
       // For all output pixels...
       for(yy = 0; yy < outputHeight; yy++)
       {
         for(xx = 0; xx < outputWidth; xx++)
         {
           // Compute the mean of the input image...
-          real *subInputPlane = currentInputPlane+yy*dH*inputWidth+xx*dW;
+          real *subInputPlaneRow = currentInputPlane+yy*dH*inputWidth+xx*dW;
+
           real sum = 0;
           for(ky = 0; ky < kH; ky++)
           {
             for(kx = 0; kx < kW; kx++)
-              sum += subInputPlane[ky*inputWidth+kx];
+              sum += subInputPlaneRow[kx];
+            subInputPlaneRow += inputWidth;
           }
           
           // Update output
-          currentOutputPlane[yy*outputWidth+xx] += theWeight*sum;
+          currentOutputPlaneRow[xx] += theWeight*sum;
         }
+        currentOutputPlaneRow += outputWidth;
       }
       
       // Next input/output plane
@@ -132,19 +136,24 @@
         sum += currentGradOutputPlane[i];
       gradBiases[k] += sum;
       
+      real *currentGradOutputPlaneRow = currentGradOutputPlane;
+
       sum = 0;
       for(yy = 0; yy < outputHeight; yy++)
       {
         for(xx = 0; xx < outputWidth; xx++)
         {
-          real *subInputPlane = currentInputPlane+yy*dH*inputWidth+xx*dW;
-          real z = currentGradOutputPlane[yy*outputWidth+xx];
+          real *subInputPlaneRow = currentInputPlane+yy*dH*inputWidth+xx*dW;
+          
+          real z = currentGradOutputPlaneRow[xx];
           for(ky = 0; ky < kH; ky++)
           {
             for(kx = 0; kx < kW; kx++)
-              sum += z * subInputPlane[ky*inputWidth+kx];
+              sum += z * subInputPlaneRow[kx];
+            subInputPlaneRow += inputWidth;
           }
         }
+        currentGradOutputPlaneRow += outputWidth;
       }
       gradWeights[k] += sum;
       currentInputPlane += inputWidth*inputHeight;
@@ -165,18 +174,23 @@
     for(k = 0; k < numInputPlanes; k++)
     {
       real theWeight = weights[k];
+      real *currentGradOutputPlaneRow = currentGradOutputPlane;
+
       for(yy = 0; yy < outputHeight; yy++)
       {
         for(xx = 0; xx < outputWidth; xx++)
         {
-          real *subGradInputPlane = currentGradInputPlane+yy*dH*inputWidth+xx*dW;
-          real z = currentGradOutputPlane[yy*outputWidth+xx] * theWeight;
+          real *subGradInputPlaneRow = currentGradInputPlane+yy*dH*inputWidth+xx*dW;
+
+          real z = currentGradOutputPlaneRow[xx] * theWeight;
           for(ky = 0; ky < kH; ky++)
           {
             for(kx = 0; kx < kW; kx++)
-              subGradInputPlane[ky*inputWidth+kx] += z;
+              subGradInputPlaneRow[kx] += z;
+            subGradInputPlaneRow += inputWidth;
           }
         }
+        currentGradOutputPlaneRow += outputWidth;
       }
       currentGradInputPlane += inputWidth*inputHeight;
       currentGradOutputPlane += outputWidth*outputHeight;

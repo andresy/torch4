@@ -30,7 +30,7 @@
     {
       real z = weightColumn[e];
       for(r = 0; r < numOutputs; r++)
-        outputColumn[r] = z * expertInputColumn[r];
+        outputColumn[r] += z * expertInputColumn[r];
       expertInputColumn += numOutputs;
     }
   }

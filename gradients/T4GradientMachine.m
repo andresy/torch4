@@ -149,10 +149,13 @@
       }
 
       [criterion forwardExampleAtIndex: shuffledIndices[t] inputs: [self forwardMatrix: inputs]];
-      T4Message(@"criterion = %g [out mlp = %g] for example <%d> = [%@]", [criterion output], [[self outputs] realData][0], shuffledIndices[t], inputs);
+//      T4Message(@"criterion = %g [out mlp = %g] for example <%d> = [%@]", [criterion output], [[self outputs] realData][0], shuffledIndices[t], inputs);
       [self backwardMatrix:
               [criterion backwardExampleAtIndex: shuffledIndices[t] inputs: [self outputs]]
             inputs: inputs];
+
+//       T4Message(@"gradients = %@", gradInputs);
+//       exit(0);
 
 //      T4Message(@"gradients = %@", gradParameters);
 

@@ -44,9 +44,7 @@
   for(e = 0; e < numExamples; e++)
     [examplesArray[e] release];
 
-  [allocator keepObject: examples];
-
-  return examples;
+  return [examples autorelease];
 }
 
 -(NSArray*)examplesWithElements: (NSArray*)someMatricesA elements: (NSArray*)someMatricesB
@@ -139,16 +137,15 @@
   for(e = 0; e < numExamples; e++)
     [examplesArray[e] release];
 
-  [allocator keepObject: examples];
   [T4Allocator sysFree: examplesArray];
   [T4Allocator sysFree: exampleArray];
 
-  return examples;
+  return [examples autorelease];
 }
 
 -(NSArray*)examplesWithMatrices:  (NSArray*)someMatrices numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep elementSizes: (int*)someElementSizes numberOfElements: (int)aNumElements
 {
-  NSMutableArray *examples = [[[NSMutableArray alloc] init] keepWithAllocator: allocator];
+  NSMutableArray *examples = [[NSMutableArray alloc] init];
   int numMatrices = [someMatrices count];
   int i;
 
@@ -163,7 +160,7 @@
     [examples addObjectsFromArray: someExamples];
   }
 
-  return examples;
+  return [examples autorelease];
 }
 
 -(NSArray*)columnExamplesWithMatrix:  (T4Matrix*)aMatrix
@@ -214,7 +211,30 @@
                numberOfElements: 2];
 }
 
-//
+
+// Examples by composition of several matrices given in different arrays ////////////////////////////////////////////////////////
+
+-(NSArray*)examplesWithMatrices: (NSArray*)someMatrices
+{
+  int numExamples = [someMatrices count];
+  NSArray **examplesArray;
+  NSArray *examples;
+  int e;
+
+  examplesArray = [T4Allocator sysAllocIdArrayWithCapacity: numExamples];
+
+  for(e = 0; e < numExamples; e++)
+    examplesArray[e] = [[NSArray alloc] initWithObjects: [someMatrices objectAtIndex: e], nil];
+
+  examples = [[NSArray alloc] initWithObjects: examplesArray count: numExamples];
+
+  for(e = 0; e < numExamples; e++)
+    [examplesArray[e] release];
+
+  return [examples autorelease];  
+}
+
+// Matrices by composition of several matrices given in different arrays ////////////////////////////////////////////////////////
 
 -(NSArray*)matricesWithMatrix: (T4Matrix*)aMatrix rowOffset: (int)aRowOffset numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep
 {
@@ -259,15 +279,14 @@
   for(m = 0; m < numMatrices; m++)
     [matricesArray[m] release];
 
-  [allocator keepObject: matrices];
   [T4Allocator sysFree: matricesArray];
 
-  return matrices;
+  return [matrices autorelease];
 }
 
 -(NSArray*)matricesWithMatrices: (NSArray*)someMatrices rowOffset: (int)aRowOffset numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep
 {
-  NSMutableArray *matrices = [[[NSMutableArray alloc] init] keepWithAllocator: allocator];
+  NSMutableArray *matrices = [[NSMutableArray alloc] init];
   int numMatrices = [someMatrices count];
   int m;
 
@@ -282,7 +301,7 @@
     [matrices addObjectsFromArray: currentMatrices];
   }
 
-  return matrices;
+  return [matrices autorelease];
 }
 
 -(NSArray*)columnMatricesWithMatrix:  (T4Matrix*)aMatrix

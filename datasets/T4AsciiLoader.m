@@ -148,7 +148,6 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
   }
 
   matrix = [[T4Matrix alloc] initWithNumberOfRows: numRows numberOfColumns: numColumns];
-  [allocator keepObject: matrix];
   
   data = [matrix firstColumn];
   if(transposesMatrix)
@@ -186,7 +185,7 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
     }
   }
 
-  return matrix;
+  return [matrix autorelease];
 }
 
 -setTransposesMatrix: (BOOL)aFlag

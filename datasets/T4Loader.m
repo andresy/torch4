@@ -40,8 +40,7 @@
   for(i = 0; i < numFiles; i++)
     [matrices addObject: [self loadMatrixFromFile: [someFiles objectAtIndex: i]]];
 
-  [allocator keepObject: matrices];
-  return matrices;
+  return [matrices autorelease];
 }
 
 -(NSArray*)loadMatricesAtPaths: (NSArray*)somePaths
@@ -60,8 +59,7 @@
     [file release];
   }
 
-  [allocator keepObject: matrices];
-  return matrices;
+  return [matrices autorelease];
 }
 
 -setMaxNumberOfMatrices: (int)aMaxNumber

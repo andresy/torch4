@@ -18,6 +18,8 @@
 -(NSArray*)columnExamplesWithMatrix:  (T4Matrix*)aMatrix      elementSize: (int)anElementSize elementSize: (int)anotherElementSize;
 -(NSArray*)columnExamplesWithMatrices: (NSArray*)someMatrices elementSize: (int)anElementSize elementSize: (int)anotherElementSize;
 
+-(NSArray*)examplesWithMatrices: (NSArray*)someMatrices;
+
 //
 -(NSArray*)matricesWithMatrix: (T4Matrix*)aMatrix rowOffset: (int)aRowOffset numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep;
 -(NSArray*)matricesWithMatrices: (NSArray*)someMatrices rowOffset: (int)aRowOffset numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep;

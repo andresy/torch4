@@ -43,7 +43,6 @@
   }
 
   matrix = [[T4Matrix alloc] initWithNumberOfRows: numRows numberOfColumns: numColumns];
-  [allocator keepObject: matrix];
 
   if(transposesMatrix)
   {
@@ -66,7 +65,7 @@
     }
   }
   
-  return matrix;
+  return [matrix autorelease];
 }
 
 -setTransposesMatrix: (BOOL)aFlag

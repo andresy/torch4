@@ -2,9 +2,6 @@
 
 @interface T4MappedBinaryLoader : T4Loader
 {
-    real **mappedAddresses;
-    int *mappedSizes;
-    int numMapped;
     int maxNumColumns;
 }
 

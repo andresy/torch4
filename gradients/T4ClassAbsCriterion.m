@@ -1,6 +1,6 @@
-#import "T4ClassMSECriterion.h"
+#import "T4ClassAbsCriterion.h"
 
-@implementation T4ClassMSECriterion
+@implementation T4ClassAbsCriterion
 
 -initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat inputClassFormat: (T4ClassFormat*)anotherClassFormat
 {
@@ -28,10 +28,7 @@
     real *inputColumn = [someInputs columnAtIndex: c];
 
     for(r = 0; r < numInputs; r++)
-    {
-      real z = targetColumn[r] - inputColumn[r];
-      output += z*z;
-    }
+      output += fabs(targetColumn[r] - inputColumn[r]);
   }
   
   if(averageWithNumberOfRows)
@@ -47,7 +44,7 @@
 {  
   T4Matrix *targets = [[dataset objectAtIndex: anIndex] objectAtIndex: 1];
   int numColumns = [someInputs numberOfColumns];
-  real norm = 2.;
+  real norm = 1.;
   int c, r;
 
   [gradInputs resizeWithNumberOfColumns: numColumns];
@@ -65,7 +62,13 @@
     real *gradInputColumn = [gradInputs columnAtIndex: c];
 
     for(r = 0; r < numInputs; r++)
-      gradInputColumn[r] = norm * (inputColumn[r] - targetColumn[r]);
+    {
+      real z = targetColumn[r] - inputColumn[r];
+      if(z > 0)
+        gradInputColumn[r] = -norm;
+      else
+        gradInputColumn[r] =  norm;
+    }
   } 
 
   return gradInputs;

@@ -134,7 +134,6 @@
       int numParameters = [parameters count];
       NSArray *example = [aDataset objectAtIndex: shuffledIndices[t]];
       T4Matrix *inputs = [example objectAtIndex: 0];
-      T4Matrix *targets = [example objectAtIndex: 1];
 
       for(i = 0; i < numParameters; i++)
       {
@@ -142,9 +141,15 @@
         [gradParameter zero];
       }
 
-      [self backwardMatrix: [criterion backwardTargets: targets
-                                       inputs: [criterion forwardMatrix:
-                                                            [self forwardMatrix: inputs]]] inputs: inputs];
+      [criterion forwardMatrix: [self forwardMatrix: inputs]];
+      
+      [self backwardMatrix:
+              [criterion backwardExampleAtIndex: shuffledIndices[t] inputs: [self outputs]]
+            inputs: inputs];
+
+//       [self backwardMatrix: [criterion backwardExampleAtIndex: shuffledIndices[t]
+//                                        inputs: [criterion forwardMatrix:
+//                                                             [self forwardMatrix: inputs]]] inputs: inputs];
 
       enumerator = [[measurers objectAtIndex: 0] objectEnumerator];
       while( (measurer = [enumerator nextObject]) )

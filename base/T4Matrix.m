@@ -113,10 +113,10 @@ inline void T4TrMatrixDotMatrix(real aValue1, real *destMat, int destStride,
     else
     {
 #ifdef USE_DOUBLE
-      cblas_dgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+      cblas_dgemv(CblasColMajor, CblasTrans, srcNum, destNumRows
                   aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
 #else
-      cblas_sgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+      cblas_sgemv(CblasColMajor, CblasTrans, srcNum, destNumRows,
                   aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
     }
 #endif
@@ -297,10 +297,10 @@ inline void T4TrMatrixDotTrMatrix(real aValue1, real *destMat, int destStride,
     else
     {
 #ifdef USE_DOUBLE
-      cblas_dgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+      cblas_dgemv(CblasColMajor, CblasTrans, srcNum, destNumRows,
                   aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
 #else
-      cblas_sgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+      cblas_sgemv(CblasColMajor, CblasTrans, srcNum, destNumRows,
                   aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
     }
 #endif
@@ -423,7 +423,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 @implementation T4Matrix
 
--initWithData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
+-initWithRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
 {
   if( (self = [super init]) )
   {
@@ -446,17 +446,17 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -init
 {
-  return [self initWithData: NULL numberOfRows: 0 numberOfColumns: 0 stride: 0];
+  return [self initWithRealData: NULL numberOfRows: 0 numberOfColumns: 0 stride: 0];
 }
 
 -initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns
 {
-  return [self initWithData: NULL numberOfRows: aNumRows numberOfColumns: aNumColumns stride: aNumRows];
+  return [self initWithRealData: NULL numberOfRows: aNumRows numberOfColumns: aNumColumns stride: aNumRows];
 }
 
 -initWithNumberOfRows: (int)aNumRows
 {
-  return [self initWithData: NULL numberOfRows: aNumRows numberOfColumns: 1 stride: aNumRows];
+  return [self initWithRealData: NULL numberOfRows: aNumRows numberOfColumns: 1 stride: aNumRows];
 }
 
 -initWithSubMatrix: (T4Matrix*)aMatrix firstRowIndex: (int)aFirstRowIndex firstColumnIndex: (int)aFirstColumnIndex numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns
@@ -466,7 +466,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   if(aFirstRowIndex < 0)
     aFirstRowIndex = 0;
 
-  return [self initWithData: [aMatrix columnAtIndex: aFirstColumnIndex]+aFirstRowIndex
+  return [self initWithRealData: [aMatrix columnAtIndex: aFirstColumnIndex]+aFirstRowIndex
                numberOfRows: (aNumRows < 0 ? [aMatrix numberOfRows] : aNumRows-aFirstRowIndex)
                numberOfColumns: (aNumColumns < 0 ? [aMatrix numberOfColumns] : aNumColumns-aFirstColumnIndex)
                stride: [aMatrix stride]];
@@ -474,7 +474,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
 -initWithColumn: (int)aColumnIndex fromMatrix: (T4Matrix*)aMatrix
 {
-  return [self initWithData: [aMatrix columnAtIndex: aColumnIndex]
+  return [self initWithRealData: [aMatrix columnAtIndex: aColumnIndex]
                numberOfRows: [aMatrix numberOfRows]
                numberOfColumns: 1
                stride: [aMatrix stride]];

@@ -12,7 +12,7 @@
 -init;
 -initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithNumberOfRows: (int)aNumRows;
--initWithData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
+-initWithRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
 -initWithSubMatrix: (T4Matrix*)aMatrix firstRowIndex: (int)aFirstRowIndex firstColumnIndex: (int)aFirstColumnIndex numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithColumn: (int)aColumnIndex fromMatrix: (T4Matrix*)aMatrix;
 

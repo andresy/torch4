@@ -33,7 +33,7 @@
   {
     internalObjectOptions = nil;
     allocator = [[T4Allocator alloc] init];
-    T4Message(@"Allocating object <%@>", [[self class] description]);
+//    T4Message(@"Allocating object <%@>", [[self class] description]);
   }
   
   return self;
@@ -112,7 +112,7 @@
 -(void)dealloc
 {
   [allocator release];
-  T4Message(@"Freeing object <%@>", [[self class] description]);
+//  T4Message(@"Freeing object <%@>", [[self class] description]);
   [super dealloc];
 }
 

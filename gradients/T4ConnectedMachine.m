@@ -221,7 +221,7 @@
   int i, j;
 
   // check the nodes
-  for(i = 0; i < numLayers; i++)
+  for(i = 1; i < numLayers; i++)
   {
     layer = [layers objectAtIndex: i];
     numNodes = [layer count];
@@ -303,7 +303,7 @@
   
   if([layers count] > 1)
   {
-    previousLayer = [layers objectAtIndex: [layers count]-1];
+    previousLayer = [layers objectAtIndex: [layers count]-2];
     numNodes = [previousLayer count];
 
     for(i = 0; i < numNodes; i++)
@@ -354,7 +354,7 @@
     T4Error(@"ConnectedMachine: cannot find machine <%@>", secondMachine);
   
   if(firstLayerIndex <= secondLayerIndex)
-    T4Error(@"ConnectedMachine: try to connect a machine to an other machine which is not in a previous layer");
+    T4Error(@"ConnectedMachine: try to connect a machine <%@> to an other machine <%@> which is not in a previous layer", firstMachine, secondMachine);
 
   [firstNode addInputConnectionToMachine: secondMachine];
   [secondNode addOutputConnectionToMachine: firstMachine offset: [firstNode currentNumberOfInputs]];

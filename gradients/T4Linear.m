@@ -16,10 +16,10 @@
     parametersAddr = [[parameters objectAtIndex: 0] realData];
     gradParametersAddr = [[gradParameters objectAtIndex: 0] realData];
     
-    weights = [[T4Matrix alloc] initWithData: parametersAddr numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
-    biases = [[T4Matrix alloc] initWithData: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
-    gradWeights = [[T4Matrix alloc] initWithData: gradParametersAddr numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
-    gradBiases = [[T4Matrix alloc] initWithData: gradParametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
+    weights = [[T4Matrix alloc] initWithRealData: parametersAddr numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
+    biases = [[T4Matrix alloc] initWithRealData: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
+    gradWeights = [[T4Matrix alloc] initWithRealData: gradParametersAddr numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
+    gradBiases = [[T4Matrix alloc] initWithRealData: gradParametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
 
     [self reset];
   }
@@ -35,13 +35,16 @@
   real bound = 1./sqrt((real)numInputs);
   int i, j;
 
-  for(i = 0; i < numOutputs; i++)
+  for(i = 0; i < numInputs; i++)
   {
-    for(j = 0; j < numInputs; j++)
+    for(j = 0; j < numOutputs; j++)
       weightsAddr[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
     weightsAddr += [weights stride];
-    biasesAddr[i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
   }
+
+  for(j = 0; j < numOutputs; j++)
+    biasesAddr[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+
   return self;
 }
 

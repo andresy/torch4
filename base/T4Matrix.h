@@ -19,6 +19,8 @@
 -setMatrixFromRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
 
 -(real*)columnAtIndex: (int)aColumnIndex;
+-(real*)firstColumn;
+-(real)firstValue;
 
 -resizeWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -resizeWithNumberOfRows: (int)aNumRows;
@@ -51,7 +53,6 @@
 -(int)numberOfColumns;
 -(int)numberOfRows;
 -(int)stride;
--(real*)firstColumn;
 
 -(NSString*)description;
 

@@ -53,9 +53,10 @@
 }
 
 
--(void)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr
+-(BOOL)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr
 {
   [self subclassResponsibility: _cmd];
+  return NO;
 }
 
 -(NSString*)stringToEndOfLine

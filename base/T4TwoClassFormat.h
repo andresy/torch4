@@ -5,7 +5,7 @@
     real *classLabelArray;
 }
 
--initWithLabel: (real)aLabel1 andLabel: (real)aLabel2;
+-initWithLabel: (real)aLabel1 label: (real)aLabel2;
 -initWithDataset: (NSArray*)aDataset;
 
 // primitive:

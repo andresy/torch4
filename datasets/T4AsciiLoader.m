@@ -6,7 +6,9 @@
 {
   if( (self = [super init]) )
   {
-    [self setHasHeader: YES];
+    [self setTransposesMatrix: YES];
+    [self setHasHeader: NO];
+    [self setMaxNumberOfColumns: -1];
   }
 
   return self;
@@ -18,28 +20,48 @@
   real *data;
   int numRows, numColumns;
 
-  if(hasHeader)
+  if(hasHeader || (!autodetectsSize) )
   {
-    if(transposesMatrix)
-    {
-      [aFile readStringWithFormat: @"%d" into: &numColumns];
-      [aFile readStringWithFormat: @"%d" into: &numRows];
-    }
-    else
-    {
-      [aFile readStringWithFormat: @"%d" into: &numRows];
-      [aFile readStringWithFormat: @"%d" into: &numColumns];
-    }
-    T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
+    if(![aFile readStringWithFormat: @"%d" into: &numRows])
+      T4Error(@"AsciiLoader: file corrupted");
+
+    if(![aFile readStringWithFormat: @"%d" into: &numColumns])
+      T4Error(@"AsciiLoader: file corrupted");
   }
   else
   {
+    BOOL finishedReading = NO;
     numRows = 0;
     numColumns = -1;
-
     
-    T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
+    while(![aFile isEndOfFile])
+    {
+      NSString *string = [aFile stringToEndOfLine];
+      if(string)
+      {
+        NSScanner *scanner = [NSScanner scannerWithString: string];
+        int numberElements = 0;
+        real dummy;
+
+        while([scanner scanReal: &dummy])
+          numberElements++;
+
+        T4Message(@"[%d] %s", numberElements, [string cString]);
+      }
+      else
+        T4Message(@"string is null");
+    }
+    exit(0);
   }
+
+  if(transposesMatrix)
+  {
+    int z = numRows;
+    numRows = numColumns;
+    numColumns = z;
+  }
+
+  T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
 
   matrix = [[T4Matrix alloc] initWithNumberOfRows: numRows numberOfColumns: numColumns];
   [allocator keepObject: matrix];
@@ -52,9 +74,11 @@
     for(i = 0; i < numRows*numColumns; i++)
     {
 #ifdef USE_DOUBLE
-      [aFile readStringWithFormat: @"%lg" into: &data[i]];
+      if(![aFile readStringWithFormat: @"%lg" into: &data[i]])
+        T4Error(@"AsciiLoader: file corrupted");
 #else
-      [aFile readStringWithFormat: @"%g" into: &data[i]];
+      if(![aFile readStringWithFormat: @"%g" into: &data[i]])
+        T4Error(@"AsciiLoader: file corrupted");
 #endif
     }
   }
@@ -68,9 +92,11 @@
       for(c = 0; c < numColumns; c++)
       {
 #ifdef USE_DOUBLE
-        [aFile readStringWithFormat: @"%lg" into: &data[c*stride+r]];
+        if(![aFile readStringWithFormat: @"%lg" into: &data[c*stride+r]])
+          T4Error(@"AsciiLoader: file corrupted");
 #else
-        [aFile readStringWithFormat: @"%g" into: &data[c*stride+r]];
+        if(![aFile readStringWithFormat: @"%g" into: &data[c*stride+r]])
+          T4Error(@"AsciiLoader: file corrupted");
 #endif
       }
     }
@@ -79,9 +105,20 @@
   return matrix;
 }
 
+-(void)setTransposesMatrix: (BOOL)aFlag
+{
+  transposesMatrix = aFlag;
+}
+
 -(void)setHasHeader: (BOOL)aFlag
 {
   hasHeader = aFlag;
 }
+
+-(void)setMaxNumberOfColumns: (int)aMaxNumber
+{
+  maxNumColumns = aMaxNumber;
+}
+
 
 @end

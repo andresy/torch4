@@ -7,9 +7,7 @@
 {
   if( (self = [super init]) )
   {
-    [self setMaxNumberOfColumns: -1];
     [self setMaxNumberOfMatrices: -1];
-    [self setTransposesMatrix: YES];
   }
 
   return self;
@@ -66,19 +64,9 @@
   return matrices;
 }
 
--(void)setMaxNumberOfColumns: (int)aMaxNumber
-{
-  maxNumColumns = aMaxNumber;
-}
-
 -(void)setMaxNumberOfMatrices: (int)aMaxNumber
 {
   maxNumMatrices = aMaxNumber;
-}
-
--(void)setTransposesMatrix: (BOOL)aFlag
-{
-  transposesMatrix = aFlag;
 }
 
 @end

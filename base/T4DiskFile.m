@@ -248,7 +248,7 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   [stringToWrite release];
 }
 
--(void)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr
+-(BOOL)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr
 {
   int result;
 
@@ -257,8 +257,7 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
 
   result = fscanf(file, [aFormat cString], aPtr);
   
-  if(result != 1)
-    T4Error(@"DiskFile: error while reading");
+  return(result == 1);
 }
 
 -(NSString*)stringToEndOfLine
@@ -294,11 +293,16 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
       endOfReading = YES;
   }
 
-  if(fseek(file, startingPosition+(long)stringSize, SEEK_SET))
-    T4Error(@"DiskFile: cannot seek in the file");
+  if(stringSize > 0)
+  {
+    if(fseek(file, startingPosition+(long)stringSize, SEEK_SET))
+      T4Error(@"DiskFile: cannot seek in the file");
 //  stringBuffer[stringSize] = '\0';
 
-  return [[[NSString alloc] initWithCStringNoCopy: stringBuffer length: stringSize freeWhenDone: YES] autorelease];
+    return [[[NSString alloc] initWithCStringNoCopy: stringBuffer length: stringSize freeWhenDone: YES] autorelease];
+  }
+  else
+    return nil;
 }
 
 -(int)fileDescriptor

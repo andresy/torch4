@@ -4,7 +4,7 @@
 
 -initWithDataset: (NSArray*)aDataset
 {
-  if( (self = [self initWithLabel: 0 andLabel: 0]) )
+  if( (self = [self initWithLabel: 0 label: 0]) )
   {
     int numClassSet = 0;
     int numExamples = [aDataset count];
@@ -54,7 +54,7 @@
   return self;
 }
 
--initWithLabel: (real)aLabel1 andLabel: (real)aLabel2
+-initWithLabel: (real)aLabel1 label: (real)aLabel2
 {
   if( (self = [super initWithNumberOfClasses: 2 encodingSize: 1]) )
   {

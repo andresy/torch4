@@ -29,4 +29,9 @@
   return -1;
 }
 
+-(real*)encodingForClass: (int)aClass
+{
+  return [classLabels columnAtIndex: aClass];
+}
+
 @end

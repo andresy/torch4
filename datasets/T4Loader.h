@@ -4,9 +4,7 @@
 
 @interface T4Loader : T4Object
 {
-    int maxNumColumns;
     int maxNumMatrices;
-    BOOL transposesMatrix;
 }
 
 //primitive
@@ -16,8 +14,6 @@
 -(NSArray*)loadMatricesFromFiles: (NSArray*)someFiles;
 -(NSArray*)loadMatricesAtPaths: (NSArray*)somePaths;
 
--(void)setMaxNumberOfColumns: (int)aMaxNumber;
 -(void)setMaxNumberOfMatrices: (int)aMaxNumber;
--(void)setTransposesMatrix: (BOOL)aFlag;
 
 @end

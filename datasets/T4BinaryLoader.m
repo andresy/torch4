@@ -8,6 +8,8 @@
   {
     [self setTransposesMatrix: YES];
     [self setMaxNumberOfColumns: -1];
+    [self setReadsFloat: NO];
+    [self setReadsDouble: NO];
   }
 
   return self;
@@ -44,23 +46,105 @@
 
   matrix = [[T4Matrix alloc] initWithNumberOfRows: numRows numberOfColumns: numColumns];
 
-  if(transposesMatrix)
+  if(sizeof(real) == diskRealSize)
   {
-    if([aFile read: [matrix firstColumn] blockSize: sizeof(real) numberOfBlocks: numRows*numColumns] != numRows*numColumns)
-      T4Error(@"BinaryLoader: file corrupted");
+    if(transposesMatrix)
+    {
+      if([aFile read: [matrix firstColumn] blockSize: sizeof(real) numberOfBlocks: numRows*numColumns] != numRows*numColumns)
+        T4Error(@"BinaryLoader: file corrupted");
+    }
+    else
+    {
+      int r, c;
+      real *data = [matrix firstColumn];
+      int stride = [matrix stride];
+      
+      for(r = 0; r < numRows; r++)
+      {
+        for(c = 0; c < numColumns; c++)
+        {
+          if([aFile read: &data[c*stride+r] blockSize: sizeof(real) numberOfBlocks: 1] != 1)
+            T4Error(@"BinaryLoader: file corrupted");
+        }
+      }
+    }
   }
   else
   {
-    int r, c;
-    real *data = [matrix firstColumn];
-    int stride = [matrix stride];
-
-    for(r = 0; r < numRows; r++)
+    if(diskRealSize == sizeof(float))
     {
-      for(c = 0; c < numColumns; c++)
+      T4Message(@"BinaryLoader: enforcing float reading");
+      if(transposesMatrix)
       {
-        if([aFile read: &data[c*stride+r] blockSize: sizeof(real) numberOfBlocks: 1] != 1)
-          T4Error(@"BinaryLoader: file corrupted");
+        float *buffer = [T4Allocator sysAllocByteArrayWithCapacity: sizeof(float)*numRows];
+        int c, r;
+
+        for(c = 0; c < numColumns; c++)
+        {
+          if([aFile read: buffer blockSize: sizeof(float) numberOfBlocks: numRows] != numRows)
+            T4Error(@"BinaryLoader: file corrupted");
+
+          real *currentColumn = [matrix columnAtIndex: c];
+          for(r = 0; r < numRows; r++)
+            currentColumn[r] = (real)buffer[r];
+        }
+
+        [T4Allocator sysFree: buffer];
+      }
+      else
+      {
+        int r, c;
+        real *data = [matrix firstColumn];
+        int stride = [matrix stride];
+        float buffer;
+
+        for(r = 0; r < numRows; r++)
+        {
+          for(c = 0; c < numColumns; c++)
+          {
+            if([aFile read: &buffer blockSize: sizeof(float) numberOfBlocks: 1] != 1)
+              T4Error(@"BinaryLoader: file corrupted");
+            data[c*stride+r] = (real)buffer;
+          }
+        }
+      }
+    }
+    else
+    {
+      T4Message(@"BinaryLoader: enforcing double reading");
+      if(transposesMatrix)
+      {
+        double *buffer = [T4Allocator sysAllocByteArrayWithCapacity: sizeof(double)*numRows];
+        int c, r;
+
+        for(c = 0; c < numColumns; c++)
+        {
+          if([aFile read: buffer blockSize: sizeof(double) numberOfBlocks: numRows] != numRows)
+            T4Error(@"BinaryLoader: file corrupted");
+
+          real *currentColumn = [matrix columnAtIndex: c];
+          for(r = 0; r < numRows; r++)
+            currentColumn[r] = (real)buffer[r];
+        }
+
+        [T4Allocator sysFree: buffer];
+      }
+      else
+      {
+        int r, c;
+        real *data = [matrix firstColumn];
+        int stride = [matrix stride];
+        double buffer;
+
+        for(r = 0; r < numRows; r++)
+        {
+          for(c = 0; c < numColumns; c++)
+          {
+            if([aFile read: &buffer blockSize: sizeof(double) numberOfBlocks: 1] != 1)
+              T4Error(@"BinaryLoader: file corrupted");
+            data[c*stride+r] = (real)buffer;
+          }
+        }
       }
     }
   }
@@ -77,6 +161,26 @@
 -setMaxNumberOfColumns: (int)aMaxNumber
 {
   maxNumColumns = aMaxNumber;
+  return self;
+}
+
+-setReadsFloat: (BOOL)aFlag
+{
+  if(aFlag)
+    diskRealSize = sizeof(float);
+  else
+    diskRealSize = sizeof(real);
+
+  return self;
+}
+
+-setReadsDouble: (BOOL)aFlag
+{
+  if(aFlag)
+    diskRealSize = sizeof(double);
+  else
+    diskRealSize = sizeof(real);
+
   return self;
 }
 

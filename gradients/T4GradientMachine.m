@@ -165,7 +165,7 @@
       for(i = 0; i < numMeasurers; i++)
       {
         measurer = [currentMeasurers objectAtIndex: i];
-        [measurer measureExample: shuffledIndices[t]];
+        [measurer measureExampleAtIndex: shuffledIndices[t]];
       }
 /*      
       enumerator = [[measurers objectAtIndex: 0] objectEnumerator];
@@ -193,7 +193,7 @@
     for(i = 0; i < numMeasurers; i++)
     {
       measurer = [currentMeasurers objectAtIndex: i];
-      [measurer measureIteration: iteration];
+      [measurer measureAtIteration: iteration];
     }
 
     // le data 0 est le train dans tous les cas...
@@ -212,14 +212,14 @@
         for(i = 0; i < numMeasurers; i++)
         {
           measurer = [currentMeasurers objectAtIndex: i];
-          [measurer measureExample: t];
+          [measurer measureExampleAtIndex: t];
         }
       }
 
       for(i = 0; i < numMeasurers; i++)
       {
         measurer = [currentMeasurers objectAtIndex: i];
-        [measurer measureIteration: iteration];
+        [measurer measureAtIteration: iteration];
       }
     }
 
@@ -319,7 +319,7 @@
       for(k = 0; k < numCurrentMeasurers; k++)
       {
         measurer = [currentMeasurers objectAtIndex: k];
-        [measurer measureExample: j];
+        [measurer measureExampleAtIndex: j];
       }
 
       [progressBar setProgress: ++numTotalExamples];
@@ -328,8 +328,8 @@
     for(j = 0; j < numCurrentMeasurers; j++)      
     {
       measurer = [currentMeasurers objectAtIndex: j];
-      [measurer measureIteration: 0];
-      [measurer measureEnd];
+      [measurer measureAtIteration: 0];
+      [measurer measureAtEnd];
     }
   }
   

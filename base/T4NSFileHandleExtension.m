@@ -13,7 +13,7 @@
 size_t NSFileHandleScanChunkSize = 32;
 
 
-@implementation NSFileHandle(NSFileHandleExtension)
+@implementation NSFileHandle (NSFileHandleExtension)
 
 +(size_t)scanChunkSize
 {

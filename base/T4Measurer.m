@@ -24,17 +24,17 @@
   return [self initWithDataset: aDataset file: fileHandle];
 }
 
--measureExample: (int)anIndex
+-measureExampleAtIndex: (int)anIndex
 {
   return self;
 }
 
--measureIteration: (int)anIteration
+-measureAtIteration: (int)anIteration
 {
   return self;
 }
 
--measureEnd
+-measureAtEnd
 {
   return self;
 }

@@ -167,6 +167,9 @@
 {
   int index;
 
+  if(!anObject)
+    return nil;
+
   if(!objects)
     objects = [[NSMutableArray alloc] init];
   

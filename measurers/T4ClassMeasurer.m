@@ -2,18 +2,16 @@
 
 @implementation T4ClassMeasurer
 
--initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset file: (T4File*)aFile
-{
-  return [self initWithInputs: someInputs classFormat: aClassFormat dataset: aDataset classFormat: aClassFormat file: (T4File*)aFile];
-
-}
-
 -initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)anotherClassFormat file: (T4File*)aFile
 {
   if( (self = [super initWithDataset: aDataset file: aFile]) )
   {
     inputs = someInputs;
     inputClassFormat = aClassFormat;
+
+    if([inputs numberOfRows] != [inputClassFormat encodingSize])
+      T4Error(@"ClassMeasurer: input size [%d] is not equal to class format encoding size [%d]", [inputs numberOfRows], [inputClassFormat encodingSize]);
+
     datasetClassFormat = anotherClassFormat;
     confusionMatrix = nil;
 
@@ -37,7 +35,7 @@
   for(c = 0; c < numColumns; c++)
   {
     int classInputs = [inputClassFormat classFromRealData: [inputs columnAtIndex: c]];
-    int classTargets = [inputClassFormat classFromRealData: [datasetClassFormat encodingForClass: (int)[targets firstValueAtColumn: c]]];
+    int classTargets = [datasetClassFormat classFromRealData: [targets columnAtIndex: c]];
     
     if(classInputs != classTargets)
       internalError += 1.;

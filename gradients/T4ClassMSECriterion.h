@@ -3,14 +3,13 @@
 
 @interface T4ClassMSECriterion : T4Criterion
 {
-    T4ClassFormat *classFormat;
+    T4ClassFormat *datasetClassFormat;
+    T4ClassFormat *inputClassFormat;
     BOOL averageWithNumberOfRows;
     BOOL averageWithNumberOfColumns;
 }
 
--initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat;
--(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
--(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
+-initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat inputClassFormat: (T4ClassFormat*)anotherClassFormat;
 
 -setAveragesWithNumberOfRows: (BOOL)aFlag;
 -setAveragesWithNumberOfColumns: (BOOL)aFlag;

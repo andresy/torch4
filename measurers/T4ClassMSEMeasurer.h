@@ -5,7 +5,8 @@
 @interface T4ClassMSEMeasurer : T4Measurer
 {
     T4Matrix *inputs;
-    T4ClassFormat *classFormat;
+    T4ClassFormat *inputClassFormat;
+    T4ClassFormat *datasetClassFormat;
 
     BOOL averageWithNumberOfExamples;
     BOOL averageWithNumberOfRows;
@@ -13,10 +14,7 @@
     real internalError; 
 }
 
--initWithInputs: (T4Matrix*)someInputs dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)aClassFormat file: (T4File*)aFile;
--measureExampleAtIndex: (int)anIndex;
--measureAtIteration: (int)anIteration;
--reset;
+-initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)anotherClassFormat file: (T4File*)aFile;
 
 -setAveragesWithNumberOfExamples: (BOOL)aFlag;
 -setAveragesWithNumberOfRows: (BOOL)aFlag;

@@ -3,14 +3,9 @@
 
 @interface T4ClassNLLCriterion : T4Criterion
 {
-    T4ClassFormat *inputClassFormat;
-    T4ClassFormat *datasetClassFormat;
+    T4ClassFormat *classFormat;
 }
 
--initWithInputClassFormat: (T4ClassFormat*)aClassFormat datasetClassFormat: (T4ClassFormat*)anotherClassFormat;
--initWithClassFormat: (T4ClassFormat*)aClassFormat;
-
--(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
--(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
+-initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat;
 
 @end

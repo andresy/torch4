@@ -2,17 +2,11 @@
 
 @implementation T4ClassNLLCriterion
 
--initWithClassFormat: (T4ClassFormat*)aClassFormat
-{
-  return [self initWithInputClassFormat: aClassFormat datasetClassFormat: aClassFormat];
-}
-
--initWithInputClassFormat: (T4ClassFormat*)aClassFormat datasetClassFormat: (T4ClassFormat*)anotherClassFormat
+-initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat
 {
   if( (self = [super initWithNumberOfInputs: [aClassFormat numberOfClasses]]) )
   {
-    inputClassFormat = aClassFormat;
-    datasetClassFormat = anotherClassFormat;
+    classFormat = aClassFormat;
   }
 
   return self;
@@ -27,7 +21,7 @@
   output = 0;
   for(c = 0; c < numColumns; c++)
   {
-    int theClass = [inputClassFormat classFromRealData: [datasetClassFormat encodingForClass: (int)[targets firstValueAtColumn: c]]];
+    int theClass = [classFormat classFromRealData: [targets firstColumn]];
     output -= [someInputs columnAtIndex: c][theClass];
   }
   
@@ -45,7 +39,7 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    int theClass = [inputClassFormat classFromRealData: [datasetClassFormat encodingForClass: (int)[targets firstValueAtColumn: c]]];
+    int theClass = [classFormat classFromRealData: [targets firstColumn]];
     [gradInputs columnAtIndex: c][theClass] = -1;
   }
 

@@ -6,15 +6,13 @@
     T4Matrix *classLabels;
 }
 
-
 -initWithNumberOfClasses: (int)aNumClasses encodingSize: (int)anEncodingSize;
+
 -(real*)encodingForClass: (int)aClass;
 -(int)encodingSize;
 -(int)numberOfClasses;
 
 // primitive:
 -(int)classFromRealData: (real*)aVector;
-
-
 
 @end

@@ -6,6 +6,7 @@
 #import "T4LogSoftMax.h"
 #import "T4Exp.h"
 #import "T4SoftPlus.h"
+#import "T4HardTanh.h"
 
 @implementation T4MLP
 
@@ -52,6 +53,9 @@
 
       if([layerType isEqualToString: @"exp"])
         aMachine = [[[T4Exp alloc] initWithNumberOfUnits: aNumOutputs] keepWithAllocator: allocator];
+
+      if([layerType isEqualToString: @"hardtanh"])
+        aMachine = [[[T4HardTanh alloc] initWithNumberOfUnits: aNumOutputs] keepWithAllocator: allocator];
 
       if(!aMachine)
         T4Error(@"MLP: unknow layer type <%@>", layerType);

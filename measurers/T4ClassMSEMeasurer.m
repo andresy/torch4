@@ -2,12 +2,17 @@
 
 @implementation T4ClassMSEMeasurer
 
--initWithInputs: (T4Matrix*)someInputs dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)aClassFormat file: (T4File*)aFile
+-initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)anotherClassFormat file: (T4File*)aFile
 {
   if( (self = [super initWithDataset: aDataset file: aFile]) )
   {
     inputs = someInputs;
-    classFormat = aClassFormat;
+    inputClassFormat = aClassFormat;
+
+    if([inputs numberOfRows] != [inputClassFormat encodingSize])
+      T4Error(@"ClassMeasurer: input size [%d] is not equal to class format encoding size [%d]", [inputs numberOfRows], [inputClassFormat encodingSize]);
+
+    datasetClassFormat = anotherClassFormat;
 
     [self setAveragesWithNumberOfExamples: YES];
     [self setAveragesWithNumberOfRows: YES];
@@ -31,7 +36,7 @@
   currentError = 0;
   for(c = 0; c < numColumns; c++)
   {
-    real *targetColumn = [classFormat encodingForClass: (int)[targets firstValueAtColumn: c]];
+    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealData: [targets columnAtIndex: c]]];
     real *inputColumn = [inputs columnAtIndex: c];
 
     for(r = 0; r < numRows; r++)

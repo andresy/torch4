@@ -6,6 +6,7 @@
     T4Matrix *inputs;
     T4ClassFormat *inputClassFormat;
     T4ClassFormat *datasetClassFormat;
+
     BOOL computeConfusionMatrix;
     T4Matrix *confusionMatrix;
     real internalError;
@@ -15,14 +16,6 @@
 -initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat
         dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)anotherClassFormat
            file: (T4File*)aFile;
-
--initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat
-        dataset: (NSArray*)aDataset
-           file: (T4File*)aFile;
-
--measureExampleAtIndex: (int)anIndex;
--measureAtIteration: (int)anIteration;
--reset;
 
 -setPrintsConfusionMatrix: (BOOL)aFlag;
 

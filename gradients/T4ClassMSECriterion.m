@@ -2,11 +2,12 @@
 
 @implementation T4ClassMSECriterion
 
--initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat
+-initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat inputClassFormat: (T4ClassFormat*)anotherClassFormat
 {
-  if( (self = [super initWithNumberOfInputs: [aClassFormat encodingSize]]) )
+  if( (self = [super initWithNumberOfInputs: [inputClassFormat encodingSize]]) )
   {
-    classFormat = aClassFormat;
+    datasetClassFormat = aClassFormat;
+    inputClassFormat = anotherClassFormat;
     [self setAveragesWithNumberOfRows: YES];
     [self setAveragesWithNumberOfColumns: YES];
   }
@@ -23,13 +24,12 @@
   output = 0;
   for(c = 0; c < numColumns; c++)
   {
-    real *targetColumn = [classFormat encodingForClass: (int)[targets firstValue]];
+    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealData: [targets columnAtIndex: c]]];
     real *inputColumn = [someInputs columnAtIndex: c];
 
     for(r = 0; r < numInputs; r++)
     {
       real z = targetColumn[r] - inputColumn[r];
-//      T4Message(@"target = %g, input = %g", targetColumn[r], inputColumn[r]);
       output += z*z;
     }
   }
@@ -60,7 +60,7 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    real *targetColumn = [classFormat encodingForClass: (int)[targets firstValue]];
+    real *targetColumn = [inputClassFormat encodingForClass: [datasetClassFormat classFromRealData: [targets firstColumn]]];
     real *inputColumn = [someInputs columnAtIndex: c];
     real *gradInputColumn = [gradInputs columnAtIndex: c];
 

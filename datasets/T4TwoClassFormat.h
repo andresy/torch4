@@ -6,9 +6,5 @@
 }
 
 -initWithLabel: (real)aLabel1 label: (real)aLabel2;
--initWithDataset: (NSArray*)aDataset;
-
-// primitive:
--(int)classFromRealData: (real*)aVector;
 
 @end

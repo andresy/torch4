@@ -1,5 +1,4 @@
 #import "T4Measurer.h"
-#import "T4Matrix.h"
 
 @interface T4ObjectMeasurer : T4Measurer
 {

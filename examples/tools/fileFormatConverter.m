@@ -76,7 +76,7 @@ int main( int argc, char *argv[] )
   [cmdLine addRealOption: @"-oiImgMaxValue" at: &oiimgmaxvalue default: 0 help: @"image max value"];
   [cmdLine addBoolOption: @"-oiNoNormalization" at: &oiimgnormalize default: YES help: @"normalize image 0-PNMMaxValue"];
   [cmdLine addIntOption: @"-oiType" at: &oitype default: 1 help: @"image type (bit: 0 gray: 1 pixel: 2)"];
-  [cmdLine addIntOption: @"-oiPNMMaxvalue" at: &oipnmmaxvalue default: -1 help: @"PNM max value"];
+  [cmdLine addIntOption: @"-oiPNMMaxValue" at: &oipnmmaxvalue default: -1 help: @"PNM max value"];
 
   [cmdLine addText: @"\n"];
   [cmdLine read];

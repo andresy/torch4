@@ -1,4 +1,5 @@
 #import "T4Saver.h"
+#import "T4PNMLoader.h"
 
 @interface T4PNMSaver : T4Saver
 {    

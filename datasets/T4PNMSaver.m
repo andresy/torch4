@@ -1,5 +1,4 @@
 #import "T4PNMSaver.h"
-#import "T4PNMLoader.h"
 
 //DEBUG: Peut-etre qu'en mode noir et blanc je ne devrais pas inverser
 //       les bits pour avoir la meme chose qu'en gris. (Cause 1 c'est normalement
@@ -75,12 +74,6 @@ static void T4PNMSaverNormalizeImage(T4Matrix *inputImage, T4Matrix *outputImage
   unsigned char *currentUcharBuffer;
   int h, i, j;
 
-  if(normalizedImage)
-  {
-    T4PNMSaverNormalizeImage(aMatrix, normalizedImage, imageMinValue, imageMaxValue, (real)pnmMaxValue);
-    aMatrix = normalizedImage;
-  }
-
   real *matrixData = [aMatrix firstColumn];
   int matrixSize = [aMatrix numberOfRows];
 
@@ -94,6 +87,12 @@ static void T4PNMSaverNormalizeImage(T4Matrix *inputImage, T4Matrix *outputImage
   {
     if(matrixSize != 3*imageWidth*imageHeight)
       T4Error(@"T4PNMSaver: image size [%d x %d x 3] does not fit with matrix size [%d]", imageWidth, imageHeight, matrixSize);
+  }
+
+  if(normalizedImage)
+  {
+    T4PNMSaverNormalizeImage(aMatrix, normalizedImage, imageMinValue, imageMaxValue, (real)pnmMaxValue);
+    matrixData = [normalizedImage firstColumn];
   }
 
   switch(imageType)
@@ -161,20 +160,26 @@ static void T4PNMSaverNormalizeImage(T4Matrix *inputImage, T4Matrix *outputImage
       if((int)myPnmMaxValue > 65535)
         T4Error(@"PNMSaver: too large value in your image");
 
+      int thePnmMaxValue;
       if(pnmMaxValue < (int)myPnmMaxValue)
       {
-        if(pnmMaxValue > 0)
-          T4Warning(@"PNMSaver: overriding the provided max value which is too small [%g]", myPnmMaxValue);
-
         int z = (int)myPnmMaxValue;
-        pnmMaxValue = 1;
-        while(pnmMaxValue-1 < z)
-          pnmMaxValue <<= 1;
-        pnmMaxValue -= 1;
-      }
+        thePnmMaxValue = 1;
+        while(thePnmMaxValue-1 < z)
+          thePnmMaxValue <<= 1;
+        thePnmMaxValue -= 1;
 
-      [file writeStringWithFormat: @"%d %d\n%d\n", imageWidth, imageHeight, pnmMaxValue];
-      if(pnmMaxValue > 255)
+        if(pnmMaxValue > 0)
+          T4Warning(@"PNMSaver: overriding the provided max value which is too small [%d]", thePnmMaxValue);
+      }
+      else
+        thePnmMaxValue = pnmMaxValue;
+
+      if(thePnmMaxValue == 0)
+        thePnmMaxValue = 255;
+
+      [file writeStringWithFormat: @"%d %d\n%d\n", imageWidth, imageHeight, thePnmMaxValue];
+      if(thePnmMaxValue > 255)
       {
         ucharBuffer = (unsigned char *)[T4Allocator sysAllocByteArrayWithCapacity: matrixSize*2];
 

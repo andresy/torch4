@@ -1,6 +1,58 @@
 #import "T4Matrix.h"
-#include "cblas.h"
+#import "cblas.h"
 
+inline void T4CopyMatrix(real *destAddr, int destStride, real *sourceAddr, int sourceStride, int numRows, int numColumns)
+{
+  if( (sourceStride == numRows) && (destStride == numRows) )
+    memmove(destAddr, sourceAddr, sizeof(real)*numRows*numColumns);
+  else
+  {
+    int c;
+    for(c = 0; c < numColumns; c++)
+    {
+      memmove(destAddr, sourceAddr, sizeof(real)*numRows);
+      sourceAddr += sourceStride;
+      destAddr += destStride;
+    }
+  }
+}
+
+inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourceAddr, int sourceStride, int numRows, int numColumns)
+{
+  if(numColumns == 1)
+  {
+#ifdef USE_DOUBLE
+    cblas_daxpy(numRows, aValue, sourceAddr, 1, destAddr, 1);
+#else
+    cblas_saxpy(numRows, aValue, sourceAddr, 1, destAddr, 1);
+#endif
+  }
+  else
+  {
+    if( (numRows == destStride) && (numRows == sourceStride) )
+    {
+#ifdef USE_DOUBLE
+      cblas_daxpy(numRows*numColumns, aValue, sourceAddr, 1, destAddr, 1);
+#else
+      cblas_saxpy(numRows*numColumns, aValue, sourceAddr, 1, destAddr, 1);
+#endif
+    }
+    else
+    {
+      int c;
+      for(c = 0; c < numColumns; c++)
+      {
+#ifdef USE_DOUBLE
+        cblas_daxpy(numRows, aValue, sourceAddr, 1, destAddr, 1);
+#else
+        cblas_saxpy(numRows, aValue, sourceAddr, 1, destAddr, 1);
+#endif
+        sourceAddr += sourceStride;
+        destAddr += destStride;
+      }
+    }
+  }
+}
 
 @implementation T4Matrix
 
@@ -112,21 +164,23 @@
 
 -copyMatrix: (T4Matrix*)aMatrix;
 {
-  if( (stride == numRows) && ([aMatrix stride] == [aMatrix numberOfRows]) )
-    memmove(data, [aMatrix data], sizeof(real)*numRows*numColumns);
-  else
-  {
-    real *columnSrc = [aMatrix data];
-    real *columnDest = data;
-    int strideSrc = [aMatrix stride];
-    int c;
-    for(c = 0; c < numColumns; c++)
-    {
-      memmove(columnDest, columnSrc, sizeof(real)*numRows);
-      columnDest += stride;
-      columnSrc += strideSrc;
-    }
-  }
+//   if(numRows != aMatrix->numRows)
+//     T4Error(@"Matrix: cannot copy a matrix of different size");
+
+  T4CopyMatrix(data, stride, aMatrix->data, aMatrix->stride, numRows, numColumns);
+
+  return self;
+}
+
+-copyFromAddress: (real*)anAddress stride: (int)aStride
+{
+  T4CopyMatrix(data, stride, anAddress, aStride, numRows, numColumns);
+  return self;
+}
+
+-copyToAddress: (real*)anAddress stride: (int)aStride
+{
+  T4CopyMatrix(anAddress, aStride, data, stride, numRows, numColumns);
   return self;
 }
 
@@ -167,33 +221,27 @@
   return self;
 }
 
--accumulateValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix
+-addValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix
 {
-  if(numColumns == 1)
-  {
-#ifdef USE_DOUBLE
-    cblas_daxpy(numRows, aValue, [aMatrix data], 1, data, 1);
-#else
-    cblas_saxpy(numRows, aValue, [aMatrix data], 1, data, 1);
-#endif    
-  }
-  else
-  {   
-    real *columnSrc = [aMatrix data];
-    real *columnDest = data;
-    int strideSrc = [aMatrix stride];
-    int c;
-    for(c = 0; c < numColumns; c++)
-    {
-#ifdef USE_DOUBLE
-      cblas_daxpy(numRows, aValue, columnSrc, 1, columnDest, 1);
-#else
-      cblas_saxpy(numRows, aValue, columnSrc, 1, columnDest, 1);
-#endif
-      columnSrc += strideSrc;
-      columnDest += stride;
-    }
-  }
+  T4AddMatrix(data, stride, aValue, aMatrix->data, aMatrix->stride, numRows, numColumns);
+  return self;
+}
+
+-addMatrix: (T4Matrix*)aMatrix
+{
+  T4AddMatrix(data, stride, 1., aMatrix->data, aMatrix->stride, numRows, numColumns);
+  return self;
+}
+
+-addFromAddress: (real*)anAddress stride: (int)aStride
+{
+  T4AddMatrix(data, stride, 1., anAddress, aStride, numRows, numColumns);
+  return self;
+}
+
+-addToAddress: (real*)anAddress stride: (int)aStride
+{
+  T4AddMatrix(anAddress, aStride, 1., data, stride, numRows, numColumns);
   return self;
 }
 

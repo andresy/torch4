@@ -16,22 +16,22 @@
       [allocator keepObject: outputs];
     }
     else
-      outputs = NULL;
+      outputs = nil;
     
     if(numInputs > 0)
     {
-      dInputs = [[T4Matrix alloc] initWithNumberOfRows: numInputs numberOfColumns: 1];
-      [allocator keepObject: dInputs];
+      gradInputs = [[T4Matrix alloc] initWithNumberOfRows: numInputs numberOfColumns: 1];
+      [allocator keepObject: gradInputs];
     }
     else
-      dInputs = NULL;
+      gradInputs = nil;
     
     if(aNumParams > 0)
     {
       T4Matrix *aMatrix;
       
       parameters = [[NSMutableArray alloc] init];
-      dParameters = [[NSMutableArray alloc] init];
+      gradParameters = [[NSMutableArray alloc] init];
 
       aMatrix = [[T4Matrix alloc] initWithNumberOfRows: aNumParams numberOfColumns: 1];
       [allocator keepObject: aMatrix];
@@ -40,13 +40,15 @@
       
       aMatrix = [[T4Matrix alloc] initWithNumberOfRows: aNumParams numberOfColumns: 1];
       [allocator keepObject: aMatrix];
-      [dParameters addObject: aMatrix];
-      [allocator keepObject: dParameters];
+      [gradParameters addObject: aMatrix];
+      [allocator keepObject: gradParameters];
     }
     else
     {
-      parameters = nil;
-      dParameters = nil;        
+      parameters = [[NSMutableArray alloc] init];
+      gradParameters = [[NSMutableArray alloc] init];
+      [allocator keepObject: parameters];
+      [allocator keepObject: gradParameters];
     }
 
     criterion = nil;
@@ -79,9 +81,9 @@
   return anInputMatrix;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)dOutputMatrix inputs: (T4Matrix*)anInputMatrix
+-(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
 {
-  return dOutputMatrix;
+  return gradOutputMatrix;
 }
 
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers
@@ -136,8 +138,8 @@
 
       for(i = 0; i < numParameters; i++)
       {
-        T4Matrix *dParameter = [dParameters objectAtIndex: i];
-        [dParameter zero];
+        T4Matrix *gradParameter = [gradParameters objectAtIndex: i];
+        [gradParameter zero];
       }
 
       [self backwardMatrix: [criterion backwardTargets: targets
@@ -151,9 +153,9 @@
       for(i = 0; i < numParameters; i++)
       {
         T4Matrix *parameter = [parameters objectAtIndex: i];
-        T4Matrix *dParameter = [dParameters objectAtIndex: i];
+        T4Matrix *gradParameter = [gradParameters objectAtIndex: i];
         real *ptrParams = [parameter data];
-        real *ptrDParams = [dParameter data];
+        real *ptrDParams = [gradParameter data];
         int size = [parameter numberOfRows];
         
         for(j = 0; j < size; j++)
@@ -271,6 +273,40 @@
   
   T4Print(@"\n");
   [progressBar release];
+}
+
+-(void)reset
+{
+}
+
+-(int)numberOfInputs
+{
+  return numInputs;
+}
+
+-(int)numberOfOutputs
+{
+  return numOutputs;
+}
+
+-(T4Matrix*)outputs
+{
+  return outputs;
+}
+
+-(T4Matrix*)gradInputs
+{
+  return gradInputs;
+}
+
+-(NSArray*)parameters
+{
+  return parameters;
+}
+
+-(NSArray*)gradParameters
+{
+  return gradParameters;
 }
 
 @end

@@ -206,7 +206,7 @@
   [super dealloc];
 }
 
-+(void*)sysAlloc: (int)capacity
++(void*)sysAllocWithCapacity: (int)capacity
 {
   void *ptr;
 
@@ -221,6 +221,27 @@
   return ptr;
 }
 
++(void*)sysRealloc: (void*)anAddress withCapacity: (int)capacity
+{
+  if(capacity <= 0)
+  {
+    if(anAddress)
+      free(anAddress);
+    
+    return NULL;
+  }
+
+  if(anAddress)
+    anAddress = realloc(anAddress, capacity);
+  else
+    anAddress = malloc(capacity);
+
+  if(!anAddress)
+    T4Error(@"Allocator: not enough memory. Buy new ram!!!");
+
+  return anAddress;
+}
+
 +(void)sysFree: (void*)ptr
 {
   if(ptr)
@@ -229,7 +250,7 @@
 
 -(void*)allocByteArrayWithCapacity: (int)aCapacity
 {
-  return [self keepPointer: [T4Allocator sysAlloc: aCapacity]];
+  return [self keepPointer: [T4Allocator sysAllocWithCapacity: aCapacity]];
 }
 
 -(char*)allocCharArrayWithCapacity: (int)aCapacity
@@ -248,6 +269,54 @@
   return (real*)[self allocByteArrayWithCapacity: aCapacity*sizeof(real)];
 }
 
+-(void*)realloc: (void*)aPointer byteArrayWithCapacity: (int)aCapacity
+{
+  T4AllocatorPointer *pointer = nil;
+  void *anAddress;
+  int nPointers, index, i;
+
+  if(!aPointer)
+    return [self allocByteArrayWithCapacity: aCapacity];
+
+  if(!pointers)
+    T4Error(@"Allocator: cannot realloc a pointer which is not mine!");
+
+  nPointers = [pointers count];
+  index = NSNotFound;
+  for(i = 0; i < nPointers; i++)
+  {
+    pointer = [pointers objectAtIndex: i];
+    if(aPointer == [pointer address])
+    {
+      index = i;
+      break;
+    }
+  }
+
+  if(index == NSNotFound)
+    T4Error(@"Allocator: cannot realloc a pointer which is not mine!");
+
+  anAddress = [T4Allocator sysRealloc: [pointer address] withCapacity: aCapacity];
+  [pointer setAddress: anAddress];
+
+  return anAddress;
+}
+
+-(char*)realloc: (void*)aPointer charArrayWithCapacity: (int)aCapacity
+{
+  return [self realloc: aPointer byteArrayWithCapacity: aCapacity];
+}
+
+-(int*)realloc: (void*)aPointer intArrayWithCapacity: (int)aCapacity
+{
+  return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(int)];
+}
+
+-(real*)realloc: (void*)aPointer realArrayWithCapacity: (int)aCapacity
+{
+  return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(real)];
+}
+
 @end
 
 @implementation T4AllocatorPointer
@@ -263,6 +332,11 @@
 -(void*)address
 {
   return address;
+}
+
+-(void)setAddress: (void*)anAddress
+{
+  address = anAddress;
 }
 
 -(void)dealloc

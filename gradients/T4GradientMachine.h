@@ -11,9 +11,9 @@
     int numOutputs;
 
     NSMutableArray *parameters;
-    NSMutableArray *dParameters;
+    NSMutableArray *gradParameters;
 
-    T4Matrix *dInputs;
+    T4Matrix *gradInputs;
     T4Matrix *outputs;
 
     T4Criterion *criterion;
@@ -29,11 +29,20 @@
 //-(void)iterInitialize;
 
 -(T4Matrix*)forwardMatrix: (T4Matrix*)anInputMatrix;
--(T4Matrix*)backwardMatrix: (T4Matrix*)dOutputMatrix inputs: (T4Matrix*)anInputMatrix;
+-(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix;
 //    virtual void setPartialBackprop(bool flag=true);
+
+-(void)reset;
 
 -(void)setCriterion: (T4Criterion*)aCriterion;
 -(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;
 -(void)testWithMeasurers: (NSArray*)someMeasurers;
+
+-(int)numberOfInputs;
+-(int)numberOfOutputs;
+-(T4Matrix*)outputs;
+-(T4Matrix*)gradInputs;
+-(NSArray*)parameters;
+-(NSArray*)gradParameters;
 
 @end

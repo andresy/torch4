@@ -192,7 +192,7 @@ BOOL T4RandomNormalIsValid = NO;
 
 +(void)shuffleArray: (void*)anArray capacity: (int)aCapacity elementCapacity: (int)anElementCapacity
 {
-  void *save = [T4Allocator sysAlloc: anElementCapacity];
+  void *save = [T4Allocator sysAllocWithCapacity: anElementCapacity];
   char *tab = (char *)anArray;
   int i;
 

@@ -19,7 +19,13 @@
 -(int*)allocIntArrayWithCapacity: (int)aCapacity;
 -(real*)allocRealArrayWithCapacity: (int)aCapacity;
 
-+(void*)sysAlloc: (int)capacity;
+-(void*)realloc: (void*)aPointer byteArrayWithCapacity: (int)aCapacity;
+-(char*)realloc: (void*)aPointer charArrayWithCapacity: (int)aCapacity;
+-(int*)realloc: (void*)aPointer intArrayWithCapacity: (int)aCapacity;
+-(real*)realloc: (void*)aPointer realArrayWithCapacity: (int)aCapacity;
+
++(void*)sysAllocWithCapacity: (int)capacity;
++(void*)sysRealloc: (void*)anAddress withCapacity: (int)capacity;
 +(void)sysFree: (void*)ptr;
 
 -(BOOL)isMyObject: (NSObject*)anObject;
@@ -35,5 +41,6 @@
 -initWithPointer: (void*)aPointer;
 -(void)dealloc;
 -(void*)address;
+-(void)setAddress: (void*)anAddress;
 
 @end

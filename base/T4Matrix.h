@@ -22,11 +22,19 @@
 
 -resizeWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -resizeWithNumberOfColumns: (int)aNumColumns;
--copyMatrix: (T4Matrix*)aMatrix;
+
 -fillWithValue: (real)aValue;
 -zero;
 
--accumulateValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix;
+-copyMatrix: (T4Matrix*)aMatrix;
+-copyFromAddress: (real*)anAddress stride: (int)aStride;
+-copyToAddress: (real*)anAddress stride: (int)aStride;
+
+-addMatrix: (T4Matrix*)aMatrix;
+-addValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix;
+-addFromAddress: (real*)anAddress stride: (int)aStride;
+-addToAddress: (real*)anAddress stride: (int)aStride;
+
 -(real)column: (int)aColumnIndex dotColumn: (int)aMatrixColumnIndex ofMatrix: (T4Matrix*)aMatrix;
 -(real)dotMatrix: (T4Matrix*)aMatrix;
 //    real innerProduct(Matrix *matrix, int column_index=0, int column_index_matrix=0);

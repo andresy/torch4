@@ -2,14 +2,87 @@
 
 @implementation T4ExampleDealer
 
+// Examples by composition of several matrices given in different arrays ////////////////////////////////////////////////////////
+
+-(NSArray*)examplesWithArrayOfElements: (NSArray*)arrayOfMatrixArray
+{
+  int numElements = [arrayOfMatrixArray count];
+  int numExamples = -1;
+  int i, e;
+  T4Matrix **exampleArray;
+  NSArray **examplesArray;
+  NSArray *examples;
+
+  for(i = 0; i < numElements; i++)
+  {
+    int currentNumExamples = [[arrayOfMatrixArray objectAtIndex: i] count];
+    if(numExamples < 0)
+      numExamples = currentNumExamples;
+    else
+    {
+      if(currentNumExamples != numExamples)
+        T4Error(@"ExampleDealer: element columns do not have the the same size!!!");
+    }
+  }
+
+  if(numExamples < 0)
+    T4Error(@"ExampleDealer: no examples proposed!!!");
+
+  examplesArray = [T4Allocator sysAllocIdArrayWithCapacity: numExamples];
+  exampleArray = [T4Allocator sysAllocIdArrayWithCapacity: numElements];
+
+  for(e = 0; e < numExamples; e++)
+  {
+    for(i = 0; i < numElements; i++)
+      exampleArray[i] = [[arrayOfMatrixArray objectAtIndex: i] objectAtIndex: e];
+
+    examplesArray[e] = [[NSArray alloc] initWithObjects: exampleArray count: numElements];
+  }
+
+  examples = [[NSArray alloc] initWithObjects: examplesArray count: numExamples];
+
+  for(e = 0; e < numExamples; e++)
+    [examplesArray[e] release];
+
+  [allocator keepObject: examples];
+
+  return examples;
+}
+
+-(NSArray*)examplesWithElements: (NSArray*)someMatricesA elements: (NSArray*)someMatricesB
+{
+  NSArray *arrayOfMatrixArray = [[NSArray alloc] initWithObjects: someMatricesA, someMatricesB, nil];
+  NSArray *examples;
+
+  examples = [self examplesWithArrayOfElements: arrayOfMatrixArray];
+
+  [arrayOfMatrixArray release];
+
+  return examples;
+}
+
+-(NSArray*)examplesWithElements: (NSArray*)someMatricesA elements: (NSArray*)someMatricesB elements: (NSArray*)someMatricesC
+{
+  NSArray *arrayOfMatrixArray = [[NSArray alloc] initWithObjects: someMatricesA, someMatricesB, someMatricesC, nil];
+  NSArray *examples;
+
+  examples = [self examplesWithArrayOfElements: arrayOfMatrixArray];
+
+  [arrayOfMatrixArray release];
+
+  return examples;
+}
+
+// Examples by decomposing a matrix in several columns //////////////////////////////////////////////////////////////////////////
+
 -(NSArray*)examplesWithMatrix:   (T4Matrix*)aMatrix      numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep elementSizes: (int*)someElementSizes numberOfElements: (int)aNumElements
 {
   int numRows = [aMatrix numberOfRows];
   int numColumns = (aNumColumns > 0 ? aNumColumns : [aMatrix numberOfColumns]);
   int stride = [aMatrix stride];
   int numExamples = [aMatrix numberOfColumns]/aNumColumns;
-  NSArray **examplesArray = [allocator allocIdArrayWithCapacity: numExamples];
-  T4Matrix **exampleArray = [allocator allocIdArrayWithCapacity: aNumElements];
+  NSArray **examplesArray = [T4Allocator sysAllocIdArrayWithCapacity: numExamples];
+  T4Matrix **exampleArray = [T4Allocator sysAllocIdArrayWithCapacity: aNumElements];
   NSArray *examples;
   int currentColumnIndex = 0;
   int e, i;
@@ -67,8 +140,8 @@
     [examplesArray[e] release];
 
   [allocator keepObject: examples];
-  [allocator freePointer: examplesArray];
-  [allocator freePointer: exampleArray];
+  [T4Allocator sysFree: examplesArray];
+  [T4Allocator sysFree: exampleArray];
 
   return examples;
 }

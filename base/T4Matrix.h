@@ -10,6 +10,7 @@
 }
 
 -init;
+-initWithCoder: (NSCoder*)aCoder;
 -initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithNumberOfRows: (int)aNumRows;
 -initWithRealArray: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;

@@ -809,4 +809,29 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return [text autorelease];
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  if( (self = [super initWithCoder: aCoder]) )
+  {
+    [aCoder decodeValueOfObjCType: @encode(int) at: &numRows];
+    [aCoder decodeValueOfObjCType: @encode(int) at: &numColumns];
+
+    stride = numRows;
+    dataSize = numRows*numColumns;
+    data = [allocator allocRealArrayWithCapacity: dataSize];
+
+    [aCoder decodeArrayOfObjCType: @encode(real) count: dataSize at: data];
+  }
+
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder *)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numRows];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numColumns];
+  [aCoder encodeArrayOfObjCType: @encode(real) count: numRows*numColumns at: data];  
+}
+
 @end

@@ -370,4 +370,46 @@
   return numParameters;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numInputs];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numOutputs];
+  parameters = [aCoder decodeObject];
+  gradParameters = [aCoder decodeObject];
+  gradInputs = [aCoder decodeObject];
+  outputs = [aCoder decodeObject];
+
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
+  criterion = [aCoder decodeObject]; //debug: retainAndKeepObject: arg!!!!
+  [aCoder decodeValueOfObjCType: @encode(real) at: &learningRate];
+  [aCoder decodeValueOfObjCType: @encode(real) at: &learningRateDecay];
+  [aCoder decodeValueOfObjCType: @encode(real) at: &endAccuracy];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &maxIteration];
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &shufflesExamples];
+
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numInputs];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numOutputs];
+  [aCoder encodeObject: parameters];
+  [aCoder encodeObject: gradParameters];
+  [aCoder encodeObject: gradInputs];
+  [aCoder encodeObject: outputs];
+
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
+  [aCoder encodeObject: criterion];
+  [aCoder encodeValueOfObjCType: @encode(real) at: &learningRate];
+  [aCoder encodeValueOfObjCType: @encode(real) at: &learningRateDecay];
+  [aCoder encodeValueOfObjCType: @encode(real) at: &endAccuracy];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &maxIteration];
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &shufflesExamples];
+}
+
 @end

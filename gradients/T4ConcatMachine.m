@@ -140,4 +140,21 @@
   return machines;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  machines = [[aCoder decodeObject] keepWithAllocator: allocator];
+  offsets = [allocator allocIntArrayWithCapacity: [machines count]];
+  [aCoder decodeArrayOfObjCType: @encode(int) count: [machines count] at: offsets];
+  gradOutputs = [[[T4Matrix alloc] init] keepWithAllocator: allocator];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeObject: machines];
+  [aCoder encodeArrayOfObjCType: @encode(int) count: [machines count] at: offsets];
+}
+
 @end

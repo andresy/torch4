@@ -24,7 +24,6 @@
   if( (self = [super init]) )
   {
     allocator = [[T4Allocator alloc] init];
-//    T4Message(@"Allocating object <%@>", [[self class] description]);
   }
   
   return self;
@@ -42,6 +41,16 @@
   [allocator release];
 //  T4Message(@"Freeing object <%@>", [[self class] description]);
   [super dealloc];
+}
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  allocator = [[T4Allocator alloc] init];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
 }
 
 @end

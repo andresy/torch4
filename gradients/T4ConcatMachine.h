@@ -8,6 +8,8 @@
 }
 
 -init;
+-initWithCoder: (NSCoder*)aCoder;
+
 -addMachine: (T4GradientMachine*)aMachine;
 -(NSArray*)machines;
 

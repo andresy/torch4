@@ -26,6 +26,7 @@
 }
 
 -initWithNumberOfInputs: (int)aNumInputs numberOfOutputs: (int)aNumOutputs numberOfParameters: (int)aNumParams;
+-initWithCoder: (NSCoder*)aCoder;
 
 //-(void)iterInitialize;
 

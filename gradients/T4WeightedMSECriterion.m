@@ -17,7 +17,7 @@
 {
   NSArray *example = [dataset objectAtIndex: anIndex];
   T4Matrix *targets = [example objectAtIndex: 1];
-  real weight = [[example objectAtIndex: 2] realData][0];
+  real weight = [[example objectAtIndex: 2] firstColumn][0];
   int numColumns = [someInputs numberOfColumns];
   int c, r;
 
@@ -51,7 +51,7 @@
   NSArray *example = [dataset objectAtIndex: anIndex];
   T4Matrix *targets = [example objectAtIndex: 1];
   int numColumns = [someInputs numberOfColumns];
-  real norm = 2.*[[example objectAtIndex: 2] realData][0];
+  real norm = 2.*[[example objectAtIndex: 2] firstColumn][0];
   int c, r;
 
   [gradInputs resizeWithNumberOfColumns: numColumns];

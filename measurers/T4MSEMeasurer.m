@@ -2,7 +2,7 @@
 
 @implementation T4MSEMeasurer
 
--initWithInputs: (T4Matrix*)someInputs dataset: (NSArray*)aDataset file: (NSFileHandle*)aFile
+-initWithInputs: (T4Matrix*)someInputs dataset: (NSArray*)aDataset file: (T4File*)aFile
 {
   if( (self = [super initWithDataset: aDataset file: aFile]) )
   {
@@ -57,8 +57,10 @@
     internalError /= (real)[dataset count];
   
   [file writeStringWithFormat: @"%g\n", internalError];
-  [self reset];
+  [file synchronizeFile];
 
+  [self reset];
+  
   return self;
 }
 

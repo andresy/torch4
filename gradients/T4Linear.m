@@ -13,8 +13,8 @@
 
     [self setWeightDecay: 0];
 
-    parametersAddr = [[parameters objectAtIndex: 0] realData];
-    gradParametersAddr = [[gradParameters objectAtIndex: 0] realData];
+    parametersAddr = [[parameters objectAtIndex: 0] firstColumn];
+    gradParametersAddr = [[gradParameters objectAtIndex: 0] firstColumn];
     
     weights = [[T4Matrix alloc] initWithRealData: parametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
     biases = [[T4Matrix alloc] initWithRealData: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
@@ -34,7 +34,7 @@
 
 -reset
 {
-  real *biasesData = [biases realData];
+  real *biasesData = [biases firstColumn];
   real bound = 1./sqrt((real)numInputs);
   int i, j;
 

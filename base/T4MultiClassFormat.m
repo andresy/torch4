@@ -22,7 +22,7 @@ int T4MultiClassSort(const void *a, const void *b)
   
   for(i = 0; i < numExamples; i++)
   {
-    real target = [[[aDataset objectAtIndex: i] objectAtIndex: 1] realData][0];
+    real target = [[[aDataset objectAtIndex: i] objectAtIndex: 1] firstColumn][0];
     
     BOOL classExists = NO;
     for(j = 0; j < numClassSet; j++)
@@ -63,7 +63,7 @@ int T4MultiClassSort(const void *a, const void *b)
   {
     int i;
 
-    classLabelArray = [classLabels realData];
+    classLabelArray = [classLabels firstColumn];
 
     for(i = 0; i < aNumClasses; i++)
       classLabelArray[i] = someLabels[i];

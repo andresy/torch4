@@ -772,7 +772,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return stride;
 }
 
--(real*)realData
+-(real*)firstColumn
 {
   return data;
 }

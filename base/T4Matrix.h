@@ -51,7 +51,7 @@
 -(int)numberOfColumns;
 -(int)numberOfRows;
 -(int)stride;
--(real*)realData;
+-(real*)firstColumn;
 
 -(NSString*)description;
 

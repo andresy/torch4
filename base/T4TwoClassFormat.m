@@ -12,7 +12,7 @@
 
     for(i = 0; i < numExamples; i++)
     {
-      real *targets = [[[aDataset objectAtIndex: i] objectAtIndex: 1] realData];
+      real *targets = [[[aDataset objectAtIndex: i] objectAtIndex: 1] firstColumn];
     
       BOOL classExists = NO;
       for(j = 0; j < numClassSet; j++)
@@ -58,7 +58,7 @@
 {
   if( (self = [super initWithNumberOfClasses: 2 encodingSize: 1]) )
   {
-    classLabelArray = [classLabels realData];
+    classLabelArray = [classLabels firstColumn];
     classLabelArray[0] = aLabel1;
     classLabelArray[1] = aLabel2;
   }

@@ -11,7 +11,7 @@
     int totalNumColumns;
 }
 
--initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset file: (NSFileHandle*)aFile;
+-initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset file: (T4File*)aFile;
 
 -measureExampleAtIndex: (int)anIndex;
 -measureAtIteration: (int)anIteration;

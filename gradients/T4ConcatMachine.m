@@ -61,7 +61,7 @@
     if(i == 0)
     {
       [outputs resizeWithNumberOfColumns: [currentOutputs numberOfColumns]];
-      outputData = [outputs realData];
+      outputData = [outputs firstColumn];
       outputStride = [outputs stride];
     }
 
@@ -76,7 +76,7 @@
   T4GradientMachine *currentMachine;
   int numMachines = [machines count];
   T4Matrix *currentGradInputs;
-  real *gradOutputData = [someGradOutputs realData];
+  real *gradOutputData = [someGradOutputs firstColumn];
   int gradOutputNumColumns = [someGradOutputs numberOfColumns];
   int gradOutputStride = [someGradOutputs stride];
   int i;

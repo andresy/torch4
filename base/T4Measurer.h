@@ -1,14 +1,13 @@
 #import "T4Object.h"
-#import "T4NSFileHandleExtension.h"
+#import "T4File.h"
 
 @interface T4Measurer : T4Object
 {
-    NSFileHandle *file;
+    T4File *file;
     NSArray *dataset;
 }
 
--initWithDataset: (NSArray*)aDataset file: (NSFileHandle*)aFile;
--initWithDataset: (NSArray*)aDataset path: (NSString*)aPath;
+-initWithDataset: (NSArray*)aDataset file: (T4File*)aFile;
 -measureExampleAtIndex: (int)anIndex;
 -measureAtIteration: (int)anIteration;
 -measureAtEnd;

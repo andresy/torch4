@@ -11,7 +11,7 @@
     real internalError; 
 }
 
--initWithInputs: (T4Matrix*)someInputs dataset: (NSArray*)aDataset file: (NSFileHandle*)aFile;
+-initWithInputs: (T4Matrix*)someInputs dataset: (NSArray*)aDataset file: (T4File*)aFile;
 -measureExampleAtIndex: (int)anIndex;
 -measureAtIteration: (int)anIteration;
 -reset;

@@ -15,7 +15,7 @@
 
 -(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
-  real *inputData = [someInputs realData];
+  real *inputData = [someInputs firstColumn];
   int inputStride = [someInputs stride];
   int i;
 
@@ -35,7 +35,7 @@
   int i;
 
   [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
-  gradInputData = [gradInputs realData];
+  gradInputData = [gradInputs firstColumn];
   gradInputStride = [gradInputs stride];
 
   for(i = 0; i < numMachines; i++)

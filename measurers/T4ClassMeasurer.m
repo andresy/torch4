@@ -2,7 +2,7 @@
 
 @implementation T4ClassMeasurer
 
--initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset file: (NSFileHandle*)aFile
+-initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset file: (T4File*)aFile
 {
   if( (self = [super initWithDataset: aDataset file: aFile]) )
   {
@@ -50,6 +50,7 @@
   [file writeStringWithFormat: @"%g\n", internalError];
   if(computeConfusionMatrix)
     [file writeStringWithFormat: @"%@\n", confusionMatrix];
+  [file synchronizeFile];
 
   [self reset];
 

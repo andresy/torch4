@@ -286,7 +286,6 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
 
 -(NSString*)stringToEndOfLine
 {
-  long startingPosition = ftell(file);
   int stringSize = 0;
   BOOL endOfReading = NO;
   char *stringBuffer = NULL;
@@ -296,37 +295,40 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
 
   while(!endOfReading)
   {
-    int numByteRead;
     int i;
-
+    
     stringBuffer = [T4Allocator sysReallocCharArray: stringBuffer
                                 withCapacity: stringSize + T4FileStringChunkSizeForReading/* + 1*/];
 
-    numByteRead = fread(stringBuffer+stringSize, 1, T4FileStringChunkSizeForReading, file);
-
-    for(i = 0; i < numByteRead; i++)
+    for(i = 0; i < T4FileStringChunkSizeForReading; i++)
     {
-      if(stringBuffer[stringSize++] == '\n')
-      {
-        endOfReading = YES;
-        break;
-      }
-    }
+      char currentChar;
+      int z = fread(&currentChar, 1, 1, file);
 
-    if(numByteRead < T4FileStringChunkSizeForReading)
-      endOfReading = YES;
+      if(z == 1)
+      {
+        stringBuffer[stringSize++] = currentChar;
+        if(currentChar == '\n')
+        {
+          endOfReading = YES;
+          break;
+        }
+      }
+      else
+        endOfReading = YES;
+    }
   }
 
   if(stringSize > 0)
   {
-    if(fseek(file, startingPosition+(long)stringSize, SEEK_SET))
-      T4Error(@"DiskFile: cannot seek in the file");
+//    if(fseek(file, startingPosition+(long)stringSize, SEEK_SET))
+//      T4Error(@"DiskFile: cannot seek in the file");
 //  stringBuffer[stringSize] = '\0';
 
     return [[[NSString alloc] initWithCStringNoCopy: stringBuffer length: stringSize freeWhenDone: YES] autorelease];
   }
   else
-    return nil;
+    return nil; //DEBUG???? @"" instead?
 }
 
 -(int)fileDescriptor

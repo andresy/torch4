@@ -214,4 +214,85 @@
                numberOfElements: 2];
 }
 
+//
+
+-(NSArray*)matricesWithMatrix: (T4Matrix*)aMatrix rowOffset: (int)aRowOffset numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep
+{
+  int stride = [aMatrix stride];
+  int numMatrices;
+  T4Matrix **matricesArray;
+  NSArray *matrices;
+  int currentColumnIndex = 0;
+  int m;
+
+  if(aRowOffset < 0)
+    aRowOffset = 0;
+
+  if(aNumRows < 0)
+    aNumRows = [aMatrix numberOfRows] - aRowOffset;
+
+  if(aNumRows < aRowOffset+[aMatrix numberOfRows])
+    T4Error(@"ExampleDealer: number of rows required does not fit in the provided matrix");
+
+  if(aNumColumns < 0)
+    aNumColumns = [aMatrix numberOfColumns];
+
+  if(aNumColumns > [aMatrix numberOfColumns])
+    T4Error(@"ExampleDealer: number of columns required does not fit in the provided matrix");
+
+  numMatrices = [aMatrix numberOfColumns]/aNumColumns;
+  matricesArray = [T4Allocator sysAllocIdArrayWithCapacity: numMatrices];
+
+  for(m = 0; m < numMatrices; m++)
+  {
+    T4Matrix *matrix = [[T4Matrix alloc] initWithRealData: [aMatrix columnAtIndex: currentColumnIndex]+aRowOffset
+                                         numberOfRows: aNumRows
+                                         numberOfColumns: aNumColumns
+                                         stride: stride];
+
+    matricesArray[m] = matrix;
+    currentColumnIndex += aColumnStep;
+  }
+
+  matrices = [[NSArray alloc] initWithObjects: matricesArray count: numMatrices];
+
+  for(m = 0; m < numMatrices; m++)
+    [matricesArray[m] release];
+
+  [allocator keepObject: matrices];
+  [T4Allocator sysFree: matricesArray];
+
+  return matrices;
+}
+
+-(NSArray*)matricesWithMatrices: (NSArray*)someMatrices rowOffset: (int)aRowOffset numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns columnStep: (int)aColumnStep
+{
+  NSMutableArray *matrices = [[[NSMutableArray alloc] init] keepWithAllocator: allocator];
+  int numMatrices = [someMatrices count];
+  int m;
+
+  for(m = 0; m < numMatrices; m++)
+  {
+    NSArray *someMatrices = [self matricesWithMatrix: [someMatrices objectAtIndex: m]
+                                  rowOffset: aRowOffset
+                                  numberOfRows: aNumRows
+                                  numberOfColumns: aNumColumns
+                                  columnStep: aColumnStep];
+
+    [matrices addObjectsFromArray: someMatrices];
+  }
+
+  return matrices;
+}
+
+-(NSArray*)columnMatricesWithMatrix:  (T4Matrix*)aMatrix
+{
+  return [self matricesWithMatrix: aMatrix rowOffset: 0 numberOfRows: -1 numberOfColumns: 1 columnStep: 1];
+}
+
+-(NSArray*)columnMatricesWithMatrices: (NSArray*)someMatrices
+{
+  return [self matricesWithMatrices: someMatrices rowOffset: 0 numberOfRows: -1 numberOfColumns: 1 columnStep: 1];  
+}
+
 @end

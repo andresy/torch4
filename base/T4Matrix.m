@@ -728,70 +728,6 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
-/*
-void Matrix::dotSaccSdotMdotM(real scalar1, real scalar2, Matrix *matrix1, Matrix *matrix2)
-{
-  if(nColumns == 1)
-  {
-#ifdef USE_DOUBLE
-    cblas_dgemv(CblasColMajor, CblasNoTrans, nRows, matrix1->nColumns,
-                scalar2, matrix1->data, matrix1->stride, matrix2->data, 1, scalar1, data, 1);
-#else
-    cblas_sgemv(CblasColMajor, CblasNoTrans, nRows, matrix1->nColumns,
-                scalar2, matrix1->data, matrix1->stride, matrix2->data, 1, scalar1, data, 1);
-#endif
-  }
-  else
-  {
-#ifdef USE_DOUBLE
-    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nRows, nColumns,
-                matrix1->nColumns, scalar2, matrix1->data, matrix1->stride, matrix2->data, matrix2->stride,
-                scalar1, data, stride);
-#else
-    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, nRows, nColumns,
-                matrix1->nColumns, scalar2, matrix1->data, matrix1->stride, matrix2->data, matrix2->stride,
-                scalar1, data, stride);
-#endif
-  }
-}
-
-void Matrix::dotSaccSdotTMdotM(real scalar1, real scalar2, Matrix *matrix1, Matrix *matrix2)
-{
-  if(nColumns == 1)
-  {
-#ifdef USE_DOUBLE
-    cblas_dgemv(CblasColMajor, CblasTrans, nRows, matrix1->nColumns,
-                scalar2, matrix1->data, matrix1->stride, matrix2->data, 1, scalar1, data, 1);
-#else
-    cblas_sgemv(CblasColMajor, CblasTrans, nRows, matrix1->nColumns,
-                scalar2, matrix1->data, matrix1->stride, matrix2->data, 1, scalar1, data, 1);
-#endif
-  }
-  else
-  {
-#ifdef USE_DOUBLE
-    cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, nRows, nColumns,
-                matrix1->nColumns, scalar2, matrix1->data, matrix1->stride, matrix2->data, matrix2->stride,
-                scalar1, data, stride);
-#else
-    cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans, nRows, nColumns,
-                matrix1->nColumns, scalar2, matrix1->data, matrix1->stride, matrix2->data, matrix2->stride,
-                scalar1, data, stride);
-#endif
-  }
-}
-
-void Matrix::accSdotMextM(real scalar, Matrix *matrix1, Matrix *matrix2, int column_index1, int column_index2)
-{
-#ifdef USE_DOUBLE
-  cblas_dger(CblasColMajor, nRows, nColumns, scalar, matrix1->columnAtIndex(column_index1), 1, matrix2->columnAtIndex(column_index2), 1, data, stride);
-#else
-  cblas_sger(CblasColMajor, nRows, nColumns, scalar, matrix1->columnAtIndex(column_index1), 1, matrix2->columnAtIndex(column_index2), 1, data, stride);
-#endif
-}
-
-*/
-
 -(real)getMinRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex
 {
   real minValue = INF;
@@ -872,14 +808,19 @@ void Matrix::accSdotMextM(real scalar, Matrix *matrix1, Matrix *matrix2, int col
 {
   NSMutableString *text = [[NSMutableString alloc] init];
   int r, c;
-
+  
   for(r = 0; r < numRows; r++)
   {
-    for(c = 0; c < numColumns-1; c++)
-      [text appendFormat: @"%g ", data[c*stride+r]];
-    [text appendFormat: @"%g", data[(numColumns-1)*stride+r]];
+    if(r == 0)
+      [text appendString: @"[["];
+    else
+      [text appendString: @" ["];
+    for(c = 0; c < numColumns; c++)
+      [text appendFormat: @" %12g", data[c*stride+r]];
     if(r != (numRows-1))
-      [text appendString: @"\n"];
+      [text appendString: @" ]\n"];
+    else
+      [text appendString: @" ]]"];
   }
 
   return [text autorelease];

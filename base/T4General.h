@@ -5,7 +5,6 @@
 #import <string.h>
 #import <limits.h>
 #import <stdarg.h>
-#import <time.h>
 #import <float.h>
 
 // Old systems need that to define FLT_MAX and DBL_MAX

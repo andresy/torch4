@@ -2,7 +2,6 @@
 
 @interface T4Matrix : T4Object
 {
-@public
     real *data;
     int dataSize;
     int numRows;
@@ -45,13 +44,6 @@
 -dotValue: (real)aValue1 addValue: (real)aValue2 dotTrMatrix: (T4Matrix*)aMatrix1 dotMatrix:   (T4Matrix*)aMatrix2;
 -dotValue: (real)aValue1 addValue: (real)aValue2 dotMatrix:   (T4Matrix*)aMatrix1 dotTrMatrix: (T4Matrix*)aMatrix2;
 -dotValue: (real)aValue1 addValue: (real)aValue2 dotTrMatrix: (T4Matrix*)aMatrix1 dotTrMatrix: (T4Matrix*)aMatrix2;
-
-//    real innerProduct(Matrix *matrix, int column_index=0, int column_index_matrix=0);
-
-// -dotValue: (real)aValue1 
-// void dotSaccSdotMdotM(real scalar1, real scalar2, Matrix *matrix1, Matrix *matrix2);
-//     void dotSaccSdotTMdotM(real scalar1, real scalar2, Matrix *matrix1, Matrix *matrix2);
-//     void accSdotMextM(real scalar, Matrix *matrix1, Matrix *matrix2, int column_index1=0, int column_index2=0);
 
 -(real)getMinRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex;
 -(real)getMaxRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex;

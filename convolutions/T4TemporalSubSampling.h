@@ -37,7 +37,7 @@
 }
 
 -initWithNumberOfRows: (int)aNumInputRows
-           kernelSize: (int)aKW
-                   dT: (int)aDT;
+      kernelTimeWidth: (int)aKW
+       kernelTimeStep: (int)aDT;
 
 @end

@@ -14,23 +14,24 @@
         numberOfOutputPlanes: (int)aNumOutputPlanes
                   inputWidth: (int)anInputWidth
                  inputHeight: (int)anInputHeight
-                  kernelSize: (int)aKW
-                          dX: (int)aDX
-                          dY: (int)aDY
+                 kernelWidth: (int)aKW
+                kernelHeight: (int)aKH
+             kernelWidthStep: (int)aDX
+            kernelHeightStep: (int)aDY
 {
   int anOutputWidth = (anInputWidth - aKW) / aDX + 1;
-  int anOutputHeight = (anInputHeight - aKW) / aDY + 1;
+  int anOutputHeight = (anInputHeight - aKH) / aDY + 1;
 
   if(anInputWidth < aKW)
     T4Error(@"SpatialConvolution: input image width is too small (width = %d < kW = %d) ", anInputWidth, aKW);
-  if(anInputHeight < aKW)
-    T4Error(@"SpatialConvolution: input image height is too small (height = %d < kW = %d) ", anInputHeight, aKW);
+  if(anInputHeight < aKH)
+    T4Error(@"SpatialConvolution: input image height is too small (height = %d < kH = %d) ", anInputHeight, aKH);
 
   T4Message(@"SpatialConvolution: output image is <%d x %d>", anOutputWidth, anOutputHeight);
 
   if( (self = [super initWithNumberOfInputs: aNumInputPlanes * anInputHeight * anInputWidth
                      numberOfOutputs: aNumOutputPlanes * anOutputHeight * anOutputWidth
-                     numberOfParameters: aKW*aKW*aNumInputPlanes*aNumOutputPlanes+aNumOutputPlanes]) )
+                     numberOfParameters: aKW*aKH*aNumInputPlanes*aNumOutputPlanes+aNumOutputPlanes]) )
   {
     real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
     real *gradParametersData = [[gradParameters objectAtIndex: 0] firstColumn];
@@ -43,18 +44,19 @@
     outputWidth = anOutputWidth;
     outputHeight = anOutputHeight;
     kW = aKW;
+    kH = aKH;
     dX = aDX;
     dY = aDY;
 
     weights = (real **)[allocator allocPointerArrayWithCapacity: numOutputPlanes];
     for(i = 0; i < numOutputPlanes; i++)
-      weights[i] = parametersData + i*kW*kW*numInputPlanes;
-    biases = parametersData + kW*kW*numInputPlanes*numOutputPlanes;
+      weights[i] = parametersData + i*kW*kH*numInputPlanes;
+    biases = parametersData + kW*kH*numInputPlanes*numOutputPlanes;
     
     gradWeights = (real **)[allocator allocPointerArrayWithCapacity: numOutputPlanes];
     for(i = 0; i < numOutputPlanes; i++)
-      gradWeights[i] = gradParametersData + i*kW*kW*numInputPlanes;
-    gradBiases = gradParametersData + kW*kW*numInputPlanes*numOutputPlanes;
+      gradWeights[i] = gradParametersData + i*kW*kH*numInputPlanes;
+    gradBiases = gradParametersData + kW*kH*numInputPlanes*numOutputPlanes;
 
     [self reset];
   }
@@ -64,7 +66,7 @@
 
 -reset
 {
-  real bound = 1./sqrt((real)(kW*kW*numInputPlanes));
+  real bound = 1./sqrt((real)(kW*kH*numInputPlanes));
   int numParameters = [[parameters objectAtIndex: 0] numberOfRows];
   real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
   int i;
@@ -98,7 +100,7 @@
       for(i = 0; i < numInputPlanes; i++)
       {
         // Get the good mask for (k,i) (k out, i in)
-        real *ptrW = weights[k]+i*kW*kW;
+        real *ptrW = weights[k]+i*kW*kH;
       
         // Get the input image
         real *currentInputPlane = inputColumn+i*inputWidth*inputHeight;
@@ -111,7 +113,7 @@
             // Dot product in two dimensions... (between input image and the mask)
             real *subInputPlane = currentInputPlane+yy*dY*inputWidth+xx*dX;
             real sum = 0;
-            for(ky = 0; ky < kW; ky++)
+            for(ky = 0; ky < kH; ky++)
             {
               for(kx = 0; kx < kW; kx++)
                 sum += subInputPlane[ky*inputWidth+kx]*ptrW[ky*kW+kx];
@@ -153,7 +155,7 @@
       
       for(i = 0; i < numInputPlanes; i++)
       {
-        real *gradPtrW = gradWeights[k] + i*kW*kW;
+        real *gradPtrW = gradWeights[k] + i*kW*kH;
         real *currentInputPlane = inputColumn+i*inputWidth*inputHeight;
         for(yy = 0; yy < outputHeight; yy++)
         {
@@ -161,7 +163,7 @@
           {
             real *subInputPlane = currentInputPlane+yy*dY*inputWidth+xx*dX;            
             real z = currentGradOutputPlane[yy*outputWidth+xx];
-            for(ky = 0; ky < kW; ky++)
+            for(ky = 0; ky < kH; ky++)
             {
               for(kx = 0; kx < kW; kx++)
                 gradPtrW[ky*kW+kx] += z * subInputPlane[ky*inputWidth+kx];
@@ -187,7 +189,7 @@
     {
       for(i = 0; i < numInputPlanes; i++)
       {
-        real *ptrW = weights[k]+i*kW*kW;
+        real *ptrW = weights[k]+i*kW*kH;
         real *currentGradInputPlane = gradInputColumn+i*inputWidth*inputHeight;
         for(yy = 0; yy < outputHeight; yy++)
         {
@@ -195,7 +197,7 @@
           {
             real *subGradInputPlane = currentGradInputPlane+yy*dY*inputWidth+xx*dX;
             real z = currentGradOutputPlane[yy*outputWidth+xx];
-            for(ky = 0; ky < kW; ky++)
+            for(ky = 0; ky < kH; ky++)
             {
               for(kx = 0; kx < kW; kx++)
                 subGradInputPlane[ky*inputWidth+kx] += z * ptrW[ky*kW+kx];

@@ -38,7 +38,7 @@
 /// Create a convolution layer...
 -initWithNumberOfInputRows: (int)aNumInputRows
         numberOfOutputRows: (int)aNumOutputRows
-                kernelSize: (int)aKW
-                        dT: (int)aDT;
+           kernelTimeWidth: (int)aKW
+            kernelTimeStep: (int)aDT;
 
 @end

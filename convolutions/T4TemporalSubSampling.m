@@ -4,8 +4,8 @@
 @implementation T4TemporalSubSampling
 
 -initWithNumberOfRows: (int)aNumInputRows
-           kernelSize: (int)aKW
-                   dT: (int)aDT
+      kernelTimeWidth: (int)aKW
+       kernelTimeStep: (int)aDT
 {
   if( (self = [super initWithNumberOfInputs: aNumInputRows
                      numberOfOutputs: aNumInputRows

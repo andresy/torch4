@@ -6,17 +6,18 @@
 -initWithNumberOfInputPlanes: (int)aNumInputPlanes
                   inputWidth: (int)anInputWidth
                 outputHeight: (int)anInputHeight
-                  kernelSize: (int)aKW
-                          dX: (int)aDX
-                          dY: (int)aDY
+                 kernelWidth: (int)aKW
+                kernelHeight: (int)aKH
+             kernelWidthStep: (int)aDX
+            kernelHeightStep: (int)aDY
 {
   int anOutputWidth = (anInputWidth - aKW) / aDX + 1;
-  int anOutputHeight = (anInputHeight - aKW) / aDY + 1;
+  int anOutputHeight = (anInputHeight - aKH) / aDY + 1;
 
   if(anInputWidth < aKW)
     T4Error(@"SpatialSubSampling: input image width is too small (width = %d < kW = %d) ", anInputWidth, aKW);
-  if(anInputHeight < aKW)
-    T4Error(@"SpatialSubSampling: input image height is too small (height = %d < kW = %d) ", anInputHeight, aKW);
+  if(anInputHeight < aKH)
+    T4Error(@"SpatialSubSampling: input image height is too small (height = %d < kH = %d) ", anInputHeight, aKH);
 
   T4Message(@"SpatialSubSampling: output image is <%d x %d>", anOutputWidth, anOutputHeight);
 
@@ -30,6 +31,7 @@
     outputWidth = anOutputWidth;
     outputHeight = anOutputHeight;
     kW = aKW;
+    kH = aKH;
     dX = aDX;
     dY = aDY;
 
@@ -47,7 +49,7 @@
 
 -reset
 {
-  real bound = 1./sqrt((real)(kW*kW));
+  real bound = 1./sqrt((real)(kW*kH));
   int numParameters = [[parameters objectAtIndex: 0] numberOfRows];
   real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
   int i;
@@ -90,7 +92,7 @@
           // Compute the mean of the input image...
           real *subInputPlane = currentInputPlane+yy*dY*inputWidth+xx*dX;
           real sum = 0;
-          for(ky = 0; ky < kW; ky++)
+          for(ky = 0; ky < kH; ky++)
           {
             for(kx = 0; kx < kW; kx++)
               sum += subInputPlane[ky*inputWidth+kx];
@@ -137,7 +139,7 @@
         {
           real *subInputPlane = currentInputPlane+yy*dY*inputWidth+xx*dX;
           real z = currentGradOutputPlane[yy*outputWidth+xx];
-          for(ky = 0; ky < kW; ky++)
+          for(ky = 0; ky < kH; ky++)
           {
             for(kx = 0; kx < kW; kx++)
               sum += z * subInputPlane[ky*inputWidth+kx];
@@ -169,7 +171,7 @@
         {
           real *subGradInputPlane = currentGradInputPlane+yy*dY*inputWidth+xx*dX;
           real z = currentGradOutputPlane[yy*outputWidth+xx] * theWeight;
-          for(ky = 0; ky < kW; ky++)
+          for(ky = 0; ky < kH; ky++)
           {
             for(kx = 0; kx < kW; kx++)
               subGradInputPlane[ky*inputWidth+kx] += z;

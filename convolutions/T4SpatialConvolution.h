@@ -25,6 +25,7 @@
 {
     /// Kernel size (height and width).
     int kW;
+    int kH;
     
     /// 'x' translation \emph{in the input image} after each application of the kernel.
     int dX;
@@ -70,9 +71,10 @@
         numberOfOutputPlanes: (int)aNumOutputPlanes
                   inputWidth: (int)anInputWidth
                  inputHeight: (int)anInputHeight
-                  kernelSize: (int)aKW
-                          dX: (int)aDX
-                          dY: (int)aDY;
+                 kernelWidth: (int)aKWX
+                kernelHeight: (int)aKWY
+             kernelWidthStep: (int)aDX
+            kernelHeightStep: (int)aDY;
 
 -(int)numberOfOutputPlanes;
 -(int)outputWidth;

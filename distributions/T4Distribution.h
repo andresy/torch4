@@ -20,7 +20,7 @@
 
 
 -(real)forwardInputs: (T4Matrix*)someInputs;
--backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs;
+-backwardLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs;
 -update;
 
 -reset;
@@ -28,8 +28,8 @@
 -setEndAccuracy: (real)aValue;
 -setMaxNumberOfIterations: (int)aValue;
 
--(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;
--(void)testWithMeasurers: (NSArray*)someMeasurers;
+-trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers;
+-testWithMeasurers: (NSArray*)someMeasurers;
 
 -(int)numberOfInputs;
 -(NSArray*)parameters;

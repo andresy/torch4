@@ -64,7 +64,7 @@
   return -INF;
 }
 
--backwardOutputWithLogPosterior: (real) aLogPosterior inputs: (T4Matrix*)someInputs;
+-backwardLogPosterior: (real) aLogPosterior inputs: (T4Matrix*)someInputs;
 {
 	return self;	
 }
@@ -89,7 +89,7 @@
   return numInputs;
 }
 
--(void)testWithMeasurers: (NSArray*)someMeasurers
+-testWithMeasurers: (NSArray*)someMeasurers
 {
   NSArray *datasets;
   NSArray *measurers;
@@ -147,6 +147,7 @@
   
   T4Print(@"\n");
   [progressBar release];
+  return self;
 }
 
 -resetAccumulators
@@ -165,7 +166,7 @@
 	return self;
 }
 
--(void)trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers
+-trainWithDataset: (NSArray*)aDataset measurers: (NSArray*)someMeasurers
 {
   int iteration = 0;
   real currentError = 0;
@@ -208,7 +209,7 @@
       
 			
 			currentError -= [self forwardInputs: inputs];
-			[self backwardOutputWithLogPosterior: 0 inputs: inputs];
+			[self backwardLogPosterior: 0 inputs: inputs];
 
       currentMeasurers = [measurers objectAtIndex: 0];
       numMeasurers = [currentMeasurers count];
@@ -275,6 +276,7 @@
       break;
     }
   }
+  return self;
 }
 
 @end

@@ -179,7 +179,7 @@
 }
 
 
--backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
+-backwardLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
 {
   int f,i,j;
   int numFrames = [someInputs numberOfColumns];
@@ -195,7 +195,7 @@
         real logPosteriorIF = aLogPosterior + logAlphaF[i] +
           logBetaF[i] - logProbability;
         [partialInputs setMatrixFromRealData: [someInputs columnAtIndex: f] numberOfRows: [someInputs numberOfRows] numberOfColumns: 1 stride: -1];
-        [states[i] backwardOutputWithLogPosterior: logPosteriorIF inputs: partialInputs];
+        [states[i] backwardLogPosterior: logPosteriorIF inputs: partialInputs];
       }
     }
   }

@@ -273,7 +273,7 @@
 }
 
 
--backwardOutputWithLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
+-backwardLogPosterior: (real)aLogPosterior inputs: (T4Matrix*)someInputs
 {
   int f;
   int numFrames = [someInputs numberOfColumns];

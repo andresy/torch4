@@ -22,16 +22,20 @@
 
   if(transposesMatrix)
   {
-    int z = numRows;
-    numRows = numColumns;
-    numColumns = z;
+    if([aFile writeBlocksFrom: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+      T4Error(@"BinarySaver: error while writing");
+
+    if([aFile writeBlocksFrom: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+      T4Error(@"BinarySaver: error while writing");    
   }
-
-  if([aFile writeBlocksFrom: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
-    T4Error(@"BinarySaver: error while writing");
-
-  if([aFile writeBlocksFrom: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
-    T4Error(@"BinarySaver: error while writing");
+  else
+  {
+    if([aFile writeBlocksFrom: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+      T4Error(@"BinarySaver: error while writing");
+    
+    if([aFile writeBlocksFrom: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+      T4Error(@"BinarySaver: error while writing");
+  }
 
   if(sizeof(real) == diskRealSize)
   {

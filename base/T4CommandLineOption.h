@@ -13,7 +13,7 @@
 
 -read: (NSMutableArray*)arguments;
 -initToDefaultValue;
--(NSString*)textValue;
+-(NSString*)textValue; // nil if not textable...
 
 -(BOOL)isSet;
 -(NSString*)type;
@@ -30,9 +30,6 @@
 }
 
 -initWithName: (NSString*)aName at: (int*)anAddress default: (int)aDefaultValue help: (NSString*)aHelp;
--read: (NSMutableArray*)arguments;
--initToDefaultValue;
--(NSString*)textValue;
 
 @end
 
@@ -43,9 +40,6 @@
 }
 
 -initWithName: (NSString*)aName at: (real*)anAddress default: (real)aDefaultValue help: (NSString*)aHelp;
--read: (NSMutableArray*)arguments;
--initToDefaultValue;
--(NSString*)textValue;
 
 @end
 
@@ -56,9 +50,6 @@
 }
 
 -initWithName: (NSString*)aName at: (BOOL*)anAddress default: (BOOL)aDefaultValue help: (NSString*)aHelp;
--read: (NSMutableArray*)arguments;
--initToDefaultValue;
--(NSString*)textValue;
 
 @end
 
@@ -69,8 +60,5 @@
 }
 
 -initWithName: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp;
--read: (NSMutableArray*)arguments;
--initToDefaultValue;
--(NSString*)textValue;
 
 @end

@@ -7,6 +7,7 @@
   if( (self = [super init]) )
   {
     [self setTransposesMatrix: YES];
+    [self setWritesHeader: NO];
   }
 
   return self;
@@ -18,15 +19,14 @@
   int numColumns = [aMatrix numberOfColumns];
   int r, c;
 
-  if(transposesMatrix)
+  if(writesHeader)
   {
-    int z = numRows;
-    numRows = numColumns;
-    numColumns = z;
+    if(transposesMatrix)
+      [aFile writeStringWithFormat: @"%d %d\n", numColumns, numRows];
+    else
+      [aFile writeStringWithFormat: @"%d %d\n", numRows, numColumns];
   }
 
-  [aFile writeStringWithFormat: @"%d %d\n", numRows, numColumns];
-    
   real *data = [aMatrix firstColumn];
   int stride = [aMatrix stride];
   if(transposesMatrix)
@@ -74,6 +74,12 @@
 -setTransposesMatrix: (BOOL)aFlag
 {
   transposesMatrix = aFlag;
+  return self;
+}
+
+-setWritesHeader: (BOOL)aFlag
+{
+  writesHeader = aFlag;
   return self;
 }
 

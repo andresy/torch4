@@ -191,16 +191,6 @@
   return self;
 }
 
--(NSString*)textValue
-{
-  BOOL res = (isSet ? *address : defaultValue);
-  
-  if(res)
-    return [[[NSString alloc] initWithString: @"yes"] autorelease];
-  else
-    return [[[NSString alloc] initWithFormat: @"no"] autorelease];
-}
-
 @end
 
 @implementation T4StringCommandLineOption

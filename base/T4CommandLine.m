@@ -242,7 +242,10 @@
         T4Print(@" %@ %@", optionName, optionType);
         for(i = 0; i < maxLength+1-z; i++)
           T4Print(@" ");
-        T4Print(@"-> %@ [%@]\n", optionHelp, optionTextValue);
+        if(optionTextValue)
+          T4Print(@"-> %@ [%@]\n", optionHelp, optionTextValue);
+        else
+          T4Print(@"-> %@\n", optionHelp);
       }
     }
   }

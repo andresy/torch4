@@ -249,5 +249,52 @@
 {
   return outputWidth;
 }
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &kH];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &dW];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &dH];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numInputPlanes];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numOutputPlanes];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &inputWidth];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &inputHeight];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &outputWidth];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &outputHeight];
+
+  real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
+  real *gradParametersData = [[gradParameters objectAtIndex: 0] firstColumn];
+  int i;
+  
+  weights = (real **)[allocator allocPointerArrayWithCapacity: numOutputPlanes];
+  for(i = 0; i < numOutputPlanes; i++)
+    weights[i] = parametersData + i*kW*kH*numInputPlanes;
+  biases = parametersData + kW*kH*numInputPlanes*numOutputPlanes;
+  
+  gradWeights = (real **)[allocator allocPointerArrayWithCapacity: numOutputPlanes];
+  for(i = 0; i < numOutputPlanes; i++)
+    gradWeights[i] = gradParametersData + i*kW*kH*numInputPlanes;
+  gradBiases = gradParametersData + kW*kH*numInputPlanes*numOutputPlanes;
+  
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &kH];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &dW];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &dH];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numInputPlanes];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numOutputPlanes];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &inputWidth];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &inputHeight];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &outputWidth];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &outputHeight];
+}
   
 @end

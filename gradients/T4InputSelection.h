@@ -1,6 +1,6 @@
 #import "T4GradientMachine.h"
 
-@interface T4SelectInputs : T4GradientMachine
+@interface T4InputSelection : T4GradientMachine
 {
     int *selectedInputs;
     int numSelectedInputs;

@@ -43,14 +43,4 @@
   [super dealloc];
 }
 
--initWithCoder: (NSCoder*)aCoder
-{
-  allocator = [[T4Allocator alloc] init];
-  return self;
-}
-
--(void)encodeWithCoder: (NSCoder*)aCoder
-{
-}
-
 @end

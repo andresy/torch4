@@ -81,4 +81,35 @@
   return self;
 }
 
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(real) at: &weightDecay];
+
+  real *parametersAddr, *gradParametersAddr;
+  
+  parametersAddr = [[parameters objectAtIndex: 0] firstColumn];
+  gradParametersAddr = [[gradParameters objectAtIndex: 0] firstColumn];
+  
+  weights = [[T4Matrix alloc] initWithRealArray: parametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
+  biases = [[T4Matrix alloc] initWithRealArray: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
+  gradWeights = [[T4Matrix alloc] initWithRealArray: gradParametersAddr numberOfRows: numInputs numberOfColumns: numOutputs stride: -1];
+  gradBiases = [[T4Matrix alloc] initWithRealArray: gradParametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: 1 stride: -1];
+  
+  [allocator keepObject: weights];
+  [allocator keepObject: biases];
+  [allocator keepObject: gradWeights];
+  [allocator keepObject: gradBiases];
+  
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(real) at: &weightDecay];
+}
+
 @end

@@ -1,6 +1,6 @@
-#import "T4SelectInputs.h"
+#import "T4InputSelection.h"
 
-@implementation T4SelectInputs
+@implementation T4InputSelection
 
 -initWithNumberOfInputs: (int)aNumInputs selectedInputs: (int*)someSelectedInputs numberOfSelectedInputs: (int)aNumSelectedInputs
 {
@@ -56,6 +56,22 @@
     
     return gradInputs;
   }
+}
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numSelectedInputs];
+  selectedInputs = [allocator allocIntArrayWithCapacity: numSelectedInputs];
+  [aCoder decodeArrayOfObjCType: @encode(int) count: numSelectedInputs at: selectedInputs];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numSelectedInputs];
+  [aCoder encodeArrayOfObjCType: @encode(int) count: numSelectedInputs at: selectedInputs];
 }
 
 @end

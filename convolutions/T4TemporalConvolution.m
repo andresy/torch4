@@ -156,4 +156,35 @@
   return gradInputs;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &dT];
+
+  real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
+  real *gradParametersData = [[gradParameters objectAtIndex: 0] firstColumn];
+  int i;
+
+  weights = (real **)[allocator allocPointerArrayWithCapacity: numOutputs];
+  for(i = 0; i < numOutputs; i++)
+    weights[i] = parametersData + i*kW*numInputs;
+  biases = parametersData + kW*numInputs*numOutputs;
+  
+  gradWeights = (real **)[allocator allocPointerArrayWithCapacity: numOutputs];
+  for(i = 0; i < numOutputs; i++)
+    gradWeights[i] = gradParametersData + i*kW*numInputs;
+  gradBiases = gradParametersData + kW*numInputs*numOutputs;
+  
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &dT];
+}
+
 @end

@@ -372,17 +372,17 @@
 
 -initWithCoder: (NSCoder*)aCoder
 {
-  self = [super initWithCoder: aCoder];
+  self = [super init];
 
   [aCoder decodeValueOfObjCType: @encode(int) at: &numInputs];
   [aCoder decodeValueOfObjCType: @encode(int) at: &numOutputs];
-  parameters = [aCoder decodeObject];
-  gradParameters = [aCoder decodeObject];
-  gradInputs = [aCoder decodeObject];
-  outputs = [aCoder decodeObject];
-
+  parameters = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  gradParameters = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  gradInputs = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  outputs = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  
   [aCoder decodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
-  criterion = [aCoder decodeObject]; //debug: retainAndKeepObject: arg!!!!
+  criterion = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   [aCoder decodeValueOfObjCType: @encode(real) at: &learningRate];
   [aCoder decodeValueOfObjCType: @encode(real) at: &learningRateDecay];
   [aCoder decodeValueOfObjCType: @encode(real) at: &endAccuracy];
@@ -394,8 +394,6 @@
 
 -(void)encodeWithCoder: (NSCoder*)aCoder
 {
-  [super encodeWithCoder: aCoder];
-
   [aCoder encodeValueOfObjCType: @encode(int) at: &numInputs];
   [aCoder encodeValueOfObjCType: @encode(int) at: &numOutputs];
   [aCoder encodeObject: parameters];

@@ -143,7 +143,7 @@
 -initWithCoder: (NSCoder*)aCoder
 {
   self = [super initWithCoder: aCoder];
-  machines = [[aCoder decodeObject] keepWithAllocator: allocator];
+  machines = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   offsets = [allocator allocIntArrayWithCapacity: [machines count]];
   [aCoder decodeArrayOfObjCType: @encode(int) count: [machines count] at: offsets];
   gradOutputs = [[[T4Matrix alloc] init] keepWithAllocator: allocator];

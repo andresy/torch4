@@ -4,7 +4,7 @@
 #import "T4Criterion.h"
 #import "T4Measurer.h"
 
-@interface T4GradientMachine : T4Object <T4Machine>
+@interface T4GradientMachine : T4Object <T4Machine, NSCoding>
 {
     int numInputs;
     int numOutputs;
@@ -26,7 +26,6 @@
 }
 
 -initWithNumberOfInputs: (int)aNumInputs numberOfOutputs: (int)aNumOutputs numberOfParameters: (int)aNumParams;
--initWithCoder: (NSCoder*)aCoder;
 
 //-(void)iterInitialize;
 

@@ -2,7 +2,6 @@
 
 @interface T4MLP : T4SequentialMachine
 {
-    BOOL *isLinear;
 }
 
 -initWithNumberOfLayers: (int)aNumLayers layers: (int)aNumInputs, ...;

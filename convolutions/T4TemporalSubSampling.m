@@ -141,4 +141,27 @@
   return gradInputs;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &dT];
+
+  weights = [[parameters objectAtIndex: 0] firstColumn];
+  biases = weights + numInputs;
+  
+  gradWeights = [[gradParameters objectAtIndex: 0] firstColumn];
+  gradBiases = gradWeights + numInputs;
+  
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &dT];
+}
+
 @end

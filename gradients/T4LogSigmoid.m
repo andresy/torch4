@@ -7,7 +7,7 @@
   if( (self = [super initWithNumberOfInputs: aNumUnits numberOfOutputs: aNumUnits
                      numberOfParameters: 0]) )
   {
-    buffer = [[T4Matrix alloc] initWithNumberOfRows: aNumUnits];
+    buffer = [[[T4Matrix alloc] initWithNumberOfRows: aNumUnits] keepWithAllocator: allocator];
   }
 
   return self;
@@ -53,6 +53,13 @@
     }
   }
   return gradInputs;
+}
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  buffer = [[[T4Matrix alloc] initWithNumberOfRows: numInputs] keepWithAllocator: allocator];
+  return self;
 }
 
 @end

@@ -97,4 +97,17 @@
   return machines;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  machines = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeObject: machines];
+}
+
 @end

@@ -213,4 +213,42 @@
   return outputWidth;
 }
 
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &kH];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &dW];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &dH];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numInputPlanes];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &inputWidth];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &inputHeight];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &outputWidth];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &outputHeight];
+  
+  weights = [[parameters objectAtIndex: 0] firstColumn];
+  biases = weights + numInputPlanes;
+  
+  gradWeights = [[gradParameters objectAtIndex: 0] firstColumn];
+  gradBiases = gradWeights + numInputPlanes;
+  
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &kW];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &kH];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &dW];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &dH];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numInputPlanes];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &inputWidth];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &inputHeight];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &outputWidth];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &outputHeight];
+}
+
 @end

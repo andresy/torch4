@@ -1,6 +1,6 @@
 #import "T4Object.h"
 
-@interface T4Matrix : T4Object
+@interface T4Matrix : T4Object <NSCoding>
 {
     real *data;
     int dataSize;
@@ -10,7 +10,6 @@
 }
 
 -init;
--initWithCoder: (NSCoder*)aCoder;
 -initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithNumberOfRows: (int)aNumRows;
 -initWithRealArray: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;

@@ -6,6 +6,5 @@
 }
 
 -initWithNumberOfExperts: (int)aNumExperts numberOfOutputs: (int)aNumOutputsPerExpert;
--initWithCoder: (NSCoder*)aCoder;
 
 @end

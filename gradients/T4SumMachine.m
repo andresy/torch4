@@ -44,4 +44,17 @@
   return gradInputs;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numMachines];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numMachines];
+}
+
 @end

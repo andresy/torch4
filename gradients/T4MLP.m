@@ -17,10 +17,6 @@
     int l;
     va_list args;
 
-    isLinear = [allocator allocBoolArrayWithCapacity: aNumLayers];
-    for(l = 0; l < aNumLayers; l++)
-      isLinear[l] = NO;
-
     va_start(args, aNumInputs);
     for(l = 0; l < aNumLayers; l++)
     {
@@ -32,8 +28,6 @@
       {
         aMachine = [[[T4Linear alloc] initWithNumberOfInputs: aNumInputs numberOfOutputs: aNumOutputs]
                      keepWithAllocator: allocator];
-
-        isLinear[l] = YES;
       }
 
       if([layerType isEqualToString: @"tanh"])
@@ -77,8 +71,9 @@
 
   for(l = 0; l < numMachines; l++)
   {
-    if(isLinear[l])
-      [[machines objectAtIndex: l] setWeightDecay: aWeightDecay];
+    id machine = [machines objectAtIndex: l];
+    if([machine isKindOfClass: [T4Linear class]])
+      [machine setWeightDecay: aWeightDecay];
   }
   return self;
 }

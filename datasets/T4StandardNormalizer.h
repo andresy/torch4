@@ -1,7 +1,7 @@
 #import "T4Object.h"
 #import "T4Matrix.h"
 
-@interface T4StandardNormalizer : T4Object
+@interface T4StandardNormalizer : T4Object <NSCoding>
 {
     T4Matrix *mean;
     T4Matrix *standardDeviation;

@@ -84,4 +84,19 @@
   return self;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  [aCoder decodeValueOfObjCType: @encode(real) at: &shift];
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &computeShift];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(real) at: &shift];
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &computeShift];
+}
+
 @end

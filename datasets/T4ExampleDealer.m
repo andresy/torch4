@@ -273,13 +273,13 @@
 
   for(m = 0; m < numMatrices; m++)
   {
-    NSArray *someMatrices = [self matricesWithMatrix: [someMatrices objectAtIndex: m]
+    NSArray *currentMatrices = [self matricesWithMatrix: [someMatrices objectAtIndex: m]
                                   rowOffset: aRowOffset
                                   numberOfRows: aNumRows
                                   numberOfColumns: aNumColumns
                                   columnStep: aColumnStep];
 
-    [matrices addObjectsFromArray: someMatrices];
+    [matrices addObjectsFromArray: currentMatrices];
   }
 
   return matrices;

@@ -26,8 +26,8 @@ inline void T4MatrixDotMatrix(real aValue1, real *destMat, int destStride,
 #else
       cblas_sgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
                   aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
-    }
 #endif
+    }
   }
   else
   {
@@ -113,13 +113,13 @@ inline void T4TrMatrixDotMatrix(real aValue1, real *destMat, int destStride,
     else
     {
 #ifdef USE_DOUBLE
-      cblas_dgemv(CblasColMajor, CblasTrans, srcNum, destNumRows
+      cblas_dgemv(CblasColMajor, CblasTrans, srcNum, destNumRows,
                   aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
 #else
       cblas_sgemv(CblasColMajor, CblasTrans, srcNum, destNumRows,
                   aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
-    }
 #endif
+    }
   }
   else
   {
@@ -210,8 +210,8 @@ inline void T4MatrixDotTrMatrix(real aValue1, real *destMat, int destStride,
 #else
       cblas_sgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
                   aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
-    }
 #endif
+    }
   }
   else
   {
@@ -302,8 +302,8 @@ inline void T4TrMatrixDotTrMatrix(real aValue1, real *destMat, int destStride,
 #else
       cblas_sgemv(CblasColMajor, CblasTrans, srcNum, destNumRows,
                   aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
-    }
 #endif
+    }
   }
   else
   {
@@ -372,14 +372,22 @@ inline void T4CopyMatrix(real *destAddr, int destStride, real *sourceAddr, int s
 {
   if( (sourceStride == numRows) && (destStride == numRows) )
 //    memmove(destAddr, sourceAddr, sizeof(real)*numRows*numColumns);
+#ifdef USE_DOUBLE
+    cblas_dcopy(numRows*numColumns, sourceAddr, 1, destAddr, 1);
+#else
     cblas_scopy(numRows*numColumns, sourceAddr, 1, destAddr, 1);
+#endif
   else
   {
     int c;
     for(c = 0; c < numColumns; c++)
     {
 //      memmove(destAddr, sourceAddr, sizeof(real)*numRows);
+#ifdef USE_DOUBLE
+      cblas_dcopy(numRows, sourceAddr, 1, destAddr, 1);
+#else
       cblas_scopy(numRows, sourceAddr, 1, destAddr, 1);
+#endif
       sourceAddr += sourceStride;
       destAddr += destStride;
     }

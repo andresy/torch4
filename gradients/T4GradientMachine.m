@@ -274,7 +274,6 @@
 */
 
   [allocator freePointer: shuffledIndices];
-  [localAllocator release];
 }
 
 -(void)testWithMeasurers: (NSArray*)someMeasurers
@@ -335,7 +334,6 @@
   
   T4Print(@"\n");
   [progressBar release];
-  [localAllocator release];
 }
 
 -reset

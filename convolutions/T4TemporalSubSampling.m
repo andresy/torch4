@@ -1,34 +1,24 @@
-#import "T4TemporalConvolution.h"
+#import "T4TemporalSubSampling.h"
 #import "T4Random.h"
 
-@implementation T4TemporalConvolution
+@implementation T4TemporalSubSampling
 
--initWithNumberOfInputRows: (int)aNumInputRows
-        numberOfOutputRows: (int)aNumOutputRows
-                kernelSize: (int)aKW
-                        dT: (int)aDT
+-initWithNumberOfRows: (int)aNumInputRows
+           kernelSize: (int)aKW
+                   dT: (int)aDT
 {
-
   if( (self = [super initWithNumberOfInputs: aNumInputRows
-                     numberOfOutputs: aNumOutputRows
-                     numberOfParameters: (aKW*aNumInputRows+1)*aNumOutputRows]) )
+                     numberOfOutputs: aNumInputRows
+                     numberOfParameters: 2*aNumInputRows]) )
   {
-    real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
-    real *gradParametersData = [[gradParameters objectAtIndex: 0] firstColumn];
-    int i;
-
     kW = aKW;
     dT = aDT;
 
-    weights = (real **)[allocator allocPointerArrayWithCapacity: numOutputs];
-    for(i = 0; i < numOutputs; i++)
-      weights[i] = parametersData + i*kW*numInputs;
-    biases = parametersData + kW*numInputs*numOutputs;
-        
-    gradWeights = (real **)[allocator allocPointerArrayWithCapacity: numOutputs];
-    for(i = 0; i < numOutputs; i++)
-      gradWeights[i] = gradParametersData + i*kW*numInputs;
-    gradBiases = gradParametersData + kW*numInputs*numOutputs;
+    weights = [[parameters objectAtIndex: 0] firstColumn];
+    biases = weights + numInputs;
+    
+    gradWeights = [[gradParameters objectAtIndex: 0] firstColumn];
+    gradBiases = gradWeights + numInputs;
 
     [self reset];
   }
@@ -38,7 +28,7 @@
 
 -reset
 {
-  real bound = 1./sqrt((real)(kW*numInputs)); // ah bon???
+  real bound = 1./sqrt((real)(kW));
   int numParameters = [[parameters objectAtIndex: 0] numberOfRows];
   real *parametersData = [[parameters objectAtIndex: 0] firstColumn];
   int i;
@@ -48,7 +38,6 @@
 
   return self;
 }
-
 
 -(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
 {
@@ -60,7 +49,7 @@
   int l, i, j, k;
 
   if(numInputColumns < kW)
-    T4Error(@"TemporalConvolution: input sequence too small! (numColumns = %d < kW = %d)", numInputColumns, kW);
+    T4Error(@"TemporalSubSampling: input sequence too small! (numColumns = %d < kW = %d)", numInputColumns, kW);
 
   [outputs resizeWithNumberOfColumns: numOutputColumns];
 
@@ -76,14 +65,12 @@
       // Sur tous les "neurones" de sorties
       for(k = 0; k < numOutputs; k++)
       {
-        real *ptrW = weights[k]+j*numInputs;
         real *inputColumn = inputData+currentInputColumn*inputStride;
-
         real sum = 0;
         for(l = 0; l < numInputs; l++)
-          sum += ptrW[l]*inputColumn[l];
+          sum += inputColumn[l];
 
-        outputColumn[k] += sum;
+        outputColumn[k] += weights[k]*sum;
       }
     }
     currentInputColumn += dT;
@@ -95,13 +82,13 @@
 -(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   int numInputColumns = [someInputs numberOfColumns];
-  int numOutputColumns = [someGradOutputs numberOfColumns];
+  int numOutputColumns = [someGradOutputs numberOfColumns]; 
   int currentInputColumn = 0;
   real *inputData = [someInputs firstColumn];
   real *gradInputData;
   int inputStride = [someInputs stride];
   int l, i, j, k;
-
+  
   // NOTE: boucle *necessaire* avec "partial backprop"
 
   for(i = 0; i < numOutputColumns; i++)
@@ -114,11 +101,11 @@
     {
       for(k = 0; k < numOutputs; k++)
       {
-        real *gradPtrW = gradWeights[k]+j*numInputs;
         real *inputColumn = inputData+currentInputColumn*inputStride;
-        real z = gradOutputColumn[k];
+        real sum = 0;
         for(l = 0; l < numInputs; l++)
-          gradPtrW[l] += z*inputColumn[l];
+          sum += inputColumn[l];
+        gradWeights[k] += gradOutputColumn[k]*sum;
       }
     }
     currentInputColumn += dT;
@@ -142,12 +129,10 @@
     {
       for(k = 0; k < numOutputs; k++)
       {
-        real *ptrW = weights[k]+j*numInputs;
         real *gradInputColumn = gradInputData+currentInputColumn*numInputs;
-
-        real z = gradOutputColumn[k];
+        real z = gradOutputColumn[k]*weights[k];
         for(l = 0; l < numInputs; l++)
-           gradInputColumn[l] += ptrW[l]*z;
+           gradInputColumn[l] += z;
       }
     }
     currentInputColumn += dT;

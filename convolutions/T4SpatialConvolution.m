@@ -173,7 +173,7 @@
     }
         
     if(partialBackpropagation)
-      return nil;
+      continue;
     
     // NOTE: boucle *non-necessaire* avec "partial backprop"
 
@@ -207,7 +207,10 @@
     }
   }
 
-  return gradInputs;
+  if(partialBackpropagation)
+    return nil;
+  else
+    return gradInputs;
 }
   
 @end

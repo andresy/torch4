@@ -14,9 +14,9 @@
   int anOutputHeight = (anInputHeight - aKW) / aDY + 1;
 
   if(anInputWidth < aKW)
-    T4Error(@"SpatialConvolution: input image width is too small (width = %d < kW = %d) ", anInputWidth, aKW);
+    T4Error(@"SpatialSubSampling: input image width is too small (width = %d < kW = %d) ", anInputWidth, aKW);
   if(anInputHeight < aKW)
-    T4Error(@"SpatialConvolution: input image height is too small (height = %d < kW = %d) ", anInputHeight, aKW);
+    T4Error(@"SpatialSubSampling: input image height is too small (height = %d < kW = %d) ", anInputHeight, aKW);
 
   T4Message(@"SpatialSubSampling: output image is <%d x %d>", anOutputWidth, anOutputHeight);
 
@@ -150,7 +150,7 @@
     }
 
     if(partialBackpropagation)
-      return nil;
+      continue;
 
     // NOTE: boucle *non-necessaire* avec "partial backprop"
     
@@ -181,7 +181,10 @@
     }
   }
 
-  return gradInputs;
+  if(partialBackpropagation)
+    return nil;
+  else
+    return gradInputs;
 }
 
 @end

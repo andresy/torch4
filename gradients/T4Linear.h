@@ -2,11 +2,13 @@
 
 @interface T4Linear :  T4GradientMachine
 {
-    real weight_decay;
-    real *weights;
-    real *biases;
-    real *gradWeights;
-    real *gradBias;
+    real weightDecay;
+    BOOL partialBackpropagation;
+
+    T4Matrix *weights;
+    T4Matrix *biases;
+    T4Matrix *gradWeights;
+    T4Matrix *gradBiases;
 }
 
 -initWithNumberOfInputs: (int)aNumInputs numberOfOutputs: (int)aNumOutputs;

@@ -10,14 +10,16 @@
   {
     real *parametersAddr, *gradParametersAddr;
 
-    [self addRealOption: @"weight decay" address: &weight_decay initValue: 0];
+    [self addRealOption: @"weight decay" address: &weightDecay initValue: 0];
+    [self addBoolOption: @"partial backpropagation" address: &partialBackpropagation initValue: NO];
+
     parametersAddr = [[parameters objectAtIndex: 0] data];
     gradParametersAddr = [[gradParameters objectAtIndex: 0] data];
     
-    weights = parametersAddr;
-    biases = parametersAddr+numInputs*numOutputs;
-    gradWeights = gradParametersAddr;
-    gradBiases = gradParametersAddr+numInputs*numOutputs;
+    weights = [[T4Matrix alloc] initWithData: parametersAddr numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
+    biases = [[T4Matrix alloc] initWithData: parametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
+    gradWeights = [[T4Matrix alloc] initWithData: gradParametersAddr numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
+    gradBiases = [[T4Matrix alloc] initWithData: gradParametersAddr+numInputs*numOutputs numberOfRows: numOutputs numberOfColumns: numInputs stride: -1];
 
     [self reset];
   }
@@ -28,16 +30,17 @@
 -reset
 {
   // Note: just to be compatible with "Torch II Dev"
-  real *weights_ = weights;
-  real bound = 1./sqrt((real)n_inputs);
+  real *weightsAddr = [weights data];
+  real *biasesAddr = [biases data];
+  real bound = 1./sqrt((real)numInputs);
   int i, j;
 
   for(i = 0; i < numOutputs; i++)
   {
     for(j = 0; j < numInputs; j++)
-      weights_[j] = [T4Random boundedUniform(-bound, bound)];
-    weights_ += numInputs;
-    biases[i] = [T4Random boundedUniform(-bound, bound)];
+      weightsAddr[j] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
+    weightsAddr += [weights stride];
+    biasesAddr[i] = [T4Random uniformBoundedWithValue: -bound andValue: bound];
   }
   return self;
 }
@@ -52,46 +55,16 @@
 -(T4Matrix*)backwardMatrix: (T4Matrix*)gradOutputMatrix inputs: (T4Matrix*)anInputMatrix
 {
   [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
-  [gradInputs zero];
-  
-  if(!partial_backprop)
-  {
-    for(int i = 0; i < n_inputs; i++)
-      beta_[i] = 0;
-    
-    real *weights_ = weights;
-    for(int i = 0; i < n_outputs; i++)
-    {
-      real z = alpha_[i];
-      for(int j = 0; j < n_inputs; j++)
-        beta_[j] += z * weights_[j];
-      weights_ += n_inputs;
-    }
-  }
+//  [gradInputs zero];
 
-  real *der_weights_ = der_weights;
-  for(int i = 0; i < n_outputs; i++)
-  {
-    real z = alpha_[i];
-    for(int j = 0; j < n_inputs; j++)
-      der_weights_[j] += z * f_inputs[j];
-    der_weights_ += n_inputs;
+  if(!partialBackpropagation)
+    [gradInputs dotValue: 0. plusValue: 1. dotTrMatrix: weights dotMatrix: gradOutputMatrix];
 
-    der_bias[i] += z;
-  }
+  [gradWeights dotValue: 1. plusValue: 1. dotMatrix: gradOutputMatrix dotTrMatrix: anInputMatrix];
+//  [gradBiases...];
 
-  if(weight_decay != 0)
-  {
-    real *src_ = params->data[0];
-    real *dest_ = der_params->data[0];
-    // Note: pas de weight decay sur les biais.
-    for(int i = 0; i < n_inputs*n_outputs; i++)
-      dest_[i] += weight_decay * src_[i];
-  }
+  if(weightDecay != 0)
+    [gradWeights dotValue: 1. plusValue: weightDecay dotMatrix: weights];
 }
 
-Linear::~Linear()
-{
-}
-
-}
+@end

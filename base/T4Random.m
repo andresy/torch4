@@ -207,7 +207,7 @@ BOOL T4RandomNormalIsValid = NO;
   [T4Allocator sysFree: save];
 }
 
-+(real)uniformBoundedWith: (real)a and: (real)b
++(real)uniformBoundedWithValue: (real)a andValue: (real)b
 {
   return([self uniform] * (b - a) + a);
 }

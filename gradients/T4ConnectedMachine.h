@@ -25,6 +25,8 @@
 -(void)setInputs: (T4Matrix*)aMatrix;
 -(int)currentNumberOfInputs;
 -(T4GradientMachine*)machine;
+-(void)check;
+-(void)setGradOutputs: (T4Matrix*)aMatrix;
 
 @end
 

@@ -12,7 +12,7 @@
 +(real)uniform;
 +(void)getArrayOfShuffledIndices: (int*)indices capacity: (int)aCapacity;
 +(void)shuffleArray: (void*)anArray capacity: (int)aCapacity elementCapacity: (int)anElementCapacity;
-+(real)uniformBoundedWith: (real)a and: (real)b;
++(real)uniformBoundedWithValue: (real)a andValue: (real)b;
 +(real)normalWithMean: (real)mean deviation: (real)stdv;
 +(real)normal;
 +(real)exponential: (real)lambda;

@@ -29,7 +29,7 @@
     for(e = 0; e < numExperts; e++)
     {
       real z = weightColumn[e];
-      for(r = 0; r < numInputs; r++)
+      for(r = 0; r < numOutputs; r++)
         outputColumn[r] = z * expertInputColumn[r];
       expertInputColumn += numOutputs;
     }
@@ -44,8 +44,6 @@
 
   [gradInputs resizeWithNumberOfColumns: [anInputMatrix numberOfColumns]];
 
-
-
   for(c = 0; c < numColumns; c++)
   {
     real *weightColumn = [anInputMatrix columnAtIndex: c];
@@ -57,7 +55,7 @@
       real z = 0;
       for(r = 0; r < numOutputs; r++)
         z += gradOutputColumn[r] * expertInputColumn[r];
-      gradInputColumn[r] = z;
+      gradInputColumn[e] = z;
       expertInputColumn += numOutputs;
     }
 

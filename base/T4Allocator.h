@@ -20,11 +20,11 @@
 -(real*)allocRealArrayWithCapacity: (int)aCapacity;
 -(BOOL*)allocBoolArrayWithCapacity: (int)aCapacity;
 
--(void*)realloc: (void*)aPointer byteArrayWithCapacity: (int)aCapacity;
--(char*)realloc: (void*)aPointer charArrayWithCapacity: (int)aCapacity;
--(int*)realloc: (void*)aPointer intArrayWithCapacity: (int)aCapacity;
--(real*)realloc: (void*)aPointer realArrayWithCapacity: (int)aCapacity;
--(BOOL*)realloc: (void*)aPointer boolArrayWithCapacity: (int)aCapacity;
+-(void*)reallocByteArray: (void*)aPointer withCapacity: (int)aCapacity;
+-(char*)reallocCharArray: (void*)aPointer withCapacity: (int)aCapacity;
+-(int*)reallocIntArray: (void*)aPointer withCapacity: (int)aCapacity;
+-(real*)reallocRealArray: (void*)aPointer withCapacity: (int)aCapacity;
+-(BOOL*)reallocBoolArray: (void*)aPointer withCapacity: (int)aCapacity;
 
 +(void*)sysAllocWithCapacity: (int)capacity;
 +(void*)sysRealloc: (void*)anAddress withCapacity: (int)capacity;

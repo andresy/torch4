@@ -281,7 +281,7 @@
   return (BOOL*)[self allocByteArrayWithCapacity: aCapacity*sizeof(BOOL)];
 }
 
--(void*)realloc: (void*)aPointer byteArrayWithCapacity: (int)aCapacity
+-(void*)reallocByteArray: (void*)aPointer withCapacity: (int)aCapacity
 {
   T4AllocatorPointer *pointer = nil;
   void *anAddress;
@@ -314,24 +314,24 @@
   return anAddress;
 }
 
--(char*)realloc: (void*)aPointer charArrayWithCapacity: (int)aCapacity
+-(char*)reallocCharArray: (void*)aPointer withCapacity: (int)aCapacity
 {
-  return [self realloc: aPointer byteArrayWithCapacity: aCapacity];
+  return [self reallocByteArray: aPointer withCapacity: aCapacity];
 }
 
--(int*)realloc: (void*)aPointer intArrayWithCapacity: (int)aCapacity
+-(int*)reallocIntArray: (void*)aPointer withCapacity: (int)aCapacity
 {
-  return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(int)];
+  return [self reallocByteArray: aPointer withCapacity: aCapacity*sizeof(int)];
 }
 
--(real*)realloc: (void*)aPointer realArrayWithCapacity: (int)aCapacity
+-(real*)reallocRealArray: (void*)aPointer withCapacity: (int)aCapacity
 {
-  return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(real)];
+  return [self reallocByteArray: aPointer withCapacity: aCapacity*sizeof(real)];
 }
 
--(BOOL*)realloc: (void*)aPointer boolArrayWithCapacity: (int)aCapacity
+-(BOOL*)reallocBoolArray: (void*)aPointer withCapacity: (int)aCapacity
 {
-  return [self realloc: aPointer byteArrayWithCapacity: aCapacity*sizeof(BOOL)];
+  return [self reallocByteArray: aPointer withCapacity: aCapacity*sizeof(BOOL)];
 }
 
 @end

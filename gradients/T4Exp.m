@@ -1,6 +1,6 @@
-#import "T4Sigmoid.h"
+#import "T4Exp.h"
 
-@implementation T4Sigmoid
+@implementation T4Exp
 
 -initWithNumberOfUnits: (int)aNumUnits
 {

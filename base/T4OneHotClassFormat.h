@@ -1,11 +1,10 @@
 #import "T4ClassFormat.h"
 
-@interface T4TwoClassFormat : T4ClassFormat
+@interface T4OneHotClassFormat : T4ClassFormat
 {
-    real *classLabelArray;
 }
 
--initWithLabel: (real)aLabel1 andLabel: (real)aLabel2;
+-initWithNumberOfClasses: (int)aNumClasses;
 -initWithDataset: (NSArray*)aDataset;
 
 // primitive:

@@ -108,7 +108,7 @@
     gradOutputs = [[T4Matrix alloc] initWithNumberOfRows: [machine numberOfOutputs]];
   }
 
-  gradOutputMatrixOffsets = [allocator realloc: gradOutputMatrixOffsets intArrayWithCapacity: [gradOutputMatrices count]];
+  gradOutputMatrixOffsets = [allocator reallocIntArray: gradOutputMatrixOffsets withCapacity: [gradOutputMatrices count]];
   gradOutputMatrixOffsets[[gradOutputMatrices count]-1] = anOffset;
 }
 
@@ -132,7 +132,7 @@
     gradOutputs = [[T4Matrix alloc] init];
   }
 
-  gradOutputMatrixOffsets = [allocator realloc: gradOutputMatrixOffsets intArrayWithCapacity: 1];
+  gradOutputMatrixOffsets = [allocator reallocIntArray: gradOutputMatrixOffsets withCapacity: 1];
   gradOutputMatrixOffsets[0] = anOffset;
 }
 
@@ -273,13 +273,21 @@
     outputs = [[node machine] outputs];
 
   // compute number of inputs
-  numInputs = 0;
+  numInputs = -1;
   layer = [layers objectAtIndex: 0];
   numNodes = [layer count];
   for(i = 0; i < numNodes; i++)
   {
+    int currentNumInputs;
+
     node = [layer objectAtIndex: i];
-    numInputs += [[node machine] numberOfInputs];
+    currentNumInputs = [[node machine] numberOfInputs];
+    
+    if(numInputs < 0)
+      numInputs = currentNumInputs;
+
+    if(numInputs != currentNumInputs)
+      T4Error(@"ConnectedMachine: machine on the first layer must have the same input size!!!");
   }
 
   // check gradInputs
@@ -373,8 +381,8 @@
   if(firstLayerIndex <= secondLayerIndex)
     T4Error(@"ConnectedMachine: try to connect a machine <%@> to an other machine <%@> which is not in a previous layer", firstMachine, secondMachine);
 
-  [firstNode addInputConnectionToMachine: secondMachine];
   [secondNode addOutputConnectionToMachine: firstMachine offset: [firstNode currentNumberOfInputs]];
+  [firstNode addInputConnectionToMachine: secondMachine]; // attention le currentNumberOfInputs change...
 
   return self;
 //  printf("[%d %d on %d %d] machine %d outputs. = machine mere: %d outputs. machine fils: %d inputs\n", l, m, current_layer, current_machine, machine->n_outputs, machines[l][m]->n_outputs, machines[current_layer][current_machine]->n_inputs);
@@ -463,7 +471,7 @@
     }
   }
 
-  // NOTE: if not direct output connection, updates output.
+  // NOTE: if not direct input connection, updates output.
   if([[layers objectAtIndex: 0] count] > 1)
   {
     layer = [layers objectAtIndex: 0];

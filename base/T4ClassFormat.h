@@ -11,9 +11,7 @@
 -(int)encodingSize;
 -(int)numberOfClasses;
 
-// primitives:
--(void)transformRealData: (real*)aVector toOneHotData: (real*)aOneHotVector;
--(void)transformOneHotData: (real*)aOneHotVector toRealData: (real*)aVector;
+// primitive:
 -(int)classFromRealData: (real*)aVector;
 
 @end

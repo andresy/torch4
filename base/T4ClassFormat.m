@@ -23,16 +23,6 @@
   return [classLabels numberOfColumns];
 }
 
--(void)transformRealData: (real*)aVector toOneHotData: (real*)aOneHotVector
-{
-  [self subclassResponsibility: _cmd];
-}
-
--(void)transformOneHotData: (real*)aOneHotVector toRealData: (real*)aVector
-{
-  [self subclassResponsibility: _cmd];
-}
-
 -(int)classFromRealData: (real*)aVector
 {
   [self subclassResponsibility: _cmd];

@@ -14,12 +14,12 @@
 -(void)freePointer:(void*)aPointer;
 -(void)dealloc;
 
--(void*)allocByteArrayOfSize: (int)aSize;
--(char*)allocCharArrayOfSize: (int)aSize;
--(int*)allocIntArrayOfSize: (int)aSize;
--(real*)allocRealArrayOfSize: (int)aSize;
+-(void*)allocByteArrayWithCapacity: (int)aCapacity;
+-(char*)allocCharArrayWithCapacity: (int)aCapacity;
+-(int*)allocIntArrayWithCapacity: (int)aCapacity;
+-(real*)allocRealArrayWithCapacity: (int)aCapacity;
 
-+(void*)sysAlloc: (int)size;
++(void*)sysAlloc: (int)capacity;
 +(void)sysFree: (void*)ptr;
 
 -(BOOL)isMyObject: (NSObject*)anObject;

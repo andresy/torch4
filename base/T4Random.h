@@ -10,8 +10,8 @@
 +(unsigned long)initialSeed;
 +(unsigned long)random;
 +(real)uniform;
-+(void)getArrayOfShuffledIndices: (int*)indices size: (int)aSize;
-+(void)shuffleArray: (void*)anArray size: (int)aSize elementSize: (int)anElementSize;
++(void)getArrayOfShuffledIndices: (int*)indices capacity: (int)aCapacity;
++(void)shuffleArray: (void*)anArray capacity: (int)aCapacity elementCapacity: (int)anElementCapacity;
 +(real)uniformBoundedWith: (real)a and: (real)b;
 +(real)normalWithMean: (real)mean deviation: (real)stdv;
 +(real)normal;

@@ -180,28 +180,28 @@ BOOL T4RandomNormalIsValid = NO;
 /////////////////////////////////////////////////////////////////////
 //// Now my own code...
 
-+(void)getArrayOfShuffledIndices: (int*)indices size: (int)aSize
++(void)getArrayOfShuffledIndices: (int*)indices capacity: (int)aCapacity
 {
   int i;
 
-  for(i = 0; i < aSize; i++)
+  for(i = 0; i < aCapacity; i++)
     indices[i] = i;
   
-  [self shuffleArray: indices size: aSize elementSize: sizeof(int)];
+  [self shuffleArray: indices capacity: aCapacity elementCapacity: sizeof(int)];
 }
 
-+(void)shuffleArray: (void*)anArray size: (int)aSize elementSize: (int)anElementSize
++(void)shuffleArray: (void*)anArray capacity: (int)aCapacity elementCapacity: (int)anElementCapacity
 {
-  void *save = [T4Allocator sysAlloc: anElementSize];
+  void *save = [T4Allocator sysAlloc: anElementCapacity];
   char *tab = (char *)anArray;
   int i;
 
-  for(i = 0; i < aSize-1; i++)
+  for(i = 0; i < aCapacity-1; i++)
   {
-    int z = [self random] % (aSize-i);
-    memcpy(save, tab+i*anElementSize, anElementSize);
-    memmove(tab+i*anElementSize, tab+(z+i)*anElementSize, anElementSize);
-    memcpy(tab+(z+i)*anElementSize, save, anElementSize);
+    int z = [self random] % (aCapacity-i);
+    memcpy(save, tab+i*anElementCapacity, anElementCapacity);
+    memmove(tab+i*anElementCapacity, tab+(z+i)*anElementCapacity, anElementCapacity);
+    memcpy(tab+(z+i)*anElementCapacity, save, anElementCapacity);
   }
   
   [T4Allocator sysFree: save];

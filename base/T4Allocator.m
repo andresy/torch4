@@ -206,14 +206,14 @@
   [super dealloc];
 }
 
-+(void*)sysAlloc: (int)size
++(void*)sysAlloc: (int)capacity
 {
   void *ptr;
 
-  if(size <= 0)
+  if(capacity <= 0)
     return NULL;
 
-  ptr = malloc(size);
+  ptr = malloc(capacity);
 
   if(!ptr)
     T4Error(@"Allocator: not enough memory. Buy new ram!!!");
@@ -227,25 +227,25 @@
     free(ptr);
 }
 
--(void*)allocByteArrayOfSize: (int)aSize
+-(void*)allocByteArrayWithCapacity: (int)aCapacity
 {
-  return [self keepPointer: [T4Allocator sysAlloc: aSize]];
+  return [self keepPointer: [T4Allocator sysAlloc: aCapacity]];
 }
 
--(char*)allocCharArrayOfSize: (int)aSize
+-(char*)allocCharArrayWithCapacity: (int)aCapacity
 {
-  return (char*)[self allocByteArrayOfSize: aSize];
+  return (char*)[self allocByteArrayWithCapacity: aCapacity];
 }
 
 
--(int*)allocIntArrayOfSize: (int)aSize
+-(int*)allocIntArrayWithCapacity: (int)aCapacity
 {
-  return (int*)[self allocByteArrayOfSize: aSize*sizeof(int)];
+  return (int*)[self allocByteArrayWithCapacity: aCapacity*sizeof(int)];
 }
 
--(real*)allocRealArrayOfSize: (int)aSize
+-(real*)allocRealArrayWithCapacity: (int)aCapacity
 {
-  return (real*)[self allocByteArrayOfSize: aSize*sizeof(real)];
+  return (real*)[self allocByteArrayWithCapacity: aCapacity*sizeof(real)];
 }
 
 @end

@@ -24,11 +24,11 @@
   return [self initWithDataset: aDataset file: fileHandle];
 }
 
--(void)measureExample
+-(void)measureExample: (int)anIndex
 {
 }
 
--(void)measureIteration
+-(void)measureIteration: (int)anIteration
 {
 }
 
@@ -38,6 +38,11 @@
 
 -(void)reset
 {
+}
+
+-(NSArray*)dataset
+{
+  return dataset;
 }
 
 @end

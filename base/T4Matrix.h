@@ -1,27 +1,27 @@
-#include "T4Object.h"
+#import "T4Object.h"
 
 @interface T4Matrix : T4Object
 {
     real *data;
     int dataSize;
-    int nRows;
-    int nColumns;
+    int numRows;
+    int numColumns;
     int stride;
 }
 
 -init;
--initWithNRows: (int)aNRows nColumns: (int)aNColumns;
--initWithNRows: (int)aNRows;
--initWithData: (real*)aData nRows: (int)aNRows nColumns: (int)aNColumns stride: (int)aStride;
--initWithSubMatrix: (T4Matrix*)aMatrix startingRow: (int)aStartingRow startingColumn: (int)aStartingColumn nRows: (int)aNRows nColumns: (int)aNColumns;
+-initWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
+-initWithNumberOfRows: (int)aNumRows;
+-initWithData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
+-initWithSubMatrix: (T4Matrix*)aMatrix firstRowIndex: (int)aFirstRowIndex firstColumnIndex: (int)aFirstColumnIndex numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithColumn: (int)aColumnIndex fromMatrix: (T4Matrix*)aMatrix;
 
--setMatrixFromData: (real*)aData nRows: (int)aNRows nColumns: (int)aNColumns stride: (int)aStride;
+-setMatrixFromData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
 
--(real*)getColumn: (int)aColumnIndex;
+-(real*)columnAtIndex: (int)aColumnIndex;
 
--resizeWithNRows: (int)aNRows nColumns: (int)aNColumns;
--resizeWithNColumns: (int)aNColumns;
+-resizeWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
+-resizeWithNumberOfColumns: (int)aNumColumns;
 -copyMatrix: (T4Matrix*)aMatrix;
 -fillWithValue: (real)aValue;
 -zero;
@@ -39,9 +39,9 @@
 -(real)getMinRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex;
 -(real)getMaxRowIndex: (int*)aRowIndex columnIndex: (int*)aColumnIndex;
 
--(int)nColumns;
--(int)nRows;
--(int)stride;    
+-(int)numberOfColumns;
+-(int)numberOfRows;
+-(int)stride;
 -(real*)data;
 
 @end

@@ -205,7 +205,6 @@
   if(pointers)
   {
     int nPointers = [pointers count];
-    T4Message(@"%d pointers to release", nPointers);
     for(i = nPointers-1; i >= 0; i--)
     {
       NSObject *pointer = [pointers objectAtIndex: i];

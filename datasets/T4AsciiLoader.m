@@ -53,13 +53,21 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
     int numElements;
     NSString *currentLine;
     BOOL hasHeader = NO;
+    int fakeNumRows = 0;
+    int fakeNumColumns = 0;
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
+    
     while( (currentLine = T4AsciiLoaderNextLineAndGetNumberOfElements(aFile, &numElements)) )
     {
       if(numRows == 0)
       {
         numColumns = numElements;
+        if(numColumns == 2)
+        {
+          NSScanner *scanner = [NSScanner scannerWithString: currentLine];
+          [scanner scanInt: &fakeNumRows];
+          [scanner scanInt: &fakeNumColumns];
+        }
       }
 
       if(numRows == 1)
@@ -78,7 +86,8 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
         {
           if(numColumns == 2)
           {
-            
+            if( (fakeNumRows > 0) && (fakeNumColumns == 2) )
+              T4Error(@"AsciiLoader: cannot be sure that you have a header [exceptional case, sorry]");
           }
         }
       }
@@ -101,26 +110,13 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
       [aFile seekToBeginningOfFile];
 
       if(![aFile readStringWithFormat: @"%d" into: &numRows])
-        T4Error(@"AsciiLoader: file header corrupted");
+        T4Error(@"AsciiLoader: file corrupted around header");
       
       if(![aFile readStringWithFormat: @"%d" into: &numColumns])
-        T4Error(@"AsciiLoader: file header corrupted");
+        T4Error(@"AsciiLoader: file corrupted around header");
     }
     else
     {
-      if( (numColumns == 2) && (numRows == 3) )
-      {
-        int fakeNumRows, fakeNumColumns;
-
-        [aFile seekToBeginningOfFile];
-
-        if([aFile readStringWithFormat: @"%d" into: &fakeNumRows] && [aFile readStringWithFormat: @"%d" into: &fakeNumColumns])
-        {
-          if( (fakeNumColumns == 2) && (fakeNumRows == 2) )
-            T4Error(@"AsciiLoader: cannot be sure that you have a header [exceptional case, sorry]");
-        }
-      }
-
       [aFile seekToBeginningOfFile];
     }
   }
@@ -140,7 +136,16 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
     numColumns = z;
   }
 
+  if( (numRows == 0) || (numColumns == 0) )
+    T4Error(@"AsciiLoader: header seems corrupted");
+
   T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
+
+  if( (maxNumColumns > 0) && (maxNumColumns < numColumns) )
+  {
+    numColumns = maxNumColumns;
+    T4Warning(@"AsciiLoader: loading only %d columns", numColumns);
+  }
 
   matrix = [[T4Matrix alloc] initWithNumberOfRows: numRows numberOfColumns: numColumns];
   [allocator keepObject: matrix];
@@ -154,10 +159,10 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
     {
 #ifdef USE_DOUBLE
       if(![aFile readStringWithFormat: @"%lg" into: &data[i]])
-        T4Error(@"AsciiLoader: file corrupted at line %d", i % numRows ? i/numRows+1 : i/numRows);
+        T4Error(@"AsciiLoader: file corrupted around line %d", i/numRows);
 #else
       if(![aFile readStringWithFormat: @"%g" into: &data[i]])
-        T4Error(@"AsciiLoader: file corrupted at line %d", i % numRows ? i/numRows+1 : i/numRows);
+        T4Error(@"AsciiLoader: file corrupted around line %d", i/numRows);
 #endif
     }
   }
@@ -172,10 +177,10 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
       {
 #ifdef USE_DOUBLE
         if(![aFile readStringWithFormat: @"%lg" into: &data[c*stride+r]])
-          T4Error(@"AsciiLoader: file corrupted at line %d", numRows+1);
+          T4Error(@"AsciiLoader: file corrupted around line %d", numRows+1);
 #else
         if(![aFile readStringWithFormat: @"%g" into: &data[c*stride+r]])
-          T4Error(@"AsciiLoader: file corrupted at line %d", numRows+1);
+          T4Error(@"AsciiLoader: file corrupted around line %d", numRows+1);
 #endif
       }
     }
@@ -198,6 +203,5 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
 {
   maxNumColumns = aMaxNumber;
 }
-
 
 @end

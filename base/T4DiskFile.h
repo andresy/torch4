@@ -13,17 +13,20 @@
 -initWithStream: (FILE*)aFile attributes: (int)someAttributes;
 -initForReadingAtPath: (NSString*)aPath;
 -initForWritingAtPath: (NSString*)aPath;
+-initForReadingAndWritingAtPath: (NSString*)aPath;
 -initForWritingWithPipe: (NSString*)aPipeCommand;
 -initForReadingWithPipe: (NSString*)aPipeCommand;
+-initForReadingAndWritingWithPipe: (NSString*)aPipeCommand;
 
--(int)fileDescriptor;
 -(FILE*)fileStream;
 
 +(BOOL)isLittleEndianProcessor;
 +(BOOL)isBigEndianProcessor;
-+(BOOL)isUsingNativeEncoding;
-+(void)setUsesNativeEncoding;
-+(void)setUsesLittleEndianEncoding;
-+(void)setUsesBigEndianEncoding;
++(BOOL)isNativeEncoding;
++(void)setNativeEncoding;
++(void)setLittleEndianEncoding;
++(void)setBigEndianEncoding;
+
+-(int)fileAttributes;
 
 @end

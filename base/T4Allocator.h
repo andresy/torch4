@@ -16,6 +16,7 @@
 
 -(void*)allocByteArrayWithCapacity: (int)aCapacity;
 -(id*)allocIdArrayWithCapacity: (int)aCapacity;
+-(void**)allocPointerArrayWithCapacity: (int)aCapacity;
 -(char*)allocCharArrayWithCapacity: (int)aCapacity;
 -(int*)allocIntArrayWithCapacity: (int)aCapacity;
 -(real*)allocRealArrayWithCapacity: (int)aCapacity;
@@ -23,6 +24,7 @@
 
 -(void*)reallocByteArray: (void*)aPointer withCapacity: (int)aCapacity;
 -(id*)reallocIdArray: (id*)aPointer withCapacity: (int)aCapacity;
+-(void**)reallocPointerArray: (void**)aPointer withCapacity: (int)aCapacity;
 -(char*)reallocCharArray: (void*)aPointer withCapacity: (int)aCapacity;
 -(int*)reallocIntArray: (void*)aPointer withCapacity: (int)aCapacity;
 -(real*)reallocRealArray: (void*)aPointer withCapacity: (int)aCapacity;
@@ -30,6 +32,7 @@
 
 +(void*)sysAllocByteArrayWithCapacity: (int)capacity;
 +(id*)sysAllocIdArrayWithCapacity: (int)aCapacity;
++(void**)sysAllocPointerArrayWithCapacity: (int)aCapacity;
 +(char*)sysAllocCharArrayWithCapacity: (int)aCapacity;
 +(int*)sysAllocIntArrayWithCapacity: (int)aCapacity;
 +(real*)sysAllocRealArrayWithCapacity: (int)aCapacity;
@@ -37,6 +40,7 @@
 
 +(void*)sysReallocByteArray: (void*)anAddress withCapacity: (int)capacity;
 +(id*)sysReallocIdArray: (id*)aPointer withCapacity: (int)aCapacity;
++(void**)sysReallocPointerArray: (void**)aPointer withCapacity: (int)aCapacity;
 +(char*)sysReallocCharArray: (void*)aPointer withCapacity: (int)aCapacity;
 +(int*)sysReallocIntArray: (void*)aPointer withCapacity: (int)aCapacity;
 +(real*)sysReallocRealArray: (void*)aPointer withCapacity: (int)aCapacity;

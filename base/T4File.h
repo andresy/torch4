@@ -4,8 +4,8 @@
 {
 }
 
--(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks;
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks;
+-(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks;
+-(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks;
 -(BOOL)isEndOfFile;
 -(void)synchronizeFile;
 -(void)seekToFileOffset: (unsigned long long)anOffset;
@@ -15,5 +15,6 @@
 -(void)writeStringWithFormat: (NSString*)aFormat, ...;
 -(BOOL)readStringWithFormat: (NSString*)aFormat into: (void*)aPtr;
 -(NSString*)stringToEndOfLine;
+-(int)fileDescriptor;
 
 @end

@@ -136,8 +136,8 @@ NSString *T4AsciiLoaderNextLineAndGetNumberOfElements(T4File *aFile, int *aNumEl
     numColumns = z;
   }
 
-  if( (numRows == 0) || (numColumns == 0) )
-    T4Error(@"AsciiLoader: header seems corrupted");
+  if( (numRows <= 0) || (numColumns <= 0) )
+    T4Error(@"AsciiLoader: file header seems corrupted");
 
   T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
 

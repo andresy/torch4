@@ -2,7 +2,7 @@
 
 #define T4FileStringChunkSizeForReading 32
 
-BOOL T4FileUsesNativeEncoding = YES;
+BOOL T4FileNativeEncoding = YES;
 
 @implementation T4DiskFile
 
@@ -47,30 +47,30 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   return(![self isLittleEndianProcessor]);
 }
 
-+(BOOL)isUsingNativeEncoding
++(BOOL)isNativeEncoding
 {
-  return T4FileUsesNativeEncoding;
+  return T4FileNativeEncoding;
 }
 
-+(void)setUsesNativeEncoding
++(void)setNativeEncoding
 {
-  T4FileUsesNativeEncoding = YES;
+  T4FileNativeEncoding = YES;
 }
 
-+(void)setUsesLittleEndianEncoding
++(void)setLittleEndianEncoding
 {
   if([self isLittleEndianProcessor])
-    T4FileUsesNativeEncoding = YES;
+    T4FileNativeEncoding = YES;
   else
-    T4FileUsesNativeEncoding = NO;
+    T4FileNativeEncoding = NO;
 }
 
-+(void)setUsesBigEndianEncoding
++(void)setBigEndianEncoding
 {
   if([self isBigEndianProcessor])
-    T4FileUsesNativeEncoding = YES;
+    T4FileNativeEncoding = YES;
   else
-    T4FileUsesNativeEncoding = NO;
+    T4FileNativeEncoding = NO;
 }
 
 // End of endian stuff ////////////////////////////////////////////////
@@ -124,16 +124,15 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
     T4Error(@"DiskFile: cannot open <%s> for writing!!!", [aPath cString]);
 
   return [self initWithStream: aFile attributes: T4FileIsWritable];
-
 }
 
--initForWritingWithPipe: (NSString*)aPipeCommand
+-initForReadingAndWritingAtPath: (NSString*)aPath
 {
-  FILE *aFile = popen([aPipeCommand cString], "w");
+  FILE *aFile = fopen([aPath cString], "r+");
   if(!aFile)
-    T4Error(@"DiskFile: cannot open the pipe <%@> for writing!!!", aPipeCommand);
+    T4Error(@"DiskFile: cannot open <%s> for reading and writing!!!", [aPath cString]);
 
-  return [self initWithStream: aFile attributes: T4FileIsWritable | T4FileIsAPipe];
+  return [self initWithStream: aFile attributes: T4FileIsReadable | T4FileIsWritable];
 }
 
 -initForReadingWithPipe: (NSString*)aPipeCommand
@@ -145,7 +144,25 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   return [self initWithStream: aFile attributes: T4FileIsReadable | T4FileIsAPipe];
 }
 
--(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks
+-initForWritingWithPipe: (NSString*)aPipeCommand
+{
+  FILE *aFile = popen([aPipeCommand cString], "w");
+  if(!aFile)
+    T4Error(@"DiskFile: cannot open the pipe <%@> for writing!!!", aPipeCommand);
+
+  return [self initWithStream: aFile attributes: T4FileIsWritable | T4FileIsAPipe];
+}
+
+-initForReadingAndWritingWithPipe: (NSString*)aPipeCommand
+{
+  FILE *aFile = popen([aPipeCommand cString], "r+");
+  if(!aFile)
+    T4Error(@"DiskFile: cannot open the pipe <%@> for reading and writing!!!", aPipeCommand);
+
+  return [self initWithStream: aFile attributes: T4FileIsReadable | T4FileIsWritable | T4FileIsAPipe];
+}
+
+-(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   int result;
 
@@ -154,25 +171,25 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
 
   result = fread(someData, aBlockSize, aNumBlocks, file);
 
-  if(!T4FileUsesNativeEncoding)
+  if(!T4FileNativeEncoding)
     T4FileReverseMemory(someData, aBlockSize, aNumBlocks);
   
   return(result);
 }
 
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks
+-(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   int result;
 
   if( !(fileAttributes & T4FileIsWritable) )
     T4Error(@"DiskFile: file not writable");
 
-  if(!T4FileUsesNativeEncoding)
+  if(!T4FileNativeEncoding)
     T4FileReverseMemory(someData, aBlockSize, aNumBlocks);
 
   result = fwrite(someData, aBlockSize, aNumBlocks, file);
 
-  if(!T4FileUsesNativeEncoding)
+  if(!T4FileNativeEncoding)
     T4FileReverseMemory(someData, aBlockSize, aNumBlocks);
   
   return(result);
@@ -313,6 +330,11 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
 -(FILE*)fileStream
 {
   return(file);
+}
+
+-(int)fileAttributes
+{
+  return fileAttributes;
 }
 
 -(void)dealloc

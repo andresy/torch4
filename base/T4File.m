@@ -2,13 +2,13 @@
 
 @implementation T4File
 
--(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks
+-(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   [self subclassResponsibility: _cmd];
   return 0;
 }
 
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks
+-(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   [self subclassResponsibility: _cmd];
   return 0;
@@ -63,6 +63,12 @@
 {
   [self subclassResponsibility: _cmd];
   return nil;
+}
+
+-(int)fileDescriptor
+{
+  [self subclassResponsibility: _cmd];
+  return -1;
 }
 
 @end

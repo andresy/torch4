@@ -59,30 +59,25 @@
 
 -(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
-  if(!partialBackpropagation)
-  {
-    [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
-    [gradInputs dotValue: 0. addValue: 1. dotMatrix: weights dotMatrix: someGradOutputs];
-  }
-
   [gradWeights dotValue: 1. addValue: 1. dotMatrix: someInputs dotTrMatrix: someGradOutputs];
   [gradBiases addValue: 1. dotSumMatrixColumns: someGradOutputs];
 
   if(weightDecay != 0)
     [gradWeights addValue: weightDecay dotMatrix: weights];
 
-  return gradInputs;
+  if(partialBackpropagation)
+    return nil;
+  else
+  {
+    [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
+    [gradInputs dotValue: 0. addValue: 1. dotMatrix: weights dotMatrix: someGradOutputs];
+    return gradInputs;
+  }
 }
 
 -setWeightDecay: (real)aWeightDecay
 {
   aWeightDecay = weightDecay;
-  return self;
-}
-
--setPartialBackpropagation: (BOOL)aFlag
-{
-  partialBackpropagation = aFlag;
   return self;
 }
 

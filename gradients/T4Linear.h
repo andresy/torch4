@@ -2,7 +2,6 @@
 
 @interface T4Linear :  T4GradientMachine
 {
-    BOOL partialBackpropagation;
     real weightDecay;
 
     T4Matrix *weights;

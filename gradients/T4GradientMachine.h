@@ -15,6 +15,8 @@
     T4Matrix *gradInputs;
     T4Matrix *outputs;
 
+    BOOL partialBackpropagation;
+
     T4Criterion *criterion;
     real learningRate;
     real learningRateDecay;

@@ -36,30 +36,26 @@
 
 -(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
-  int numColumns;
-  int c, r;
-
   if(partialBackpropagation)
     return nil;
-
-  numColumns = [someInputs numberOfColumns];
-  [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
-  [gradInputs zero];
-
-  for(c = 0; c < numColumns; c++)
+  else
   {
-    real *gradInputColumn = [gradInputs columnAtIndex: c];
-    real *gradOutputColumn = [someGradOutputs columnAtIndex: c];
-    for(r = 0; r < numSelectedInputs; r++)
-      gradInputColumn[r] += gradOutputColumn[selectedInputs[r]];
-  }
-  return gradInputs;
-}
+    int numColumns = [someInputs numberOfColumns];
+    int r, c;
 
--setPartialBackpropagation: (BOOL)aFlag
-{
-  partialBackpropagation = aFlag;
-  return self;
+    [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
+    [gradInputs zero];
+    
+    for(c = 0; c < numColumns; c++)
+    {
+      real *gradInputColumn = [gradInputs columnAtIndex: c];
+      real *gradOutputColumn = [someGradOutputs columnAtIndex: c];
+      for(r = 0; r < numSelectedInputs; r++)
+        gradInputColumn[r] += gradOutputColumn[selectedInputs[r]];
+    }
+    
+    return gradInputs;
+  }
 }
 
 @end

@@ -81,6 +81,7 @@
 
 -setPartialBackpropagation: (BOOL)aFlag
 {
+  partialBackpropagation = aFlag;
   [[machines objectAtIndex: 0] setPartialBackpropagation: aFlag];
   return self;
 }

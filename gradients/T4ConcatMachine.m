@@ -81,7 +81,8 @@
   int gradOutputStride = [someGradOutputs stride];
   int i;
 
-  [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
+  if(!partialBackpropagation)
+    [gradInputs resizeWithNumberOfColumns: [someInputs numberOfColumns]];
 
   for(i = 0; i < numMachines; i++)
   {
@@ -94,13 +95,19 @@
 
     currentGradInputs = [currentMachine backwardMatrix: gradOutputs inputs: someInputs];
 
-    if(i == 0)
-      [gradInputs copyMatrix: currentGradInputs];
-    else
-      [gradInputs addMatrix: currentGradInputs];
+    if(!partialBackpropagation)
+    {
+      if(i == 0)
+        [gradInputs copyMatrix: currentGradInputs];
+      else
+        [gradInputs addMatrix: currentGradInputs];
+    }
   }
   
-  return gradInputs;
+  if(partialBackpropagation)
+    return nil;
+  else
+    return gradInputs;
 }
 
 -reset
@@ -118,6 +125,8 @@
 {
   int numMachines = [machines count];
   int i;
+
+  partialBackpropagation = aFlag;
 
   for(i = 0; i < numMachines; i++)
     [[machines objectAtIndex: i] setPartialBackpropagation: aFlag];

@@ -374,6 +374,7 @@
 
 -setPartialBackpropagation: (BOOL)aFlag
 {
+  partialBackpropagation = aFlag;
   return self;
 }
 

@@ -20,7 +20,8 @@
   real *data;
   int numRows, numColumns;
 
-  if(hasHeader || (!autodetectsSize) )
+//  if(hasHeader || (!autodetectsSize) )
+  if(0)
   {
     if(![aFile readStringWithFormat: @"%d" into: &numRows])
       T4Error(@"AsciiLoader: file corrupted");

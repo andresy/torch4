@@ -2,7 +2,7 @@
 
 @implementation T4ClassMSECriterion
 
--initWithClassFormat: (T4ClassFormat*)aClassFormat
+-initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat
 {
   if( (self = [super initWithNumberOfInputs: [aClassFormat encodingSize]]) )
   {

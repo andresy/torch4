@@ -782,6 +782,11 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return *data;
 }
 
+-(real)firstValueAtColumn: (int)aColumnIndex
+{
+  return data[aColumnIndex*stride];
+}
+
 -(NSString*)description
 {
   NSMutableString *text = [[NSMutableString alloc] init];

@@ -1,4 +1,15 @@
+#ifdef USE_DOUBLE
+#define INF DBL_MAX
+#define REAL_EPSILON DBL_EPSILON
+#define real double
+#else
+#define INF FLT_MAX
+#define REAL_EPSILON FLT_EPSILON
+#define real float
+#endif
+
 #import <Foundation/Foundation.h>
+#import "T4NSCategories.h"
 #import <stdio.h>
 #import <stdlib.h>
 #import <math.h>
@@ -12,15 +23,6 @@
 #import <values.h>
 #endif
 
-#ifdef USE_DOUBLE
-#define INF DBL_MAX
-#define REAL_EPSILON DBL_EPSILON
-#define real double
-#else
-#define INF FLT_MAX
-#define REAL_EPSILON FLT_EPSILON
-#define real float
-#endif
 
 /// Print an error message. The program will exit.
 void T4Error(NSString* aMessage, ...);

@@ -4,9 +4,15 @@
 
 -initWithClassFormat: (T4ClassFormat*)aClassFormat
 {
+  return [self initWithInputClassFormat: aClassFormat datasetClassFormat: aClassFormat];
+}
+
+-initWithInputClassFormat: (T4ClassFormat*)aClassFormat datasetClassFormat: (T4ClassFormat*)anotherClassFormat
+{
   if( (self = [super initWithNumberOfInputs: [aClassFormat numberOfClasses]]) )
   {
-    classFormat = aClassFormat;
+    inputClassFormat = aClassFormat;
+    datasetClassFormat = anotherClassFormat;
   }
 
   return self;
@@ -21,7 +27,7 @@
   output = 0;
   for(c = 0; c < numColumns; c++)
   {
-    int theClass = [classFormat classFromRealData: [targets columnAtIndex: c]];
+    int theClass = [inputClassFormat classFromRealData: [datasetClassFormat encodingForClass: (int)[targets firstValueAtColumn: c]]];
     output -= [someInputs columnAtIndex: c][theClass];
   }
   
@@ -39,7 +45,7 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    int theClass = [classFormat classFromRealData: [targets columnAtIndex: c]];
+    int theClass = [inputClassFormat classFromRealData: [datasetClassFormat encodingForClass: (int)[targets firstValueAtColumn: c]]];
     [gradInputs columnAtIndex: c][theClass] = -1;
   }
 

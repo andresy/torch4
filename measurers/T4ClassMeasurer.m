@@ -4,16 +4,24 @@
 
 -initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset file: (T4File*)aFile
 {
+  return [self initWithInputs: someInputs classFormat: aClassFormat dataset: aDataset classFormat: aClassFormat file: (T4File*)aFile];
+
+}
+
+-initWithInputs: (T4Matrix*)someInputs classFormat: (T4ClassFormat*)aClassFormat dataset: (NSArray*)aDataset classFormat: (T4ClassFormat*)anotherClassFormat file: (T4File*)aFile
+{
   if( (self = [super initWithDataset: aDataset file: aFile]) )
   {
     inputs = someInputs;
-    classFormat = aClassFormat;
+    inputClassFormat = aClassFormat;
+    datasetClassFormat = anotherClassFormat;
     confusionMatrix = nil;
 
     [self setPrintsConfusionMatrix: NO];
     [self reset];
 
-    [allocator retainAndKeepObject: classFormat];
+    [allocator retainAndKeepObject: inputClassFormat];
+    [allocator retainAndKeepObject: datasetClassFormat];
     [allocator retainAndKeepObject: inputs];
   }
 
@@ -28,8 +36,8 @@
 
   for(c = 0; c < numColumns; c++)
   {
-    int classInputs = [classFormat classFromRealData: [inputs columnAtIndex: c]];
-    int classTargets = [classFormat classFromRealData: [targets columnAtIndex: c]];
+    int classInputs = [inputClassFormat classFromRealData: [inputs columnAtIndex: c]];
+    int classTargets = [inputClassFormat classFromRealData: [datasetClassFormat encodingForClass: (int)[targets firstValueAtColumn: c]]];
     
     if(classInputs != classTargets)
       internalError += 1.;
@@ -71,7 +79,7 @@
 
 -setPrintsConfusionMatrix: (BOOL)aFlag
 {
-  int numClasses = [classFormat numberOfClasses];
+  int numClasses = [inputClassFormat numberOfClasses];
 
   computeConfusionMatrix = aFlag;
 

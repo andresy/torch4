@@ -20,6 +20,7 @@
 
 -(real*)columnAtIndex: (int)aColumnIndex;
 -(real*)firstColumn;
+-(real)firstValueAtColumn: (int)aColumnIndex;
 -(real)firstValue;
 
 -resizeWithNumberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;

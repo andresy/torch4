@@ -8,7 +8,7 @@
     BOOL averageWithNumberOfColumns;
 }
 
--initWithClassFormat: (T4ClassFormat*)aClassFormat;
+-initWithDatasetClassFormat: (T4ClassFormat*)aClassFormat;
 -(real)forwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
 -(T4Matrix*)backwardExampleAtIndex: (int)anIndex inputs: (T4Matrix*)someInputs;
 

@@ -1,17 +1,19 @@
-//
-//  NSFileHandleExtensions.m
-//  GaussianChemistry
-//
-//  Created by Jeffrey Frey on Thu Jan 16 2003.
-//  Doren Research Group
-//  University of Delaware
-//  Copyright (c) 2003
-//
-
-#import "T4NSFileHandleExtension.h"
+#import "T4NSCategories.h"
 
 size_t NSFileHandleScanChunkSize = 32;
 
+@implementation NSScanner (T4NSScannerExtension)
+
+-(BOOL)scanReal: (real*)aReal
+{
+#ifdef USE_DOUBLE
+  return [self scanDouble: aReal];
+#else
+  return [self scanFloat: aReal];
+#endif
+}
+
+@end
 
 @implementation NSFileHandle (NSFileHandleExtension)
 

@@ -1,5 +1,11 @@
 #import "T4General.h"
 
+@interface NSScanner (T4NSScannerExtension)
+
+-(BOOL)scanReal: (real*)aReal;
+
+@end
+
 @interface NSFileHandle (T4NSFileHandleExtension)
 
 +(size_t)scanChunkSize;

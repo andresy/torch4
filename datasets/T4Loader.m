@@ -19,6 +19,7 @@
 -(T4Matrix*)loadMatrixFromFile: (T4File*)aFile
 {
   [self subclassResponsibility: _cmd];
+  return nil;
 }
 
 -(T4Matrix*)loadMatrixAtPath: (NSString*)aPath

@@ -258,6 +258,11 @@
     free(ptr);
 }
 
+-(id*)allocIdArrayWithCapacity: (int)aCapacity
+{
+  return (id*)[self keepPointer: [T4Allocator sysAllocWithCapacity: aCapacity*sizeof(id)]];
+}
+
 -(void*)allocByteArrayWithCapacity: (int)aCapacity
 {
   return [self keepPointer: [T4Allocator sysAllocWithCapacity: aCapacity]];
@@ -282,6 +287,11 @@
 -(BOOL*)allocBoolArrayWithCapacity: (int)aCapacity
 {
   return (BOOL*)[self allocByteArrayWithCapacity: aCapacity*sizeof(BOOL)];
+}
+
+-(id*)reallocIdArray: (id*)aPointer withCapacity: (int)aCapacity
+{
+  return (id*)[self reallocByteArray: aPointer withCapacity: aCapacity*sizeof(id)];
 }
 
 -(void*)reallocByteArray: (void*)aPointer withCapacity: (int)aCapacity

@@ -14,12 +14,14 @@
 -(void)freePointer:(void*)aPointer;
 -(void)dealloc;
 
+-(id*)allocIdArrayWithCapacity: (int)aCapacity;
 -(void*)allocByteArrayWithCapacity: (int)aCapacity;
 -(char*)allocCharArrayWithCapacity: (int)aCapacity;
 -(int*)allocIntArrayWithCapacity: (int)aCapacity;
 -(real*)allocRealArrayWithCapacity: (int)aCapacity;
 -(BOOL*)allocBoolArrayWithCapacity: (int)aCapacity;
 
+-(id*)reallocIdArray: (id*)aPointer withCapacity: (int)aCapacity;
 -(void*)reallocByteArray: (void*)aPointer withCapacity: (int)aCapacity;
 -(char*)reallocCharArray: (void*)aPointer withCapacity: (int)aCapacity;
 -(int*)reallocIntArray: (void*)aPointer withCapacity: (int)aCapacity;

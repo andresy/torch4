@@ -20,9 +20,17 @@
 
   if(hasHeader)
   {
-    [aFile readStringWithFormat: @"%d" into: &numRows];
-    [aFile readStringWithFormat: @"%d" into: &numColumns];
-    T4Message(@"IOAscii: %d rows and %d columns detected", numRows, numColumns);
+    if(transposesMatrix)
+    {
+      [aFile readStringWithFormat: @"%d" into: &numColumns];
+      [aFile readStringWithFormat: @"%d" into: &numRows];
+    }
+    else
+    {
+      [aFile readStringWithFormat: @"%d" into: &numRows];
+      [aFile readStringWithFormat: @"%d" into: &numColumns];
+    }
+    T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
   }
   else
   {
@@ -30,7 +38,7 @@
     numColumns = -1;
 
     
-    T4Message(@"IOAscii: %d rows and %d columns detected", numRows, numColumns);
+    T4Message(@"AsciiLoader: %d rows and %d columns detected", numRows, numColumns);
   }
 
   matrix = [[T4Matrix alloc] initWithNumberOfRows: numRows numberOfColumns: numColumns];

@@ -80,14 +80,14 @@
   else
     imageHeight = theImageHeight;
 
-  int imageMaxValue = 0;
+  int pnmMaxValue = 0;
   if( (pnmType != 4) && (pnmType != 1) )
   {
     stringBuffer = [file stringToEndOfLine];
     if(!stringBuffer)
       T4Error(@"PNMLoader: file is not in a PNM format");
     charBuffer = [stringBuffer cString];
-    sscanf(charBuffer, "%d", &imageMaxValue);
+    sscanf(charBuffer, "%d", &pnmMaxValue);
   }
 
   int theImageType;
@@ -103,7 +103,7 @@
   else
     imageType = theImageType;
 
-  T4Message(@"PNMLoader: detected image: <%d x %d> with max value: <%d> [mode %d]", imageWidth, imageHeight, imageMaxValue, pnmType);
+  T4Message(@"PNMLoader: detected image: <%d x %d> with max value: <%d> [mode %d]", imageWidth, imageHeight, pnmMaxValue, pnmType);
 
   // Reading
 
@@ -181,7 +181,7 @@
 
     case 5:
     case 6:
-      if(imageMaxValue > 255)
+      if(pnmMaxValue > 255)
       {
         ucharBuffer = (unsigned char *)[T4Allocator sysAllocByteArrayWithCapacity: matrixSize*2];
 
@@ -197,7 +197,7 @@
       {
         ucharBuffer = (unsigned char *)[T4Allocator sysAllocByteArrayWithCapacity: matrixSize];
 
-        if([file readBlocksInto: ucharBuffer blockSize: 1  numberOfBlocks: matrixSize*2] != matrixSize)
+        if([file readBlocksInto: ucharBuffer blockSize: 1  numberOfBlocks: matrixSize] != matrixSize)
           T4Error(@"PNMLoader: error while reading");
 
         for(i = 0; i < matrixSize; i++)

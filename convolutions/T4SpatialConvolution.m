@@ -235,9 +235,44 @@
     return gradInputs;
 }
 
+-(int)numberOfInputPlanes
+{
+  return numInputPlanes;
+}
+
 -(int)numberOfOutputPlanes
 {
   return numOutputPlanes;
+}
+
+-(int)inputWidth
+{
+  return inputWidth;
+}
+
+-(int)inputHeight
+{
+  return inputHeight;
+}
+
+-(int)kernelWidth
+{
+  return kW;
+}
+
+-(int)kernelHeight
+{
+  return kH;
+}
+
+-(int)kernelWidthStep
+{
+  return dW;
+}
+
+-(int)kernelHeightStep
+{
+  return dH;
 }
 
 -(int)outputHeight

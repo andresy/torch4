@@ -292,6 +292,31 @@
   return self;
 }
 
+
+-copyParametersFromMachine: (T4GradientMachine*)aMachine
+{
+  NSArray *copyParameters = [aMachine parameters];
+  int numSelfParameterMatrices = [parameters count];
+  int numCopyParameterMatrices = [copyParameters count];
+  int i;
+
+  if(numCopyParameterMatrices != numSelfParameterMatrices)
+    T4Error(@"GradientMachine: incompatible number of parameters during copy");
+
+  for(i = 0; i < numSelfParameterMatrices; i++)
+  {
+    T4Matrix *matrix = [parameters objectAtIndex: i];
+    T4Matrix *copyMatrix = [copyParameters objectAtIndex: i];
+
+    if([matrix numberOfRows] != [copyMatrix numberOfRows])
+      T4Error(@"GradientMachine: incompatible number of parameters during copy");
+
+    [matrix copyMatrix: copyMatrix];
+  }
+
+  return self;
+}
+
 -(int)numberOfInputs
 {
   return numInputs;

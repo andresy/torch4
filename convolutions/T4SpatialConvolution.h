@@ -76,7 +76,14 @@
              kernelWidthStep: (int)aDW
             kernelHeightStep: (int)aDH;
 
+-(int)numberOfInputPlanes;
 -(int)numberOfOutputPlanes;
+-(int)inputWidth;
+-(int)inputHeight;
+-(int)kernelWidth;
+-(int)kernelHeight;
+-(int)kernelWidthStep;
+-(int)kernelHeightStep;
 -(int)outputWidth;
 -(int)outputHeight;
 

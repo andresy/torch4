@@ -141,6 +141,16 @@
   return gradInputs;
 }
 
+-(int)kernelTimeWidth
+{
+  return kW;
+}
+
+-(int)kernelTimeStep
+{
+  return dT;
+}
+
 -initWithCoder: (NSCoder*)aCoder
 {
   self = [super initWithCoder: aCoder];

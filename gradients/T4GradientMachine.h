@@ -42,6 +42,8 @@
 
 -setCriterion: (T4Criterion*)aCriterion;
 
+-copyParametersFromMachine: (T4GradientMachine*)aMachine;
+
 -(int)numberOfInputs;
 -(int)numberOfOutputs;
 -(T4Matrix*)outputs;

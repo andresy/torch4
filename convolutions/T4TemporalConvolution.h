@@ -41,4 +41,7 @@
            kernelTimeWidth: (int)aKW
             kernelTimeStep: (int)aDT;
 
+-(int)kernelTimeWidth;
+-(int)kernelTimeStep;
+
 @end

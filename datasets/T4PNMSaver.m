@@ -1,4 +1,5 @@
 #import "T4PNMSaver.h"
+#import "T4PNMLoader.h"
 
 //DEBUG: Peut-etre qu'en mode noir et blanc je ne devrais pas inverser
 //       les bits pour avoir la meme chose qu'en gris. (Cause 1 c'est normalement
@@ -6,13 +7,14 @@
 
 @implementation T4PNMSaver
 
--init
+-initWithImageWidth: (int)aWidth imageHeight: (int)aHeight imageType: (int)aType
 {
   if( (self = [super init]) )
   {
-    [self setImageWidth: 0];
-    [self setImageHeight: 0];
-    [self setImageMode: T4PNMGrayLevelsMode];
+    imageWidth = aWidth;
+    imageHeight = aHeight;
+    imageType = aType;
+
     [self setImageMaxValue: -1];
   }
 
@@ -31,21 +33,21 @@
   real *matrixData = [aMatrix firstColumn];
   int matrixSize = [aMatrix numberOfRows];
 
-  if( (imageMode == T4PNMBlackAndWhiteMode) ||  (imageMode == T4PNMGrayLevelsMode) )
+  if( (imageType == T4PNMBitMap) ||  (imageType == T4PNMGrayMap) )
   {
     if(matrixSize != imageWidth*imageHeight)
       T4Error(@"T4PNMSaver: image size [%d x %d x 1] does not fit with matrix size [%d]", imageWidth, imageHeight, matrixSize);
   }
 
-  if(imageMode == T4PNMColorMode)
+  if(imageType == T4PNMPixelMap)
   {
     if(matrixSize != 3*imageWidth*imageHeight)
       T4Error(@"T4PNMSaver: image size [%d x %d x 3] does not fit with matrix size [%d]", imageWidth, imageHeight, matrixSize);
   }
 
-  switch(imageMode)
+  switch(imageType)
   {
-    case T4PNMBlackAndWhiteMode:
+    case T4PNMBitMap:
       [file writeStringWithFormat: @"P4\n%d %d\n", imageWidth, imageHeight];
 
       numBytesPerRow = imageWidth/8;
@@ -85,10 +87,10 @@
       [T4Allocator sysFree: ucharBuffer];
       break;
 
-    case T4PNMGrayLevelsMode:
-    case T4PNMColorMode:
+    case T4PNMGrayMap:
+    case T4PNMPixelMap:
 
-      if( imageMode == T4PNMGrayLevelsMode )
+      if( imageType == T4PNMGrayMap )
         [file writeStringWithFormat: @"P5\n"];
       else
         [file writeStringWithFormat: @"P6\n"];
@@ -154,26 +156,6 @@
       T4Error(@"PNMSaver: internal bug (?!). The provided image mode is not a valid!!!");
   }
 
-  return self;
-}
-
--setImageWidth: (int)aWidth
-{
-  imageWidth = aWidth;
-  return self;
-}
-
--setImageHeight: (int)aHeight
-{
-  imageHeight = aHeight;
-  return self;
-}
-
--setImageMode: (int)aMode
-{
-  imageMode = aMode;
-  if(! ( (imageMode == T4PNMBlackAndWhiteMode) || (imageMode == T4PNMGrayLevelsMode) || (imageMode == T4PNMColorMode) ) )
-    T4Error(@"PNMSaver: invalid image mode");
   return self;
 }
 

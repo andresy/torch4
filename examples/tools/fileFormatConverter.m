@@ -8,6 +8,9 @@
 #import "T4BinarySaver.h"
 #import "T4DiskFile.h"
 
+#import "T4PNMLoader.h"
+#import "T4PNMSaver.h"
+
 int main( int argc, char *argv[] )
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -22,7 +25,9 @@ int main( int argc, char *argv[] )
   BOOL oatranspose, oaheader;
   
   BOOL obtranspose, obfloat, obdouble, oblittle, obbig;
-  
+ 
+  int oiwidth, oiheight, oitype, oimaxvalue;
+
   // command line ----------------------------------------------------------------------------------
 
   T4CommandLine *cmdLine = [[[T4CommandLine alloc] initWithArgv: argv argc: argc] autorelease];
@@ -32,7 +37,7 @@ int main( int argc, char *argv[] )
   [cmdLine addStringArgument: @"input file" at: &inputFileName help: @"input file"];
   [cmdLine addStringArgument: @"output file" at: &outputFileName help: @"output file"];
 
-  [cmdLine addText: @"\n where <format> can be <ascii> or <binary>\n"];
+  [cmdLine addText: @"\n where <format> can be <ascii> or <binary> or <image>\n"];
   [cmdLine addText: @"\nInput Options:"];
   [cmdLine addText: @"--------------\n"];
   [cmdLine addText: @" * ascii:\n"];
@@ -48,6 +53,8 @@ int main( int argc, char *argv[] )
   [cmdLine addBoolOption: @"-ibBigEndian" at: &ibbig default: NO help: @"enforces big endian encoding"];
   [cmdLine addIntOption: @"-ibMaxLoad" at: &ibmaxload default: -1 help: @"maximum number of columns to load"];
 
+  [cmdLine addText: @"\n * image:\n"];
+
   [cmdLine addText: @"\nOuput Options:"];
   [cmdLine addText: @"--------------\n"];
   [cmdLine addText: @" * ascii:\n"];
@@ -60,6 +67,12 @@ int main( int argc, char *argv[] )
   [cmdLine addBoolOption: @"-obDouble" at: &obdouble default: NO help: @"enforces double encoding"];
   [cmdLine addBoolOption: @"-obLittleEndian" at: &oblittle default: NO help: @"enforces little endian encoding"];
   [cmdLine addBoolOption: @"-obBigEndian" at: &obbig default: NO help: @"enforces big endian encoding"];
+
+  [cmdLine addText: @"\n * image:\n"];
+  [cmdLine addIntOption: @"-oiWidth" at: &oiwidth default: 0 help: @"image width"];
+  [cmdLine addIntOption: @"-oiHeight" at: &oiheight default: 0 help: @"image height"];
+  [cmdLine addIntOption: @"-oiType" at: &oitype default: 1 help: @"image type (bit: 0 gray: 1 pixel: 2)"];
+  [cmdLine addIntOption: @"-oiMaxValue" at: &oimaxvalue default: -1 help: @"image max value"];
 
   [cmdLine addText: @"\n"];
   [cmdLine read];
@@ -99,9 +112,15 @@ int main( int argc, char *argv[] )
     if(ibbig)
       [T4DiskFile setBigEndianEncoding];
 
-    [loader setMaxNumberOfColumns: iamaxload];
+    [loader setMaxNumberOfColumns: ibmaxload];
     matrix = [loader loadMatrixAtPath: inputFileName];
     [loader release];    
+  }
+  else if([inputFormat isEqualToString: @"image"])
+  {
+    T4PNMLoader *loader = [[T4PNMLoader alloc] init];
+    matrix = [loader loadMatrixAtPath: inputFileName];
+    [loader release];
   }
   else
     T4Error(@"Wrong input format <%@>", inputFormat);
@@ -142,6 +161,13 @@ int main( int argc, char *argv[] )
 
     [saver saveMatrix: matrix atPath: outputFileName];
     [saver release];    
+  }
+  else if([outputFormat isEqualToString: @"image"])
+  {
+    T4PNMSaver *saver = [[T4PNMSaver alloc] initWithImageWidth: oiwidth imageHeight: oiheight imageType: oitype];
+    [saver setImageMaxValue: oimaxvalue];
+    [saver saveMatrix: matrix atPath: outputFileName];
+    [saver release];
   }
   else
     T4Error(@"Wrong output format <%@>", outputFormat);

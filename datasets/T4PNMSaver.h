@@ -1,22 +1,14 @@
 #import "T4Saver.h"
 
-#define T4PNMBlackAndWhiteMode 0
-#define T4PNMGrayLevelsMode 1
-#define T4PNMColorMode 2
-
 @interface T4PNMSaver : T4Saver
 {    
     int imageWidth;
     int imageHeight;
-    int imageMode;
+    int imageType;
     int imageMaxValue;
 }
 
--init;
-
--setImageWidth: (int)aWidth;
--setImageHeight: (int)aHeight;
--setImageMode: (int)aMode;
+-initWithImageWidth: (int)aWidth imageHeight: (int)aHeight imageType: (int)aType;
 -setImageMaxValue: (int)aValue;
 
 @end

@@ -16,6 +16,9 @@
 {
   if( (self = [super init]) )
   {
+    imageWidth = -1;
+    imageHeight = -1;
+    imageType = -1;
   }
 
   return self;
@@ -28,11 +31,7 @@
   NSString *stringBuffer;
   const char *charBuffer;
   char charPnmMode[2];
-  int pnmMode;
-
-  // init
-  imageWidth = -1;
-  imageHeight = -1;
+  int pnmType;
 
   // header
   stringBuffer = [file stringToEndOfLine];
@@ -46,9 +45,9 @@
 
   charPnmMode[0] = charBuffer[1];
   charPnmMode[1] = '\0';
-  pnmMode = atoi(charPnmMode);
-  if( (pnmMode <= 0) || (pnmMode > 6) )
-    T4Error(@"PNMLoader: file is not in a PNM format (wrong mode <%d>)", pnmMode);
+  pnmType = atoi(charPnmMode);
+  if( (pnmType <= 0) || (pnmType > 6) )
+    T4Error(@"PNMLoader: file is not in a PNM format (wrong mode <%d>)", pnmType);
 
   stringBuffer = [file stringToEndOfLine];
   if(!stringBuffer)
@@ -68,10 +67,21 @@
   else
     T4Error(@"PNMLoader: file is not in a PNM format");
 
-  sscanf(charBuffer, "%d %d", &imageWidth, &imageHeight);
+  int theImageWidth, theImageHeight;
+  sscanf(charBuffer, "%d %d", &theImageWidth, &theImageHeight);
+
+  if( (imageWidth > 0) && (imageWidth != theImageWidth) )
+    T4Error(@"PNMLoader: trying to load images of different sizes");
+  else
+    imageWidth = theImageWidth;
+  
+  if( (imageHeight > 0) && (imageHeight != theImageHeight) )
+    T4Error(@"PNMLoader: trying to load images of different sizes");
+  else
+    imageHeight = theImageHeight;
 
   int imageMaxValue = 0;
-  if( (pnmMode != 4) && (pnmMode != 1) )
+  if( (pnmType != 4) && (pnmType != 1) )
   {
     stringBuffer = [file stringToEndOfLine];
     if(!stringBuffer)
@@ -80,17 +90,30 @@
     sscanf(charBuffer, "%d", &imageMaxValue);
   }
 
-  // RGB ?
-  if( (pnmMode == 3) || (pnmMode == 6) )
-    imageDepth = 3;
+  int theImageType;
+  if( (pnmType == 1) || (pnmType == 4) )
+    theImageType = T4PNMBitMap;
+  else if( (pnmType == 2) || (pnmType == 5) )
+    theImageType = T4PNMGrayMap;
   else
-    imageDepth = 1;
+    theImageType = T4PNMPixelMap;
 
-  T4Message(@"PNMLoader: detected image: <%d x %d> [depth = %d] with max value: <%d> [mode %d]", imageWidth, imageHeight, imageDepth, imageMaxValue, pnmMode);
+  if( (imageType > 0) && (imageType != theImageType) )
+    T4Error(@"PNMLoader: trying to load images of different format");
+  else
+    imageType = theImageType;
+
+  T4Message(@"PNMLoader: detected image: <%d x %d> with max value: <%d> [mode %d]", imageWidth, imageHeight, imageMaxValue, pnmType);
 
   // Reading
 
-  int matrixSize = imageWidth*imageHeight*imageDepth;
+  // RGB ?
+  int matrixSize;
+  if( imageType == T4PNMPixelMap )
+    matrixSize = 3*imageWidth*imageHeight;
+  else
+    matrixSize = imageWidth*imageHeight;
+
   T4Matrix *matrix = [[T4Matrix alloc] initWithNumberOfRows: matrixSize];
 
   // Internal /////
@@ -101,7 +124,7 @@
   /////////////////
 
   real *matrixData = [matrix firstColumn];
-  switch(pnmMode)
+  switch(pnmType)
   {
     case 1:
       for(i = 0; i < matrixSize; i++)
@@ -200,9 +223,9 @@
   return imageHeight;
 }
 
--(int)imageDepth
+-(int)imageType
 {
-  return imageDepth;
+  return imageType;
 }
 
 @end

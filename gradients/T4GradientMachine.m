@@ -154,8 +154,8 @@
       {
         T4Matrix *parameter = [parameters objectAtIndex: i];
         T4Matrix *gradParameter = [gradParameters objectAtIndex: i];
-        real *ptrParams = [parameter data];
-        real *ptrDParams = [gradParameter data];
+        real *ptrParams = [parameter realData];
+        real *ptrDParams = [gradParameter realData];
         int size = [parameter numberOfRows];
         
         for(j = 0; j < size; j++)

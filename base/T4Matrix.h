@@ -16,7 +16,7 @@
 -initWithSubMatrix: (T4Matrix*)aMatrix firstRowIndex: (int)aFirstRowIndex firstColumnIndex: (int)aFirstColumnIndex numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns;
 -initWithColumn: (int)aColumnIndex fromMatrix: (T4Matrix*)aMatrix;
 
--setMatrixFromData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
+-setMatrixFromRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride;
 
 -(real*)columnAtIndex: (int)aColumnIndex;
 
@@ -27,18 +27,22 @@
 -zero;
 
 -copyMatrix: (T4Matrix*)aMatrix;
--copyFromAddress: (real*)anAddress stride: (int)aStride;
--copyToAddress: (real*)anAddress stride: (int)aStride;
+-copyFromRealData: (real*)aRealData stride: (int)aStride;
+-copyToRealData: (real*)aRealData stride: (int)aStride;
 
 -addMatrix: (T4Matrix*)aMatrix;
+-addValue: (real)aValue dotSumMatrixColumns: (T4Matrix*)aMatrix;
 -addValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix;
--addFromAddress: (real*)anAddress stride: (int)aStride;
--addToAddress: (real*)anAddress stride: (int)aStride;
+-addFromRealData: (real*)aRealData stride: (int)aStride;
+-addToRealData: (real*)aRealData stride: (int)aStride;
 
 -(real)column: (int)aColumnIndex dotColumn: (int)aMatrixColumnIndex ofMatrix: (T4Matrix*)aMatrix;
 -(real)dotMatrix: (T4Matrix*)aMatrix;
 
--dotValue: (real)aValue1 plusValue: (real)aValue2 dotMatrix: (T4Matrix*)aMatrix1 dotMatrix: (T4Matrix*)aMatrix2;
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotMatrix:   (T4Matrix*)aMatrix1 dotMatrix:   (T4Matrix*)aMatrix2;
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotTrMatrix: (T4Matrix*)aMatrix1 dotMatrix:   (T4Matrix*)aMatrix2;
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotMatrix:   (T4Matrix*)aMatrix1 dotTrMatrix: (T4Matrix*)aMatrix2;
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotTrMatrix: (T4Matrix*)aMatrix1 dotTrMatrix: (T4Matrix*)aMatrix2;
 
 //    real innerProduct(Matrix *matrix, int column_index=0, int column_index_matrix=0);
 
@@ -53,6 +57,6 @@
 -(int)numberOfColumns;
 -(int)numberOfRows;
 -(int)stride;
--(real*)data;
+-(real*)realData;
 
 @end

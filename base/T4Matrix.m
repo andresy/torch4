@@ -6,29 +6,367 @@ inline void T4MatrixDotMatrix(real aValue1, real *destMat, int destStride,
                               real *srcMat2, int srcStride2,
                               int destNumRows, int destNumColumns, int srcNum)
 {
+  // matrix-vector
   if(destNumColumns == 1)
   {
+    // inner product
+    if(destNumRows == 1)
+    {
 #ifdef USE_DOUBLE
-    cblas_dgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
-                aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_ddot(srcNum, srcMat1, srcStride1, srcMat2, 1);
 #else
-    cblas_sgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
-                aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_sdot(srcNum, srcMat1, srcStride1, srcMat2, 1);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+#else
+      cblas_sgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+    }
 #endif
   }
   else
   {
+    // outer product
+    if(srcNum == 1)
+    {
+      if(aValue1 != 1.)
+      {        
+        if(aValue1 == 0.)
+        {
+          if(destStride == destNumRows)
+            memset(destMat, 0, sizeof(real)*destNumRows*destNumColumns);
+          else
+          {
+            real *column = destMat;
+            int c;
+            for(c = 0; c < destNumColumns; c++)
+              memset(column, 0, sizeof(real)*destNumRows);
+            column += destStride;
+          }
+        }
+        else
+        {
+          if(destStride == destNumRows)
+          {
+            int i;
+            for(i = 0; i < destNumRows*destNumColumns; i++)
+              destMat[i] *= aValue1;
+          }
+          else
+          {
+            real *column = destMat;
+            int c, i;
+            for(c = 0; c < destNumColumns; c++)
+            {
+              for(i = 0; i < destNumRows; i++)
+                column[i] *= aValue1;
+            }
+            column += destStride;
+          }          
+        }        
+      }
 #ifdef USE_DOUBLE
-    cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, destNumRows, destNumColumns,
-                srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
-                aValue1, destMat, destStride);
+      cblas_dger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, 1, srcMat2, srcStride2, destMat, destStride);
 #else
-    cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, destNumRows, destNumColumns,
-                srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
-                aValue1, destMat, destStride);
+      cblas_sger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, 1, srcMat2, srcStride2, destMat, destStride);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, destNumRows, destNumColumns,
+                  srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#else
+      cblas_sgemm(CblasColMajor, CblasNoTrans, CblasNoTrans, destNumRows, destNumColumns,
+                    srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
 #endif
+    }
   }
 }
+
+//===============================================================================================================================
+
+inline void T4TrMatrixDotMatrix(real aValue1, real *destMat, int destStride,
+                                real aValue2, real *srcMat1, int srcStride1,
+                                real *srcMat2, int srcStride2,
+                                int destNumRows, int destNumColumns, int srcNum)
+{
+  // matrix-vector
+  if(destNumColumns == 1)
+  {
+    // inner product
+    if(destNumRows == 1)
+    {
+#ifdef USE_DOUBLE
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_ddot(srcNum, srcMat1, 1, srcMat2, 1);
+#else
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_sdot(srcNum, srcMat1, 1, srcMat2, 1);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+#else
+      cblas_sgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, 1, aValue1, destMat, 1);
+    }
+#endif
+  }
+  else
+  {
+    // outer product
+    if(srcNum == 1)
+    {
+      if(aValue1 != 1.)
+      {        
+        if(aValue1 == 0.)
+        {
+          if(destStride == destNumRows)
+            memset(destMat, 0, sizeof(real)*destNumRows*destNumColumns);
+          else
+          {
+            real *column = destMat;
+            int c;
+            for(c = 0; c < destNumColumns; c++)
+              memset(column, 0, sizeof(real)*destNumRows);
+            column += destStride;
+          }
+        }
+        else
+        {
+          if(destStride == destNumRows)
+          {
+            int i;
+            for(i = 0; i < destNumRows*destNumColumns; i++)
+              destMat[i] *= aValue1;
+          }
+          else
+          {
+            real *column = destMat;
+            int c, i;
+            for(c = 0; c < destNumColumns; c++)
+            {
+              for(i = 0; i < destNumRows; i++)
+                column[i] *= aValue1;
+            }
+            column += destStride;
+          }          
+        }        
+      }
+#ifdef USE_DOUBLE
+      cblas_dger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, srcStride1, srcMat2, srcStride2, destMat, destStride);
+#else
+      cblas_sger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, srcStride1, srcMat2, srcStride2, destMat, destStride);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemm(CblasColMajor, CblasTrans, CblasNoTrans, destNumRows, destNumColumns,
+                  srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#else
+      cblas_sgemm(CblasColMajor, CblasTrans, CblasNoTrans, destNumRows, destNumColumns,
+                    srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#endif
+    }
+  }
+}
+
+//===============================================================================================================================
+
+inline void T4MatrixDotTrMatrix(real aValue1, real *destMat, int destStride,
+                                real aValue2, real *srcMat1, int srcStride1,
+                                real *srcMat2, int srcStride2,
+                                int destNumRows, int destNumColumns, int srcNum)
+{
+  // matrix-vector
+  if(destNumColumns == 1)
+  {
+    // inner product
+    if(destNumRows == 1)
+    {
+#ifdef USE_DOUBLE
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_ddot(srcNum, srcMat1, srcStride1, srcMat2, srcStride2);
+#else
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_sdot(srcNum, srcMat1, srcStride1, srcMat2, srcStride2);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
+#else
+      cblas_sgemv(CblasColMajor, CblasNoTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
+    }
+#endif
+  }
+  else
+  {
+    // outer product
+    if(srcNum == 1)
+    {
+      if(aValue1 != 1.)
+      {        
+        if(aValue1 == 0.)
+        {
+          if(destStride == destNumRows)
+            memset(destMat, 0, sizeof(real)*destNumRows*destNumColumns);
+          else
+          {
+            real *column = destMat;
+            int c;
+            for(c = 0; c < destNumColumns; c++)
+              memset(column, 0, sizeof(real)*destNumRows);
+            column += destStride;
+          }
+        }
+        else
+        {
+          if(destStride == destNumRows)
+          {
+            int i;
+            for(i = 0; i < destNumRows*destNumColumns; i++)
+              destMat[i] *= aValue1;
+          }
+          else
+          {
+            real *column = destMat;
+            int c, i;
+            for(c = 0; c < destNumColumns; c++)
+            {
+              for(i = 0; i < destNumRows; i++)
+                column[i] *= aValue1;
+            }
+            column += destStride;
+          }          
+        }        
+      }
+#ifdef USE_DOUBLE
+      cblas_dger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, 1, srcMat2, 1, destMat, destStride);
+#else
+      cblas_sger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, 1, srcMat2, 1, destMat, destStride);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans, destNumRows, destNumColumns,
+                  srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#else
+      cblas_sgemm(CblasColMajor, CblasNoTrans, CblasTrans, destNumRows, destNumColumns,
+                    srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#endif
+    }
+  }
+}
+
+//===============================================================================================================================
+
+inline void T4TrMatrixDotTrMatrix(real aValue1, real *destMat, int destStride,
+                                  real aValue2, real *srcMat1, int srcStride1,
+                                  real *srcMat2, int srcStride2,
+                                  int destNumRows, int destNumColumns, int srcNum)
+{
+  // matrix-vector
+  if(destNumColumns == 1)
+  {
+    // inner product
+    if(destNumRows == 1)
+    {
+#ifdef USE_DOUBLE
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_ddot(srcNum, srcMat1, 1, srcMat2, srcStride2);
+#else
+      destMat[0] = aValue1*destMat[0] + aValue2*cblas_sdot(srcNum, srcMat1, 1, srcMat2, srcStride2);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
+#else
+      cblas_sgemv(CblasColMajor, CblasTrans, destNumRows, srcNum,
+                  aValue2, srcMat1, srcStride1, srcMat2, srcStride2, aValue1, destMat, 1);
+    }
+#endif
+  }
+  else
+  {
+    // outer product
+    if(srcNum == 1)
+    {
+      if(aValue1 != 1.)
+      {        
+        if(aValue1 == 0.)
+        {
+          if(destStride == destNumRows)
+            memset(destMat, 0, sizeof(real)*destNumRows*destNumColumns);
+          else
+          {
+            real *column = destMat;
+            int c;
+            for(c = 0; c < destNumColumns; c++)
+              memset(column, 0, sizeof(real)*destNumRows);
+            column += destStride;
+          }
+        }
+        else
+        {
+          if(destStride == destNumRows)
+          {
+            int i;
+            for(i = 0; i < destNumRows*destNumColumns; i++)
+              destMat[i] *= aValue1;
+          }
+          else
+          {
+            real *column = destMat;
+            int c, i;
+            for(c = 0; c < destNumColumns; c++)
+            {
+              for(i = 0; i < destNumRows; i++)
+                column[i] *= aValue1;
+            }
+            column += destStride;
+          }          
+        }        
+      }
+#ifdef USE_DOUBLE
+      cblas_dger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, srcStride1, srcMat2, 1, destMat, destStride);
+#else
+      cblas_sger(CblasColMajor, destNumRows, destNumColumns, aValue2, srcMat1, srcStride1, srcMat2, 1, destMat, destStride);
+#endif      
+    }
+    else
+    {
+#ifdef USE_DOUBLE
+      cblas_dgemm(CblasColMajor, CblasTrans, CblasTrans, destNumRows, destNumColumns,
+                  srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#else
+      cblas_sgemm(CblasColMajor, CblasTrans, CblasTrans, destNumRows, destNumColumns,
+                    srcNum, aValue2, srcMat1, srcStride1, srcMat2, srcStride2,
+                  aValue1, destMat, destStride);
+#endif
+    }
+  }
+}
+
 
 inline void T4CopyMatrix(real *destAddr, int destStride, real *sourceAddr, int sourceStride, int numRows, int numColumns)
 {
@@ -143,7 +481,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 }
 
 
--setMatrixFromData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
+-setMatrixFromRealData: (real*)aData numberOfRows: (int)aNumRows numberOfColumns: (int)aNumColumns stride: (int)aStride
 {
   numRows = aNumRows;
   numColumns = aNumColumns;
@@ -201,15 +539,15 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
--copyFromAddress: (real*)anAddress stride: (int)aStride
+-copyFromRealData: (real*)aRealData stride: (int)aStride
 {
-  T4CopyMatrix(data, stride, anAddress, aStride, numRows, numColumns);
+  T4CopyMatrix(data, stride, aRealData, aStride, numRows, numColumns);
   return self;
 }
 
--copyToAddress: (real*)anAddress stride: (int)aStride
+-copyToRealData: (real*)aRealData stride: (int)aStride
 {
-  T4CopyMatrix(anAddress, aStride, data, stride, numRows, numColumns);
+  T4CopyMatrix(aRealData, aStride, data, stride, numRows, numColumns);
   return self;
 }
 
@@ -250,6 +588,14 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
+-addValue: (real)aValue dotSumMatrixColumns: (T4Matrix*)aMatrix
+{
+  int c;
+  for(c = 0; c < aMatrix->numColumns; c++)
+    T4AddMatrix(data, stride, aValue, aMatrix->data+aMatrix->stride*c, aMatrix->stride, numRows, 1);
+  return self;
+}
+
 -addValue: (real)aValue dotMatrix: (T4Matrix*)aMatrix
 {
   T4AddMatrix(data, stride, aValue, aMatrix->data, aMatrix->stride, numRows, numColumns);
@@ -262,15 +608,15 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
   return self;
 }
 
--addFromAddress: (real*)anAddress stride: (int)aStride
+-addFromRealData: (real*)aRealData stride: (int)aStride
 {
-  T4AddMatrix(data, stride, 1., anAddress, aStride, numRows, numColumns);
+  T4AddMatrix(data, stride, 1., aRealData, aStride, numRows, numColumns);
   return self;
 }
 
--addToAddress: (real*)anAddress stride: (int)aStride
+-addToRealData: (real*)aRealData stride: (int)aStride
 {
-  T4AddMatrix(anAddress, aStride, 1., data, stride, numRows, numColumns);
+  T4AddMatrix(aRealData, aStride, 1., data, stride, numRows, numColumns);
   return self;
 }
 
@@ -292,7 +638,7 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 #endif
 }
 
--dotValue: (real)aValue1 plusValue: (real)aValue2 dotMatrix: (T4Matrix*)aMatrix1 dotMatrix: (T4Matrix*)aMatrix2
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotMatrix: (T4Matrix*)aMatrix1 dotMatrix: (T4Matrix*)aMatrix2
 {
   T4MatrixDotMatrix(aValue1, data, stride,
                     aValue2, aMatrix1->data, aMatrix1->stride,
@@ -301,6 +647,37 @@ inline void T4AddMatrix(real *destAddr, int destStride, real aValue, real *sourc
 
   return self;
 }
+
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotTrMatrix: (T4Matrix*)aMatrix1 dotMatrix: (T4Matrix*)aMatrix2
+{
+  T4TrMatrixDotMatrix(aValue1, data, stride,
+                      aValue2, aMatrix1->data, aMatrix1->stride,
+                      aMatrix2->data, aMatrix2->stride,
+                      numRows, numColumns, aMatrix2->numRows);
+
+  return self;
+}
+
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotMatrix: (T4Matrix*)aMatrix1 dotTrMatrix: (T4Matrix*)aMatrix2
+{
+  T4MatrixDotTrMatrix(aValue1, data, stride,
+                      aValue2, aMatrix1->data, aMatrix1->stride,
+                      aMatrix2->data, aMatrix2->stride,
+                      numRows, numColumns, aMatrix1->numColumns);
+
+  return self;
+}
+
+-dotValue: (real)aValue1 addValue: (real)aValue2 dotTrMatrix: (T4Matrix*)aMatrix1 dotTrMatrix: (T4Matrix*)aMatrix2
+{
+  T4TrMatrixDotTrMatrix(aValue1, data, stride,
+                        aValue2, aMatrix1->data, aMatrix1->stride,
+                        aMatrix2->data, aMatrix2->stride,
+                        numRows, numColumns, aMatrix1->numRows);
+
+  return self;
+}
+
 /*
 void Matrix::dotSaccSdotMdotM(real scalar1, real scalar2, Matrix *matrix1, Matrix *matrix2)
 {
@@ -436,7 +813,7 @@ void Matrix::accSdotMextM(real scalar, Matrix *matrix1, Matrix *matrix2, int col
   return stride;
 }
 
--(real*)data
+-(real*)realData
 {
   return data;
 }

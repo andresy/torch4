@@ -140,7 +140,7 @@
     for(i = 0; i < numInputMatrices; i++)
     {
       currentInputs = [inputMatrices objectAtIndex: i];
-      [currentInputs copyToAddress: [inputs data]+offset stride: [inputs stride]];
+      [currentInputs copyToRealData: [inputs realData]+offset stride: [inputs stride]];
       offset += [currentInputs numberOfRows];
     }      
   }
@@ -164,7 +164,7 @@
 //                    numberOfColumns: [currentGradOutputs numberOfColumns]
 //                    stride: [currentGradOutputs stride]];
 
-      [gradOutputs setMatrixFromData: [directGradOutputs data]+gradOutputMatrixOffsets[0]
+      [gradOutputs setMatrixFromRealData: [directGradOutputs realData]+gradOutputMatrixOffsets[0]
                    numberOfRows: [[machine outputs] numberOfRows]
                    numberOfColumns: [directGradOutputs numberOfColumns]
                    stride: [directGradOutputs stride]];
@@ -178,12 +178,12 @@
       int i;
 
       [gradOutputs resizeWithNumberOfColumns: [currentGradOutputs numberOfColumns]];
-      [gradOutputs copyFromAddress: [currentGradOutputs data]+gradOutputMatrixOffsets[0] stride: [currentGradOutputs stride]];
+      [gradOutputs copyFromRealData: [currentGradOutputs realData]+gradOutputMatrixOffsets[0] stride: [currentGradOutputs stride]];
       
       for(i = 1; i < numGradOutputMatrices; i++)
       {
         currentGradOutputs = [gradOutputMatrices objectAtIndex: i];
-        [gradOutputs addFromAddress: [currentGradOutputs data]+gradOutputMatrixOffsets[i] stride: [currentGradOutputs stride]];
+        [gradOutputs addFromRealData: [currentGradOutputs realData]+gradOutputMatrixOffsets[i] stride: [currentGradOutputs stride]];
       }
     }
   }
@@ -402,14 +402,14 @@
     currentOutputs = [[node machine] outputs];
     
     [outputs resizeWithNumberOfColumns: [currentOutputs numberOfColumns]];
-    [currentOutputs copyToAddress: [outputs data] stride: [outputs stride]];
+    [currentOutputs copyToRealData: [outputs realData] stride: [outputs stride]];
     offset = [currentOutputs numberOfRows];
 
     for(i = 1; i < numNodes; i++)
     {
       node = [layer objectAtIndex: i];
       currentOutputs = [[node machine] outputs];
-      [currentOutputs copyToAddress: [outputs data]+offset stride: [outputs stride]];
+      [currentOutputs copyToRealData: [outputs realData]+offset stride: [outputs stride]];
       offset += [currentOutputs numberOfRows];
     }
   }

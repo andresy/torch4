@@ -12,8 +12,6 @@
 
   T4Matrix* logAlpha;
   T4Matrix* logBeta;
-  T4Matrix* argViterbi;
-  T4Matrix* viterbiStates;
 
   T4Matrix* logProbabilitiesStates;
 
@@ -24,7 +22,6 @@
 -initWithLogTransitions: (T4Matrix*) someInitialLogTransitions states: (T4Distribution**) someStates;
 -logAlphaWithInputs: (T4Matrix*) someInputs;
 -logBetaWithInputs: (T4Matrix*) someInputs;
--logViterbiWithInputs: (T4Matrix*) someInputs;
 -logProbabilitiesWithInputs: (T4Matrix*) someInputs;
 -(int)numStates;
 -setPriorOnTransitions: (real)aValue;

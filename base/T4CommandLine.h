@@ -23,15 +23,15 @@
 -addMasterSwitch: (NSString*)aSwitch;
 
 -addOption: (T4CommandLineOption*)option;
--addIntOption: (NSString*)aName address: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp;
--addRealOption: (NSString*)aName address: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp;
--addBoolOption: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp;
--addStringOption: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefault help: (NSString*)aHelp;
+-addIntOption: (NSString*)aName at: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp;
+-addRealOption: (NSString*)aName at: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp;
+-addBoolOption: (NSString*)aName at: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp;
+-addStringOption: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefault help: (NSString*)aHelp;
 
 -addArgument: (T4CommandLineOption*)argument;
--addIntArgument: (NSString*)aName address: (int*)anAddress help: (NSString*)aHelp;
--addRealArgument: (NSString*)aName address: (real*)anAddress help: (NSString*)aHelp;
-//-addBoolArgument: (NSString*)aName address: (BOOL*)anAddress help: (NSString*)aHelp; peut pas exister!!!
--addStringArgument: (NSString*)aName address: (NSMutableString*)anAddress help: (NSString*)aHelp;
+-addIntArgument: (NSString*)aName at: (int*)anAddress help: (NSString*)aHelp;
+-addRealArgument: (NSString*)aName at: (real*)anAddress help: (NSString*)aHelp;
+//-addBoolArgument: (NSString*)aName at: (BOOL*)anAddress help: (NSString*)aHelp; peut pas exister!!!
+-addStringArgument: (NSString*)aName at: (NSString**)anAddress help: (NSString*)aHelp;
 
 @end

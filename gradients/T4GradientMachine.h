@@ -4,7 +4,7 @@
 #import "T4Criterion.h"
 #import "T4Measurer.h"
 
-@interface T4GradientMachine : T4Object <T4Machine, NSCoding>
+@interface T4GradientMachine : T4Object <T4Machine>
 {
     int numInputs;
     int numOutputs;
@@ -29,8 +29,8 @@
 
 //-(void)iterInitialize;
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs;
--(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs;
+-(T4Matrix*)forwardInputs: (T4Matrix*)someInputs;
+-(T4Matrix*)backwardGradOutputs: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs;
 
 -reset;
 -setPartialBackpropagation: (BOOL)aFlag;

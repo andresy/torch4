@@ -73,13 +73,13 @@
 // {
 // }
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
+-(T4Matrix*)forwardInputs: (T4Matrix*)someInputs
 {
   [self subclassResponsibility: _cmd];
   return nil;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
+-(T4Matrix*)backwardGradOutputs: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   [self subclassResponsibility: _cmd];
   return nil;
@@ -142,8 +142,8 @@
         [gradParameter zero];
       }
 
-      [criterion forwardExampleAtIndex: shuffledIndices[t] inputs: [self forwardMatrix: inputs]];
-      [self backwardMatrix:
+      [criterion forwardExampleAtIndex: shuffledIndices[t] inputs: [self forwardInputs: inputs]];
+      [self backwardGradOutputs:
               [criterion backwardExampleAtIndex: shuffledIndices[t] inputs: [self outputs]]
             inputs: inputs];
 
@@ -184,7 +184,7 @@
 
       for(t = 0; t < numTest; t++)
       {
-        [self forwardMatrix: [[aTestDataset objectAtIndex: t] objectAtIndex: 0]];
+        [self forwardInputs: [[aTestDataset objectAtIndex: t] objectAtIndex: 0]];
 
         for(i = 0; i < numMeasurers; i++)
         {
@@ -262,7 +262,7 @@
     for(j = 0; j < numCurrentDataset; j++)
     {
       T4Matrix *inputs = [[currentDataset objectAtIndex: j] objectAtIndex: 0];
-      [self forwardMatrix: inputs];
+      [self forwardInputs: inputs];
 
       for(k = 0; k < numCurrentMeasurers; k++)
       {
@@ -372,7 +372,7 @@
 
 -initWithCoder: (NSCoder*)aCoder
 {
-  self = [super init];
+  self = [super initWithCoder: aCoder];
 
   [aCoder decodeValueOfObjCType: @encode(int) at: &numInputs];
   [aCoder decodeValueOfObjCType: @encode(int) at: &numOutputs];
@@ -382,7 +382,7 @@
   outputs = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   
   [aCoder decodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
-//  criterion = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  criterion = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   criterion = nil;
   [aCoder decodeValueOfObjCType: @encode(real) at: &learningRate];
   [aCoder decodeValueOfObjCType: @encode(real) at: &learningRateDecay];
@@ -395,6 +395,7 @@
 
 -(void)encodeWithCoder: (NSCoder*)aCoder
 {
+  [super encodeWithCoder: aCoder];
   [aCoder encodeValueOfObjCType: @encode(int) at: &numInputs];
   [aCoder encodeValueOfObjCType: @encode(int) at: &numOutputs];
   [aCoder encodeObject: parameters];
@@ -403,7 +404,7 @@
   [aCoder encodeObject: outputs];
 
   [aCoder encodeValueOfObjCType: @encode(BOOL) at: &partialBackpropagation];
-//  [aCoder encodeObject: criterion];
+  [aCoder encodeObject: criterion];
   [aCoder encodeValueOfObjCType: @encode(real) at: &learningRate];
   [aCoder encodeValueOfObjCType: @encode(real) at: &learningRateDecay];
   [aCoder encodeValueOfObjCType: @encode(real) at: &endAccuracy];

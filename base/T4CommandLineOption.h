@@ -29,7 +29,7 @@
   int defaultValue;
 }
 
--initWithName: (NSString*)aName address: (int*)anAddress default: (int)aDefaultValue help: (NSString*)aHelp;
+-initWithName: (NSString*)aName at: (int*)anAddress default: (int)aDefaultValue help: (NSString*)aHelp;
 -read: (NSMutableArray*)arguments;
 -initToDefaultValue;
 -(NSString*)textValue;
@@ -42,7 +42,7 @@
   real defaultValue;
 }
 
--initWithName: (NSString*)aName address: (real*)anAddress default: (real)aDefaultValue help: (NSString*)aHelp;
+-initWithName: (NSString*)aName at: (real*)anAddress default: (real)aDefaultValue help: (NSString*)aHelp;
 -read: (NSMutableArray*)arguments;
 -initToDefaultValue;
 -(NSString*)textValue;
@@ -55,7 +55,7 @@
   BOOL defaultValue;
 }
 
--initWithName: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefaultValue help: (NSString*)aHelp;
+-initWithName: (NSString*)aName at: (BOOL*)anAddress default: (BOOL)aDefaultValue help: (NSString*)aHelp;
 -read: (NSMutableArray*)arguments;
 -initToDefaultValue;
 -(NSString*)textValue;
@@ -64,11 +64,11 @@
 
 @interface T4StringCommandLineOption : T4CommandLineOption
 {
-  NSMutableString *address;
+  NSString **address;
   NSString *defaultValue;
 }
 
--initWithName: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp;
+-initWithName: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp;
 -read: (NSMutableArray*)arguments;
 -initToDefaultValue;
 -(NSString*)textValue;

@@ -49,10 +49,10 @@
   T4Matrix *matrix;
   int numRows, numColumns;
 
-  if([aFile read: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+  if([aFile readBlocksInto: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
     T4Error(@"BinaryLoader: file header corrupted");
 
-  if([aFile read: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+  if([aFile readBlocksInto: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
     T4Error(@"BinaryLoader: file header corrupted");
 
   if( (numRows <= 0) || (numColumns <= 0) )

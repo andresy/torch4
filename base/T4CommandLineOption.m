@@ -71,7 +71,7 @@
 
 @implementation T4IntCommandLineOption
 
--initWithName: (NSString*)aName address: (int*)anAddress default: (int)aDefaultValue help: (NSString*)aHelp
+-initWithName: (NSString*)aName at: (int*)anAddress default: (int)aDefaultValue help: (NSString*)aHelp
 {
   if( (self = [super initWithName: aName type: @"<int>" help: aHelp]) )
   {
@@ -119,7 +119,7 @@
 
 @implementation T4RealCommandLineOption
 
--initWithName: (NSString*)aName address: (real*)anAddress default: (real)aDefaultValue help: (NSString*)aHelp
+-initWithName: (NSString*)aName at: (real*)anAddress default: (real)aDefaultValue help: (NSString*)aHelp
 {
   if( (self = [super initWithName: aName type: @"<real>" help: aHelp]) )
   {
@@ -135,11 +135,7 @@
   if([arguments count] > 0)
   {
     NSScanner *scanner = [[NSScanner alloc] initWithString: [arguments objectAtIndex: 0]];
-#ifdef USE_DOUBLE
-    if(![scanner scanDouble: address])
-#else
-    if(![scanner scanFloat: address])
-#endif
+    if(![scanner scanReal: address])
       T4Error(@"RealCommandLineOption: <%@> is not an real value!", [arguments objectAtIndex: 0]);
     
     [arguments removeObjectAtIndex: 0];
@@ -171,7 +167,7 @@
 
 @implementation T4BoolCommandLineOption
 
--initWithName: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefaultValue help: (NSString*)aHelp
+-initWithName: (NSString*)aName at: (BOOL*)anAddress default: (BOOL)aDefaultValue help: (NSString*)aHelp
 {
   if( (self = [super initWithName: aName type: @"" help: aHelp]) )
   {
@@ -209,7 +205,7 @@
 
 @implementation T4StringCommandLineOption
 
--initWithName: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp
+-initWithName: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefaultValue help: (NSString*)aHelp
 {
   if( (self = [super initWithName: aName type: @"<string>" help: aHelp]) )
   {
@@ -224,7 +220,7 @@
 {
   if([arguments count] > 0)
   {
-    [address setString: [arguments objectAtIndex: 0]];
+    *address = [[[NSString alloc] initWithString: [arguments objectAtIndex: 0]] keepWithAllocator: allocator];
     [arguments removeObjectAtIndex: 0];
   }
   else
@@ -237,14 +233,14 @@
 
 -initToDefaultValue
 {
-  [address setString: defaultValue];
+  *address = [[[NSString alloc] initWithString: defaultValue] keepWithAllocator: allocator];
   return self;
 }
 
 -(NSString*)textValue
 {
   if(isSet)
-    return [[[NSString alloc] initWithString: address] autorelease];
+    return [[[NSString alloc] initWithString: *address] autorelease];
   else
     return [[[NSString alloc] initWithString: defaultValue] autorelease];
 }

@@ -124,7 +124,7 @@
 
 -initWithCoder: (NSCoder*)aCoder
 {
-  self = [super init];
+  self = [super initWithCoder: aCoder];
   mean = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   standardDeviation = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
   return self;
@@ -132,6 +132,7 @@
 
 -(void)encodeWithCoder: (NSCoder*)aCoder
 {
+  [super encodeWithCoder: aCoder];
   [aCoder encodeObject: mean];
   [aCoder encodeObject: standardDeviation];
 }

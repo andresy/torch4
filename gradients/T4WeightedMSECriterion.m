@@ -87,4 +87,19 @@
   return self;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfRows];  
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfColumns];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfRows];  
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfColumns];
+}
+
 @end

@@ -133,4 +133,17 @@
   return [classLabels columnAtIndex: aClass];
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &directEncoding];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &directEncoding];
+}
+
 @end

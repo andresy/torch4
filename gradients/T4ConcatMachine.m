@@ -47,7 +47,7 @@
 }
 
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
+-(T4Matrix*)forwardInputs: (T4Matrix*)someInputs
 {
   int numMachines = [machines count];
   T4Matrix *currentOutputs;
@@ -57,7 +57,7 @@
   
   for(i = 0; i < numMachines; i++)
   {
-    currentOutputs = [[machines objectAtIndex: i] forwardMatrix: someInputs];
+    currentOutputs = [[machines objectAtIndex: i] forwardInputs: someInputs];
 
     if(i == 0)
     {
@@ -72,7 +72,7 @@
   return outputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
+-(T4Matrix*)backwardGradOutputs: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   T4GradientMachine *currentMachine;
   int numMachines = [machines count];
@@ -94,7 +94,7 @@
                  numberOfColumns: gradOutputNumColumns
                  stride: gradOutputStride];
 
-    currentGradInputs = [currentMachine backwardMatrix: gradOutputs inputs: someInputs];
+    currentGradInputs = [currentMachine backwardGradOutputs: gradOutputs inputs: someInputs];
 
     if(!partialBackpropagation)
     {

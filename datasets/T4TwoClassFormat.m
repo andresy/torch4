@@ -22,4 +22,11 @@
          > fabs(value - classLabelArray[1]) ? 1 : 0);
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  classLabelArray = [classLabels firstColumn];
+  return self;
+}
+
 @end

@@ -50,7 +50,7 @@
 }
 
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
+-(T4Matrix*)forwardInputs: (T4Matrix*)someInputs
 {
   int numInputColumns = [someInputs numberOfColumns];
   int numOutputColumns = (numInputColumns - kW) / dT + 1; 
@@ -92,7 +92,7 @@
   return outputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
+-(T4Matrix*)backwardGradOutputs: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   int numInputColumns = [someInputs numberOfColumns];
   int numOutputColumns = [someGradOutputs numberOfColumns];

@@ -1,15 +1,13 @@
-#import "T4Loader.h"
+#import "T4Saver.h"
 
-@interface T4BinaryLoader : T4Loader
+@interface T4BinarySaver : T4Saver
 {
     BOOL transposesMatrix;
-    int maxNumColumns;
     int diskRealSize;
 }
 
 -init;
 -setTransposesMatrix: (BOOL)aFlag;
--setMaxNumberOfColumns: (int)aMaxNumber;
 -setEnforcesFloatEncoding: (BOOL)aFlag;
 -setEnforcesDoubleEncoding: (BOOL)aFlag;
 

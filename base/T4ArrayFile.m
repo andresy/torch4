@@ -13,7 +13,7 @@
   return self;
 }
 
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks
+-(int)writeBlocksFrom: (void*)someData blockSize: (int)aBlockSize numberOfBlocs: (int)aNumBlocks
 {
   NSData *dataToWrite = [[NSData alloc] initWithBytes: someData length: aBlockSize*aNumBlocks];
   [contents addObject: dataToWrite];

@@ -13,7 +13,7 @@
   return self;
 }
 
--(T4Matrix*)forwardMatrix: (T4Matrix*)someInputs
+-(T4Matrix*)forwardInputs: (T4Matrix*)someInputs
 {
   real *inputData = [someInputs firstColumn];
   int inputStride = [someInputs stride];
@@ -28,7 +28,7 @@
   return outputs;
 }
 
--(T4Matrix*)backwardMatrix: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
+-(T4Matrix*)backwardGradOutputs: (T4Matrix*)someGradOutputs inputs: (T4Matrix*)someInputs
 {
   real *gradInputData;
   int gradInputStride;

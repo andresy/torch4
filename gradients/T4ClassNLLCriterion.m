@@ -6,7 +6,7 @@
 {
   if( (self = [super initWithNumberOfInputs: [aClassFormat numberOfClasses]]) )
   {
-    classFormat = aClassFormat;
+    classFormat = [aClassFormat retainAndKeepWithAllocator: allocator];
   }
 
   return self;
@@ -44,6 +44,19 @@
   }
 
   return gradInputs;
+}
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  classFormat = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeObject: classFormat];
 }
 
 @end

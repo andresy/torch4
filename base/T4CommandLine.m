@@ -286,34 +286,34 @@
   return self;
 }
 
--addIntOption: (NSString*)aName address: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp
+-addIntOption: (NSString*)aName at: (int*)anAddress default: (int)aDefault help: (NSString*)aHelp
 {
   T4IntCommandLineOption *option = [T4IntCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: aDefault help: aHelp];
+  [option initWithName: aName at: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
   return [self addOption: option];
 }
 
--addRealOption: (NSString*)aName address: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp
+-addRealOption: (NSString*)aName at: (real*)anAddress default: (real)aDefault help: (NSString*)aHelp
 {
   T4RealCommandLineOption *option = [T4RealCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: aDefault help: aHelp];
+  [option initWithName: aName at: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
   return [self addOption: option];
 }
 
--addBoolOption: (NSString*)aName address: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp
+-addBoolOption: (NSString*)aName at: (BOOL*)anAddress default: (BOOL)aDefault help: (NSString*)aHelp
 {
   T4BoolCommandLineOption *option = [T4BoolCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: aDefault help: aHelp];
+  [option initWithName: aName at: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
   return [self addOption: option];
 }
 
--addStringOption: (NSString*)aName address: (NSMutableString*)anAddress default: (NSString*)aDefault help: (NSString*)aHelp
+-addStringOption: (NSString*)aName at: (NSString**)anAddress default: (NSString*)aDefault help: (NSString*)aHelp
 {
   T4StringCommandLineOption *option = [T4StringCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: aDefault help: aHelp];
+  [option initWithName: aName at: anAddress default: aDefault help: aHelp];
   [allocator keepObject: option];
   return [self addOption: option];
 }
@@ -326,26 +326,26 @@
   return self;
 }
 
--addIntArgument: (NSString*)aName address: (int*)anAddress help: (NSString*)aHelp
+-addIntArgument: (NSString*)aName at: (int*)anAddress help: (NSString*)aHelp
 {
   T4IntCommandLineOption *option = [T4IntCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: 0 help: aHelp];
+  [option initWithName: aName at: anAddress default: 0 help: aHelp];
   [allocator keepObject: option];
   return [self addArgument: option];
 }
 
--addRealArgument: (NSString*)aName address: (real*)anAddress help: (NSString*)aHelp
+-addRealArgument: (NSString*)aName at: (real*)anAddress help: (NSString*)aHelp
 {
   T4RealCommandLineOption *option = [T4RealCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: 0 help: aHelp];
+  [option initWithName: aName at: anAddress default: 0 help: aHelp];
   [allocator keepObject: option];
   return [self addArgument: option];
 }
 
--addStringArgument: (NSString*)aName address: (NSMutableString*)anAddress help: (NSString*)aHelp
+-addStringArgument: (NSString*)aName at: (NSString**)anAddress help: (NSString*)aHelp
 {
   T4StringCommandLineOption *option = [T4StringCommandLineOption alloc];
-  [option initWithName: aName address: anAddress default: @"" help: aHelp];
+  [option initWithName: aName at: anAddress default: @"" help: aHelp];
   [allocator keepObject: option];
   return [self addArgument: option];
 }

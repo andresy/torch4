@@ -4,8 +4,8 @@
 {
 }
 
--(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks;
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks;
+-(int)readBlocksInto: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks;
+-(int)writeBlocksFrom: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks;
 -(BOOL)isEndOfFile;
 -synchronizeFile;
 -seekToFileOffset: (unsigned long long)anOffset;

@@ -34,4 +34,17 @@
   return [classLabels columnAtIndex: aClass];
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+  classLabels = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeObject: classLabels];
+}
+
 @end

@@ -6,8 +6,8 @@
 {
   if( (self = [super initWithNumberOfInputs: [inputClassFormat encodingSize]]) )
   {
-    datasetClassFormat = aClassFormat;
-    inputClassFormat = anotherClassFormat;
+    datasetClassFormat = [aClassFormat retainAndKeepWithAllocator: allocator];
+    inputClassFormat = [anotherClassFormat retainAndKeepWithAllocator: allocator];
     [self setAveragesWithNumberOfRows: YES];
     [self setAveragesWithNumberOfColumns: YES];
   }
@@ -81,6 +81,28 @@
 {
   averageWithNumberOfColumns = aFlag;
   return self;
+}
+
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  datasetClassFormat = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  inputClassFormat = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfRows];  
+  [aCoder decodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfColumns];
+
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+
+  [aCoder encodeObject: datasetClassFormat];
+  [aCoder encodeObject: inputClassFormat];
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfRows];  
+  [aCoder encodeValueOfObjCType: @encode(BOOL) at: &averageWithNumberOfColumns];
 }
 
 @end

@@ -8,8 +8,8 @@
   {
     [self setTransposesMatrix: YES];
     [self setMaxNumberOfColumns: -1];
-    [self setReadsFloat: NO];
-    [self setReadsDouble: NO];
+    [self setEnforcesFloatEncoding: NO];
+    [self setEnforcesDoubleEncoding: NO];
   }
 
   return self;
@@ -20,10 +20,10 @@
   T4Matrix *matrix;
   int numRows, numColumns;
 
-  if([aFile read: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+  if([aFile readBlocksInto: &numRows blockSize: sizeof(int) numberOfBlocks: 1] != 1)
     T4Error(@"BinaryLoader: file header corrupted");
 
-  if([aFile read: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
+  if([aFile readBlocksInto: &numColumns blockSize: sizeof(int) numberOfBlocks: 1] != 1)
     T4Error(@"BinaryLoader: file header corrupted");
 
   if( (numRows <= 0) || (numColumns <= 0) )
@@ -50,7 +50,7 @@
   {
     if(transposesMatrix)
     {
-      if([aFile read: [matrix firstColumn] blockSize: sizeof(real) numberOfBlocks: numRows*numColumns] != numRows*numColumns)
+      if([aFile readBlocksInto: [matrix firstColumn] blockSize: sizeof(real) numberOfBlocks: numRows*numColumns] != numRows*numColumns)
         T4Error(@"BinaryLoader: file corrupted");
     }
     else
@@ -63,7 +63,7 @@
       {
         for(c = 0; c < numColumns; c++)
         {
-          if([aFile read: &data[c*stride+r] blockSize: sizeof(real) numberOfBlocks: 1] != 1)
+          if([aFile readBlocksInto: &data[c*stride+r] blockSize: sizeof(real) numberOfBlocks: 1] != 1)
             T4Error(@"BinaryLoader: file corrupted");
         }
       }
@@ -81,7 +81,7 @@
 
         for(c = 0; c < numColumns; c++)
         {
-          if([aFile read: buffer blockSize: sizeof(float) numberOfBlocks: numRows] != numRows)
+          if([aFile readBlocksInto: buffer blockSize: sizeof(float) numberOfBlocks: numRows] != numRows)
             T4Error(@"BinaryLoader: file corrupted");
 
           real *currentColumn = [matrix columnAtIndex: c];
@@ -102,7 +102,7 @@
         {
           for(c = 0; c < numColumns; c++)
           {
-            if([aFile read: &buffer blockSize: sizeof(float) numberOfBlocks: 1] != 1)
+            if([aFile readBlocksInto: &buffer blockSize: sizeof(float) numberOfBlocks: 1] != 1)
               T4Error(@"BinaryLoader: file corrupted");
             data[c*stride+r] = (real)buffer;
           }
@@ -119,7 +119,7 @@
 
         for(c = 0; c < numColumns; c++)
         {
-          if([aFile read: buffer blockSize: sizeof(double) numberOfBlocks: numRows] != numRows)
+          if([aFile readBlocksInto: buffer blockSize: sizeof(double) numberOfBlocks: numRows] != numRows)
             T4Error(@"BinaryLoader: file corrupted");
 
           real *currentColumn = [matrix columnAtIndex: c];
@@ -140,7 +140,7 @@
         {
           for(c = 0; c < numColumns; c++)
           {
-            if([aFile read: &buffer blockSize: sizeof(double) numberOfBlocks: 1] != 1)
+            if([aFile readBlocksInto: &buffer blockSize: sizeof(double) numberOfBlocks: 1] != 1)
               T4Error(@"BinaryLoader: file corrupted");
             data[c*stride+r] = (real)buffer;
           }
@@ -164,7 +164,7 @@
   return self;
 }
 
--setReadsFloat: (BOOL)aFlag
+-setEnforcesFloatEncoding: (BOOL)aFlag
 {
   if(aFlag)
     diskRealSize = sizeof(float);
@@ -174,7 +174,7 @@
   return self;
 }
 
--setReadsDouble: (BOOL)aFlag
+-setEnforcesDoubleEncoding: (BOOL)aFlag
 {
   if(aFlag)
     diskRealSize = sizeof(double);

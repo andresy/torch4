@@ -46,4 +46,23 @@
   return numInputs;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  [aCoder decodeValueOfObjCType: @encode(int) at: &numInputs];  
+  [aCoder decodeValueOfObjCType: @encode(real) at: &output];
+  gradInputs = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  dataset = nil;
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeValueOfObjCType: @encode(int) at: &numInputs];  
+  [aCoder encodeValueOfObjCType: @encode(real) at: &output];
+  [aCoder encodeObject: gradInputs];
+}
+
 @end

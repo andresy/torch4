@@ -165,7 +165,7 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   return [self initWithStream: aFile attributes: T4FileIsReadable | T4FileIsWritable | T4FileIsAPipe];
 }
 
--(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
+-(int)readBlocksInto: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   int result;
 
@@ -180,7 +180,7 @@ void T4FileReverseMemory(void *data, int blockSize, int numBlocks)
   return(result);
 }
 
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
+-(int)writeBlocksFrom: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   int result;
 

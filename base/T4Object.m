@@ -29,6 +29,23 @@
   return self;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  if([[self class] instanceMethodForSelector: @selector(initWithCoder:)]
+     == [T4Object instanceMethodForSelector: @selector(initWithCoder:)])
+     [self subclassResponsibility: _cmd];
+
+  allocator = [[T4Allocator alloc] init];
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder *)aCoder
+{
+  if([[self class] instanceMethodForSelector: @selector(encodeWithCoder:)]
+     == [T4Object instanceMethodForSelector: @selector(encodeWithCoder:)])
+     [self subclassResponsibility: _cmd];
+}
+
 -subclassResponsibility:(SEL)aSel
 {
   NSString *selectorName = NSStringFromSelector(aSel);

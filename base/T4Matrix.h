@@ -1,6 +1,6 @@
 #import "T4Object.h"
 
-@interface T4Matrix : T4Object <NSCoding>
+@interface T4Matrix : T4Object
 {
     real *data;
     int dataSize;

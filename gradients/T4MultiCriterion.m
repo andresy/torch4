@@ -87,4 +87,23 @@
   return gradInputs;
 }
 
+-initWithCoder: (NSCoder*)aCoder
+{
+  self = [super initWithCoder: aCoder];
+
+  criterions = [[aCoder decodeObject] retainAndKeepWithAllocator: allocator];
+  weights = [allocator allocRealArrayWithCapacity: [criterions count]];
+  [aCoder decodeArrayOfObjCType: @encode(real) count: [criterions count] at: weights];
+
+  return self;
+}
+
+-(void)encodeWithCoder: (NSCoder*)aCoder
+{
+  [super encodeWithCoder: aCoder];
+  [aCoder encodeObject: criterions];
+  [aCoder encodeArrayOfObjCType: @encode(real) count: [criterions count] at: weights];
+}
+
+
 @end

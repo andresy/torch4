@@ -2,13 +2,13 @@
 
 @implementation T4File
 
--(int)read: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
+-(int)readBlocksInto: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   [self subclassResponsibility: _cmd];
   return 0;
 }
 
--(int)write: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
+-(int)writeBlocksFrom: (void*)someData blockSize: (int)aBlockSize numberOfBlocks: (int)aNumBlocks
 {
   [self subclassResponsibility: _cmd];
   return 0;
